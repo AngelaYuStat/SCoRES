@@ -1,10 +1,9 @@
-
 SCB_gls_climate =
   function (Z, level, X = NULL, w = NULL, correlation = NULL, corpar = NULL,
             groups = NULL, V = NULL, alpha = 0.1, N = 1000, mu = NULL,
             mask = NULL)
   {
-    require(nlme)
+    # require(nlme)
     x = Z$x
     y = Z$y
     Y = Z$z
@@ -114,9 +113,9 @@ MB_ = function (x, y, R, N = 1000)
 ###################################
 #Plotting
 ###################################
-library(fields)
-library(maps)
-data(worldMapEnv)
+# library(fields)
+# library(maps)
+# data(worldMapEnv)
 
 #Functions
 ##################################

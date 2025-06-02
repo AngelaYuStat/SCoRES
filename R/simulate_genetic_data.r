@@ -1,8 +1,7 @@
 #####
 # function for method 2 of simulating data
-
 ar1_cor <- function(n, rho) {
-  exponent <- abs(matrix(1:n - 1, nrow = n, ncol = n, byrow = TRUE) - 
+  exponent <- abs(matrix(1:n - 1, nrow = n, ncol = n, byrow = TRUE) -
                     (1:n - 1))
   rho^exponent
 }
@@ -25,9 +24,9 @@ simulateData <- function(M, N.ipd, betas.sim,SIGMA) {
   # betas <- betas.ipd.marg
   # r.ipd.joint <- summary(lm(Y.ipd ~ G.ipd[,1:5]))$coef
   # betas.ipd.joint <- r.ipd.joint[2:(1+5),1]
-  
+
   # # reference data
-  # G.u <-rmvnorm(N.ref, sigma=SIGMA) 
+  # G.u <-rmvnorm(N.ref, sigma=SIGMA)
   # W <- lapply(1:M, FUN=function(m) { ifelse(G.u[,m] > c2[m], 2, ifelse(G.u[,m]<c0[m], 0,1)) })
   # W <- do.call(cbind, W)
   return(list(Y=Y.ipd, X =G.ipd, betas_margin = betas.ipd.marg, sd_margin = se.ipd.marg)) # Edit: Return trait variance
@@ -35,15 +34,15 @@ simulateData <- function(M, N.ipd, betas.sim,SIGMA) {
 
 
 # library(tidyverse)
-# 
+#
 # ########################################################
-# # Section 0: Specify parameters for the simulation 
+# # Section 0: Specify parameters for the simulation
 # ########################################################
-# 
+#
 # # Define causal IDs and correlation structure IDs to iterate
 # N_SNP = 100    # Total number of SNPs
 # block_size = 10    # Block size of LD matrix
-# 
+#
 # # Initiate the Causal index
 # N_Causal = 1
 # if(N_Causal != 0){
@@ -51,17 +50,17 @@ simulateData <- function(M, N.ipd, betas.sim,SIGMA) {
 # }else{
 #   Causal_ID = NULL
 # }
-# 
+#
 # # Initiate the number of studies per ethnic group/population
 # N_Study_PerPop = 1
 # Cor_ID = c(rep(1,N_Study_PerPop),rep(2,N_Study_PerPop),rep(3,N_Study_PerPop))
-# 
-# # Specify LD correlation 
+#
+# # Specify LD correlation
 # LD_corr = 0.9
-# 
+#
 # # Number of subjects of each population
 # Sample_Size_Scenario = "Balanced"
-# 
+#
 # if(Sample_Size_Scenario == "Balanced"){
 #   N_Sample_Per_Study = as.integer(15000/N_Study_PerPop)
 #   N_Sample = c(rep(N_Sample_Per_Study,N_Study_PerPop),rep(N_Sample_Per_Study,N_Study_PerPop),rep(N_Sample_Per_Study,N_Study_PerPop))
@@ -72,26 +71,26 @@ simulateData <- function(M, N.ipd, betas.sim,SIGMA) {
 #     stop("N_Study_PerPop != 3. Please change N_Sample so that they sum up to 45,000.")
 #   }
 # }
-# 
-# 
-# # Number of replications 
+#
+#
+# # Number of replications
 # N_Rep = 500
 # # Starting point of replication
 # Start_Rep = 1
-# 
-# # Set the effect size 
+#
+# # Set the effect size
 # Effect_size = 0.01
-# 
-# # Set the p-value cutoff for index selection 
+#
+# # Set the p-value cutoff for index selection
 # ## final cutoff would be Bonp/N_SNP
 # Bonp <-  0.05
-# 
-# # The name of populations 
+#
+# # The name of populations
 # N_Study = length(Cor_ID)
 # StudyName = paste("S",c(1:N_Study),sep="")
-# 
-# 
-# 
+#
+#
+#
 # ##############################################################################
 # # Section 1: This script is to simulate dosage and generate marginal results
 # ##############################################################################
@@ -112,8 +111,8 @@ simulateData <- function(M, N.ipd, betas.sim,SIGMA) {
 # #     Cor3[(Causal_ID[i]+1):(Causal_ID[i]+N_LD)] = LD_corr
 # #   }
 # # }
-# 
-# 
+#
+#
 # # CAUTION!
 # # Construct a conversion vector that stores the beta required in the linear regression to generate SNPs with desired correlation
 # # Desired correlationis a vector from 0 to 0.9 with 0.1 space between each pair
@@ -137,7 +136,7 @@ simulateData <- function(M, N.ipd, betas.sim,SIGMA) {
 #   # Iterate through all populations
 #   #################################
 #   for (e in 1:N_Study){
-#     
+#
 #     ##### METHOD 1 of simulating data ######
 #     ## Repeatedly generate dosages until the cholesky decomposition is possible
 #     itr = 0
@@ -182,7 +181,7 @@ simulateData <- function(M, N.ipd, betas.sim,SIGMA) {
 #     #######
 #     # Output the dosage to desired location
 #     write.table(Dosage,paste(Dosage_Dir,Dosage_FileName[e],sep=""),quote=F,sep="\t",row.name=F,col.name=T,append=F)
-# 
+#
 #     ######################
 #     ## --- Simulate continuous outcome based on selected causal SNP
 #     Beta = rep(0, N_SNP)
@@ -190,16 +189,16 @@ simulateData <- function(M, N.ipd, betas.sim,SIGMA) {
 #     X_cent <- scale(Dosage, center = TRUE, scale = FALSE)
 #     Y <- rnorm(N_Sample[e], mean=X_cent%*%Beta, sd = 1)
 #     Y_cent <- scale(Y, center = TRUE, scale = FALSE)
-# 
+#
 #     # Output the dosage to desired location
 #     write.table(Y_cent,paste(Dosage_Dir,Y_FileName[e],sep=""),quote=F,sep="\t",row.name=F,col.name=F,append=F)
-# 
+#
 #     ## --- Get summary statistics
 #     temp_Marg_Output <- susieR::univariate_regression(X_cent, Y)
 #     temp_MAF_Output <- colMeans(Dosage)/2
 #     Marg_Output <- cbind(Marg_Output, temp_Marg_Output$betahat, temp_Marg_Output$sebetahat)
 #     MAF_Output <- cbind(MAF_Output, temp_MAF_Output)
-# 
+#
 #     # Marg_p = 2*pnorm(abs( temp_Marg_Output$betahat/temp_Marg_Output$sebetahat), lower.tail = F)
 #   }
 #   # Output the Marginal results for all populations

@@ -10,4 +10,26 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports: 
     dplyr,
-    nlme
+    fields,
+    forcats,
+    ggplot2,
+    ggpubr,
+    graphics,
+    grDevices,
+    magrittr,
+    maps,
+    MASS,
+    metR,
+    mgcv,
+    mvtnorm,
+    nlme,
+    patchwork,
+    reshape,
+    stats,
+    tibble,
+    Matrix,
+    matrixStats,
+    abind
+Depends: 
+    R (>= 3.5)
+LazyData: true
