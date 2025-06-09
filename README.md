@@ -1,22 +1,38 @@
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # invSCI
 
-<!-- badges: start -->
-
-[![Codecov test coverage](https://codecov.io/)](https://codecov.io/)
-<!-- badges: end -->
-
 ### What it does
 
 |  |
-|----|
+|-----------------|
 | The identification of domain sets whose outcomes belong to predefined subsets can address fundamental risk assessment challenges in climatology and medicine. A motivating example involves estimating geographical regions where average difference between summer and winter temperatures exceed a certain benchmark, which help policymakers focus on specific areas that are at higher risk for effects of climate change. |
-| Mathematically, the target region correspond to the inverse image of $U \subset  \mathbb{R}$ under an unknown function $\mu: \mathcal{S} \to \mathbb{R}$, can be defined as $\mu^{-1}(U) = \{s \in S: \mu(s) \in U\}$, with $U$ a pre-specified subset of a real line $\mathbb{R}$ (e.g., $[c, \infty)$). |
-| A point estimator for the inverse set can be constructed as $\hat{\mu}_n^{-1}(U)$, where $\hat{\mu}_n$ is an empirical estimator of $\mu$ based on $n$ observations. To quantify the spatial uncertainty of this estimation, Sommerfeld et al. (2018) introduced Coverage Probability Excursion (CoPE) sets, defined as:  which satisfy:  for a pre-specified confidence level $1-\alpha$ (e.g., $\alpha = 0.05$). |
-| Existing approaches require restrictive assumptions, including domain density of $S$ in $R$, continuity of $\hat{\mu}_n$ and $\mu$ near thresholds, and large-sample guarantees, which limit the applicability. Besides, the estimation and coverage depend on setting a fixed threshold level, which is difficult to determine. |
-| Ren et al. (2023) proposed a framework that generalizes the estimation of such inverse sets to dense and non-dense domains with protection against inflated Type I error, and constructs multiple upper, lower or interval confidence sets of $\mu^{-1}(U)$ over arbitrary chosen thresholds. The coverage probability is achieved non-asymptotically and simultaneously through inverting simultaneous confidence intervals. For instance, suppose we are interested in inverse set $\mu^{-1}([c,\infty))$ for a single value $c$, the inverse confidence sets (CSs) are constructed by inverting simultaneous confidence intervals (SCIs). Given SCI bounds $\hat{B}_{l}(\boldsymbol{s})$ and $\hat{B}_{u}(\boldsymbol{s})$ satisfying:  the inner and outer CSs for the inverse upper excursion set $\mu^{-1}[c,\infty)$ are defined as:  For details on the estimation of inverse lower excursion set and inverse interval set, see the corresponding package vignette. This package provides useful statistical tools for both the estimation of the inverse set and the corresponding simultaneous confidence intervals. Acceptable forms of input includes both 1D and 2D data for linear regression, logistic regression, functional regression and so on. More details can be found below. |
+| Mathematically, the target region correspond to the inverse image of *U* ⊂ ℝ under an unknown function *μ* : 𝒮 → ℝ, can be defined as *μ*<sup>−1</sup>(*U*) = {*s* ∈ *S* : *μ*(*s*) ∈ *U*}, with *U* a pre-specified subset of a real line ℝ (e.g., \[*c*, ∞)). |
+| A point estimator for the inverse set can be constructed as *μ̂*<sub>*n*</sub><sup>−1</sup>(*U*), where *μ̂*<sub>*n*</sub> is an empirical estimator of *μ* based on *n* observations. To quantify the spatial uncertainty of this estimation, Sommerfeld et al. (2018) introduced Coverage Probability Excursion (CoPE) sets, defined as: 
+CS<sub>in</sub>(*U*) ⊆ *μ*<sup>−1</sup>(*U*) ⊆ CS<sub>out</sub>(*U*)
+ which satisfy: 
+ℙ(CS<sub>in</sub>(*U*) ⊆ *μ*<sup>−1</sup>(*U*) ⊆ CS<sub>out</sub>(*U*)) ≥ 1 − *α*
+ for a pre-specified confidence level 1 − *α* (e.g., *α* = 0.05). |
+| Existing approaches require restrictive assumptions, including domain density of *S* in *R*, continuity of *μ̂*<sub>*n*</sub> and *μ* near thresholds, and large-sample guarantees, which limit the applicability. Besides, the estimation and coverage depend on setting a fixed threshold level, which is difficult to determine. |
+| Ren et al. (2023) proposed a framework that generalizes the estimation of such inverse sets to dense and non-dense domains with protection against inflated Type I error, and constructs multiple upper, lower or interval confidence sets of *μ*<sup>−1</sup>(*U*) over arbitrary chosen thresholds. The coverage probability is achieved non-asymptotically and simultaneously through inverting simultaneous confidence intervals. For instance, suppose we are interested in inverse set *μ*<sup>−1</sup>(\[*c*, ∞)) for a single value *c*, the inverse confidence sets (CSs) are constructed by inverting simultaneous confidence intervals (SCIs). Given SCI bounds *B̂*<sub>*l*</sub>(**s**) and *B̂*<sub>*u*</sub>(**s**) satisfying: 
+ℙ(∀**s** ∈ 𝒮 : *B̂*<sub>*l*</sub>(**s**) ≤ *μ*(**s**) ≤ *B̂*<sub>*u*</sub>(**s**)) = 1 − *α*
+ The inner and outer CSs for the inverse upper excursion set *μ*<sup>−1</sup>\[*c*, ∞) are defined as: 
+$$
+\text{CS}\_{\text{in}}\[c,\infty) &:= \\\boldsymbol{s} \in \mathcal{S} \mid \hat{B}\_{l}(\boldsymbol{s}) \geq c\\
+$$
+ 
+$$
+\text{CS}\_{\text{out}}\[c,\infty) &:= \\\boldsymbol{s} \in \mathcal{S} \mid \hat{B}\_{u}(\boldsymbol{s}) \geq c\\
+$$ |
+| The outer and inner confidence sets (CSs) for the inverse lower excursion set $ ^{-1}(-, c\]$ are defined as: 
+CS<sub>in</sub>(−∞, *c*\] := *B̂*<sub>*u*</sub><sup>−1</sup>(−∞, *c*\] =  = {*B̂*<sub>*u*</sub><sup>−1</sup>\[*c*, +∞)}<sup>∁</sup>
+ 
+CS<sub>out</sub>(−∞, *c*\] := *B̂*<sub>ℓ</sub><sup>−1</sup>(−∞, *c*\] = {*B̂*<sub>ℓ</sub><sup>−1</sup>\[*c*, +∞)}<sup>∁</sup>
+ The inner and outer CSs for the inverse interval set $ ^{-1}\[a, b\]$ are defined as: 
+CS<sub>in</sub>\[*a*, *b*\] := *B̂*<sub>ℓ</sub><sup>−1</sup>\[*a*, ∞) ∩ *B̂*<sub>*u*</sub><sup>−1</sup>(−∞, *b*\]
+ 
+CS<sub>out</sub>\[*a*, *b*\] := *B̂*<sub>*u*</sub><sup>−1</sup>\[*a*, ∞) ∩ *B̂*<sub>ℓ</sub><sup>−1</sup>(−∞, *b*\] |
+| This package provides useful statistical tools for both the estimation of the inverse set and the corresponding simultaneous outer and inner confidence sets (CSs). Acceptable forms of input includes both 1D and 2D data for linear regression, logistic regression, and functional regression. More details can be found below. |
 | \### Installation |
 
 To install from `CRAN`, please use:
@@ -36,8 +52,9 @@ devtools::install_github("AngelaYuStat/invSCI")
 
 ------------------------------------------------------------------------
 
-The first example here is to use ccds data to construct the inverse
-confidence sets (CS) from simultaneous confidence bands (SCB).
+The first example here is to use ccds functional data to construct the
+inverse confidence sets (CS) from simultaneous confidence bands (SCB)
+using Function-on-Scalar Regression (FoSR).
 
 The ccds dataset contains repeated measures of percent change over time
 for multiple subjects under two user categories (use: 1 and no use: 0).
@@ -65,7 +82,7 @@ variation.
 
 ``` r
 data(ccds)
-ccds_fpca <- prepare_ccds_fpca(ccds)
+ccds_fpca <- invSCI::prepare_ccds_fpca(ccds)
 fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
             s(seconds, by = use, k=30, bs = "cr") +
             s(subject, by = Phi1, bs="re") +
@@ -86,134 +103,67 @@ scalar group variables. Here, we analyze the user group by specifying
 
 ``` r
 # CMA approach
-results <- SCB_functional_outcome(object = fosr_mod, method = "cma", est_mean = TRUE, outcome = "percent_change", time = "seconds", groups = "use", subject = "subject")
+results <- invSCI::SCB_functional_outcome(data = ccds,object = fosr_mod, method = "cma", est_mean = TRUE, alpha = 0.05, outcome = "percent_change", time = "seconds", group_name = "use", group_value = 1, subject = "subject")
 
-# Wild bootstrap
-results <- SCB_functional_outcome(data = ccds, object = fosr_mod, method = "wild", est_mean = TRUE, outcome = "percent_change", time = "seconds", groups = "use", subject = "subject")
+# Multiplier-t Bootstrap
+results <- invSCI::SCB_functional_outcome(data = ccds, object = fosr_mod, method = "wild", est_mean = TRUE, alpha = 0.05, outcome = "percent_change", time = "seconds", group_name = "use", group_value = 1, subject = "subject")
 ```
 
 The followings are the mathematical details:
 
 #### Correlation and Multiplicity Adjusted (CMA) Confidence Bands Based on Parameter Simulations
 
-Our goal is to obtain the quantile via simulations
+1.  Simulate model parameters
+    $\boldsymbol{\beta}\_1, \ldots, \boldsymbol{\beta}\_B \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\hat{\boldsymbol{\beta}}, \hat{V}\_{\boldsymbol{\beta}})$,
+    where $\hat{\boldsymbol{\beta}}, \hat{V}\_{\boldsymbol{\beta}}$ are
+    estimated via a fitted FoSR model.
 
-$$
-q(C_f, 1 - \alpha),
-$$
+2.  For each *b* = 1, …, *B*, compute
+    $$
+    \mathbf{X}\_b = \frac{\mathbf{B}(\boldsymbol{\beta}\_b - \hat{\boldsymbol{\beta}})}{\mathbf{D}\_f},
+    $$
+    where the division is element-wise and **B** maps parameters to
+    functional effects.
 
-which is the $1 - \alpha$ quantile of
+3.  Let
+    *d*<sub>*b*</sub> = max (\|**X**<sub>*b*</sub>\|),  *b* = 1, …, *B*,
+    where the absolute value is taken element-wise.
 
-$$
-\frac{\|\hat{\mathbf{f}} - \mathbf{f}\|}{\mathbf{D}_f},
-$$
+4.  Estimate *q*(*C*<sub>*f*</sub>, 1 − *α*) as the 100 ⋅ (1 − *α*)
+    percentile of {*d*<sub>1</sub>, …, *d*<sub>*B*</sub>}.
 
-where $\hat{\mathbf{f}}$ is the estimated functional effect,
-$\mathbf{f}$ is the true effect, and $\mathbf{D}_f$ is a standard
-deviation vector. The distribution of this quantity is assumed to be
-multivariate normal:
+#### Multiplier-t Bootstrap Procedure for Constructing Confidence Bands
 
-$$
-\frac{\hat{\mathbf{f}} - \mathbf{f}}{\mathbf{D}_f} \sim \mathcal{N}(0_n, C_f),
-$$
+1.  Compute residuals
+    *R*<sub>1</sub><sup>*N*</sup>, …, *R*<sub>*N*</sub><sup>*N*</sup>,
+    where
+    $R_n^N = \sqrt{\frac{N}{N - 1}} \left( Y_n - \hat{\mu}\_N \right)$,
+    and multipliers $g_1, \ldots, g_N \overset{\text{i.i.d.}}{\sim} g$
+    with 𝔼\[*g*\] = 0 and var\[*g*\] = 1.
 
-where $C_f$ is a known covariance matrix.
+2.  Estimate *ϵ̂*<sub>*N*</sub><sup>\*</sup>(*s*) from
+    *g*<sub>1</sub>*Y*<sub>1</sub>(*s*), …, *g*<sub>*N*</sub>*Y*<sub>*N*</sub>(*s*).
 
-To approximate this, we generate $B$ simulated vectors
-$\mathbf{X}_1, \dots, \mathbf{X}_B \sim \mathcal{N}(0_n, C_f)$, and
-define:
+3.  Compute
+    $$
+    T^\*(s) = \frac{1}{\sqrt{N}} \sum\_{n=1}^N g_n \frac{R_n^N(s)}{\hat{\epsilon}\_N^\*(s)}.
+    $$
 
-$$
-d_b = \max(|\mathbf{X}_b|), \quad b = 1, \dots, B,
-$$
+4.  Repeat steps 1 to 3 many times. Take the (1 − *α*) ⋅ 100% quantile
+    of ℒ<sup>\*</sup> to estimate *q*<sub>*α*, *N*</sub>.
 
-where $|\mathbf{X}_b|$ is the element-wise absolute value. Then the
-estimate of $q(C_f, 1 - \alpha)$ is the $100 \times (1 - \alpha)$-th
-percentile of $\{d_1, \dots, d_B\}$.
+For details of the algorithm, please refer to Telschow et al. (2019)
 
-However, directly sampling from a high-dimensional normal distribution
-can be computationally expensive. To avoid this, we use the fact that we
-can simulate from a lower-dimensional distribution of the parameters:
-
-$$
-\boldsymbol{\beta}_1, \dots, \boldsymbol{\beta}_B \sim \mathcal{N}(\hat{\boldsymbol{\beta}}, \hat{V}_{\boldsymbol{\beta}}),
-$$
-
-where $\boldsymbol{\beta}$ are the model parameters, and $\mathbf{B}$ is
-the matrix mapping $\boldsymbol{\beta}$ to $\mathbf{f}$. We define:
-
-$$
-\mathbf{X}_b = \frac{\mathbf{B}(\boldsymbol{\beta}_b - \hat{\boldsymbol{\beta}})}{\mathbf{D}_f},
-$$
-
-where the division is element-wise. Then the $\mathbf{X}_b$ are
-approximately distributed as $\mathcal{N}(0_n, C_f)$.
-
-#### Non-parametric Wild Bootstrap Procedure for Constructing Confidence Bands
-
-## 2.1 A bootstrap procedure for the mean function
-
-Let $Y_i(s)$ denotes the functional response. The estimation of the mean
-function at $s$ is $\hat{\beta}(s)$. Let $q_{\alpha, N}$ be the
-$(1 - \alpha)$th quantile for the random variable
-
-$$
-M_N = \max_{j \in \Lambda_N} \frac{|\hat{\beta}(s_j) - \beta(s_j)|}{\text{se}(\hat{\beta}(s_j))}
-$$
-
-where
-
-$$
-\text{se}(\hat{\beta}(s_j)) = \sqrt{ \frac{1}{n} \sum_{i=1}^n \left( \tilde{Y}_i(s_j) - \hat{\beta}(s_j) \right)^2 / (n-1) }.
-$$
-
-Since $q_{\alpha, N}$ satisfies
-
-$$
-P\left( \frac{|\hat{\beta}(s_j) - \beta(s_j)|}{\text{se}(\hat{\beta}(s_j))} \le q_{\alpha, N},\ \forall j \in \Lambda_N \right) = 1 - \alpha,
-$$
-
-then
-$\hat{\beta}(s_j) \pm q_{\alpha, N} \times \text{se}(\hat{\beta}(s_j))$
-is clearly the $100(1 - \alpha)\%$ simultaneous confidence band (SCB)
-for $\{ \beta(s_j), j \in \Lambda_N \}$. Therefore, if we can estimate
-the distribution of $M_N$, we can readily obtain an estimate of the SCB.
-
-A wild bootstrap proposed by Chang et al. (2017) to estimate the
-distribution of $M_N$ is as follows:
-
-**(1)** Given $\tilde{Y}_1, \ldots, \tilde{Y}_n$, compute the estimated
-mean function $\hat{\beta}(s_j)$ for each $j$ and calculate the residual
-functions
-$e_i(s_j) = \tilde{Y}_i(s_j) - \hat{\beta}(s_j),\ \forall j = 1, \ldots, N$.
-
-**(2) Resampling step:**
-
-- **(2.1)** For each bootstrap sample $b = 1, \ldots, B$, randomly
-  generate i.i.d. multipliers $c_1(b), \ldots, c_n(b)$ from a
-  distribution with mean zero and variance one.
-
-- **(2.2)** For each $b, i$, generate the sample
-  $\tilde{Y}_i^{b}(s_j) = \hat{\beta}(s_j) + c_i(b)e_i(s_j)$, calculate
-  the bootstrapped mean function at each $s_j$,
-  $\hat{\beta}^b(s_j) = \frac{1}{n} \sum_{i=1}^n \tilde{Y}_i^b(s_j)$,
-  and the bootstrapped version of $M_N$,
-  $M_N^b = \max_{j=1, \ldots, N} \frac{|\hat{\beta}^b(s_j) - \hat{\beta}(s_j)|}{\text{se}(\hat{\beta}(s_j))}$.
-
-**(3)** Choose the $(1 - \alpha)$ sample quantile,
-$\hat{q}_{\alpha, N}$, for $\{ M_N^1, \ldots, M_N^B \}$ as an
-approximation of the $(1 - \alpha)$th quantile $q_{\alpha, N}$ of $M_N$.
-
-`invSCI` provides two options for estimating the mean function at $s$,
-denoted as $\hat{\beta}(s)$. If `est_mean = TRUE`, the mean function
-will be estimated though using the fitted regression object. If
+`invSCI` provides two options for estimating the mean function at *s*,
+denoted as *μ̂*<sub>*N*</sub>(*s*) . If `est_mean = TRUE`, the mean
+function will be estimated though using the fitted regression object. If
 `est_mean = FALSE`, sample mean will be calculated. Default is `FALSE`.
 
 1.  The **sample mean**:  
     $$
-    \hat{\beta}(s) = \frac{1}{n} \sum_{i=1}^n \tilde{Y}_i(s),
-    $$ where $\tilde{Y}_i(s)$ is a smoothed version of the observed
-    functional response.
+    \hat{\mu}\_N(s) = \frac{1}{N} \sum\_{i=1}^N \tilde{Y}\_i(s),
+    $$
+    where *Ỹ*<sub>*i*</sub>(*s*) is the observed functional response.
 
 2.  The **fitted mean value** from a functional regression model (e.g.,
     using `mgcv::bam`).
@@ -221,26 +171,30 @@ will be estimated though using the fitted regression object. If
 In the wild bootstrap procedure, `invSCI` supports three types of
 multiplier distributions, which is specified by `weights`:
 
-- `"rademacher"`: $c_i \in \{-1, +1\}$ with equal probability
-- `"gaussian"`: $c_i \sim \mathcal{N}(0, 1)$
-- `"mammen"`: A two-point distribution with mean zero and variance one
-  (see Mammen, 1993)
+-   `"rademacher"`: *g*<sub>*i*</sub> ∈ {−1, +1} with equal probability
+-   `"gaussian"`: *g*<sub>*i*</sub> ∼ 𝒩(0, 1)
+-   `"mammen"`: A two-point distribution with mean zero and variance one
+    (see Mammen, 1993)
 
 Default is `rademache`.
 
 Two options are available for estimating the standard error
-$\text{se}(\hat{\beta}(s_j))$, which is specified by `method_SD`:
+*ϵ̂*<sub>*N*</sub><sup>\*</sup>(*s*<sub>*j*</sub>), which is specified by
+`method_SD`:
 
-- “regular” (empirical standard error based on residuals): $$
-  \text{se}(\hat{\beta}(s_j)) = \sqrt{ \frac{1}{n} \sum_{i=1}^n \left( \tilde{Y}_i(s_j) - \hat{\beta}(s_j) \right)^2 / (n-1) }.
-  $$
+-   “regular” (empirical standard error based on residuals):
+    $$
+    \hat{\epsilon}\_N^\*(s_j) = \sqrt{ \frac{1}{n} \sum\_{i=1}^n \left( \tilde{Y}\_i(s_j) - \hat{\beta}(s_j) \right)^2 / (n-1) }.
+    $$
 
-- “t” (bootstrap second moment-based estimator): $$
-  \text{se}(\hat{\beta}(s_j)) = \sqrt{ \frac{N}{N-1} \left| \mathbb{E}_b\left[ \tilde{Y}^{b}(s_j)^2 \right] - \left( \mathbb{E}_b\left[ \tilde{Y}^{b}(s_j) \right] \right)^2 \right| },
-  $$ where expectations are taken over bootstrap replicates and
-  $\tilde{Y}^{b}(s_j)$ is the perturbed sample in bootstrap iteration
-  $b$. The absolute value ensures numerical stability when subtracting
-  large, nearly equal quantities.
+-   “t” (bootstrap second moment-based estimator):
+    $$
+    \hat{\epsilon}\_N^\*(s_j) = \sqrt{ \frac{N}{N-1} \left\| \mathbb{E}\_b\left\[ \tilde{Y}^{b}(s_j)^2 \right\] - \left( \mathbb{E}\_b\left\[ \tilde{Y}^{b}(s_j) \right\] \right)^2 \right\| },
+    $$
+    where expectations are taken over bootstrap replicates and
+    *Ỹ*<sup>*b*</sup>(*s*<sub>*j*</sub>) is the perturbed sample in
+    bootstrap iteration *b*. The absolute value ensures numerical
+    stability when subtracting large, nearly equal quantities.
 
 Default is `t`.
 
@@ -249,17 +203,17 @@ from SCB results using the `invSCI::plot_cs()` function. The `results`
 object is first converted to a tibble for easier manipulation.
 
 The `levels = c(-7, -8, -9, -10)` argument specifies a set of
-thresholds, `invSCI::plot_cs()` function estimates multiple inverse
+thresholds, and `invSCI::plot_cs()` function estimates multiple inverse
 upper excursion sets corresponding to these thresholds, and plot the
 estimated inverse set, the inner confidence set, and the outer
 confidence set.
 
 ``` r
 results <- tibble::as_tibble(results)
-plot_cs(results,levels = c(-7, -8,-9,-10), x = results$time, mu_hat = results$yhat, xlab = "", ylab = "", level_label = T, min.size = 40, palette = "Spectral", color_level_label = "black")
+plot_cs(results,levels = c(-7, -8, -9, -10), x = results$time, mu_hat = results$yhat, xlab = "", ylab = "", level_label = T, min.size = 40, palette = "Spectral", color_level_label = "black")
 ```
 
-![](README_files/figure-gfm/ccds%20plot%20cs-1.png)<!-- -->
+![](README_files/figure-markdown_github/ccds_plot_cs-1.png)
 
 The plot demonstrate how to use SCB to find regions of s where the
 estimated mean is greater than or equal to the four levels -7, -8, -9,
@@ -272,3 +226,49 @@ mean is greater than the corresponding levels); the outer confidence
 sets are the union of the blue, yellow and red line (where the upper SCB
 is greater than the corresponding levels) and contain both the estimated
 inverse sets and the inner confidence sets
+
+------------------------------------------------------------------------
+
+The second example here is to use simulated data to construct the
+inverse confidence sets (CS) from simultaneous confidence bands (SCB)
+using linear regression.
+
+`invSCI::SCB_linear_outcome()` function use a non-parametric bootstrap
+algorithm to construct the SCB in linear regression. The argument
+`df_fit` specifies a data frame containing the training design matrix
+used to fit the linear model, while `grid_df` contains the test set
+design matrix for constructing SCB. Use argument `model` to specify the
+formula used for fitting the linear model.
+
+``` r
+library(invSCI)
+# generate simulated data
+x1 <- rnorm(100)
+x2 <- rnorm(100)
+epsilon <- rnorm(100,0,sqrt(2))
+y <- -1 + x1 + 0.5 * x1^2 - 1.1 * x1^3 - 0.5 * x2 + 0.8 * x2^2 - 1.1 * x2^3 + epsilon
+df <- data.frame(x1 = x1, x2 = x2, y = y)
+grid <- data.frame(x1 = seq(-1, 1, length.out = 100), x2 = seq(-1, 1, length.out = 100))
+# fit the linear regression model and obtain the SCB for y
+model <- "y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"
+results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
+```
+
+Likewise, the `levels = c(-0.3, 0, 0.3)` argument specifies a set of
+thresholds, and `invSCI::plot_cs()` function estimates multiple inverse
+upper excursion sets corresponding to these thresholds, and plot the
+estimated inverse set, the inner confidence set, and the outer
+confidence set.
+
+``` r
+results <- tibble::as_tibble(results)
+plot_cs(results,levels = c(-0.3, 0, 0.3), x = seq(-1, 1, length.out = 100), mu_hat = results$Mean, xlab = "", ylab = "", level_label = T, min.size = 40, palette = "Spectral", color_level_label = "black")
+```
+
+![](README_files/figure-markdown_github/simulate_plot_cs-1.png)
+
+In addition to linear regression, `invSCI` also
+provides`invSCI::SCB_logistic_outcome()` for estimating the SCB for
+outcome of logistic regression, and `invSCI::SCB_regression_coef`can
+estimate the SCB for every coefficient in the linear/logistic model. For
+details, please refer to the corresponding package vignette.

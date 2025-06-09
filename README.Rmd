@@ -1,5 +1,7 @@
 ---
-output: html_document
+output: 
+  md_document:
+    variant: markdown_github
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -63,6 +65,7 @@ The inner and outer CSs for the inverse interval set $ \mu^{-1}[a, b]$ are defin
 \]
 
 This package provides useful statistical tools for both the estimation of the inverse set and the corresponding simultaneous outer and inner confidence sets (CSs). Acceptable forms of input includes both 1D and 2D data for linear regression, logistic regression, and functional regression. More details can be found below.
+
 
 ### Installation
 
