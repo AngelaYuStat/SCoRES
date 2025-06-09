@@ -1,4 +1,4 @@
-#' Construct Confidence Sets from Simultaneous Confidence Bands
+#' Construct Inverse Confidence Sets from Simultaneous Confidence Bands
 #'
 #' This function constructs inverse confidence sets (CS) from simultaneous confidence bands (SCB),
 #' allowing visualization and containment check of level sets of true or estimated functions.

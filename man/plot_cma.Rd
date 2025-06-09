@@ -46,7 +46,19 @@ and legend display.
 }
 \examples{
 
-data(ccds_cma)
+# example using ccds data
+data(ccds)
+ccds_fpca <- prepare_ccds_fpca(ccds)
+
+fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
+  s(seconds, by = use, k=30, bs = "cr") +
+  s(subject, by = Phi1, bs="re") +
+  s(subject, by = Phi2, bs="re")+
+  s(subject, by = Phi3, bs="re") +
+  s(subject, by = Phi4, bs="re"),
+  method = "fREML", data = ccds_fpca, discrete = TRUE)
+
+ccds_cma <- cma(fosr_mod, time = "seconds", groups = "use", subject = "subject")
 ccds_cma <- tibble::as_tibble(ccds_cma)
 plot_cma(ccds_cma, xlab = "Time (s)", ylab = "Mean",
          line_color = "blue", ci_color = "gray", ci_linetype = "dotted",

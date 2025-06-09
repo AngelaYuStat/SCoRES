@@ -30,9 +30,9 @@ This allows SCBs to be constructed on a denser or alternative set of covariate v
 \value{
 A data frame with the following columns:
 \describe{
-\item{LowerBound}{Lower bound of the simultaneous confidence band.}
+\item{scb_low}{Lower bound of the simultaneous confidence band.}
 \item{Mean}{Predicted mean response from the fitted model.}
-\item{UpperBound}{Upper bound of the simultaneous confidence band.}
+\item{scb_up}{Upper bound of the simultaneous confidence band.}
 \item{...}{All columns from \code{grid_df}, representing the prediction grid.}
 }
 }
@@ -44,10 +44,11 @@ using a non-parametric bootstrap method for the mean outcome of regression on a 
 set.seed(262)
 x1 <- rnorm(100)
 x2 <- rnorm(100)
-y <- -1 + x1 + 0.5 * x1^2 - 1.1 * x1^3 - 0.5 * x2 + 0.8 * x2^2 - 1.1 * x2^3 - rnorm(100,0,sqrt(2))
+epsilon <- rnorm(100,0,sqrt(2))
+y <- -1 + x1 + 0.5 * x1^2 - 1.1 * x1^3 - 0.5 * x2 + 0.8 * x2^2 - 1.1 * x2^3 + epsilon
 df <- data.frame(x1 = x1, x2 = x2, y = y)
 grid <- data.frame(x1 = seq(-1, 1, length.out = 100), x2 = seq(-1, 1, length.out = 100))
 model <- "y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"
-SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
+results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
 
 }

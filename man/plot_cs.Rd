@@ -56,9 +56,24 @@ Supports plotting CSs at multiple levels and labeling contours.
 }
 \examples{
 
-data(ccds_cma)
+# example using ccds data
+data(ccds)
+ccds_fpca <- prepare_ccds_fpca(ccds)
 
-plot_cs(ccds_cma,levels = c(-7, -8,-9,-10), x = ccds_cma$time, mu_hat = ccds_cma$yhat,
+fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
+  s(seconds, by = use, k=30, bs = "cr") +
+  s(subject, by = Phi1, bs="re") +
+  s(subject, by = Phi2, bs="re")+
+  s(subject, by = Phi3, bs="re") +
+  s(subject, by = Phi4, bs="re"),
+  method = "fREML", data = ccds_fpca, discrete = TRUE)
+
+ccds_cma <- SCB_functional_outcome(data = ccds_fpca, object = fosr_mod, method = "cma",
+                                   est_mean = TRUE, outcome = "percent_change",
+                                   time = "seconds", group_name = "use", group_value = 1, subject = "subject")
+ccds_cma <- tibble::as_tibble(ccds_cma)
+
+plot_cs(ccds_cma,levels = c(-7, -8, -9, -10), x = ccds_cma$time, mu_hat = ccds_cma$yhat,
         xlab = "", ylab = "", level_label = T, min.size = 40, palette = "Spectral",
         color_level_label = "black")
 }

@@ -3,7 +3,7 @@
 \docType{data}
 \name{ccds}
 \alias{ccds}
-\title{Cleaned CCDS dataset (Right Eye, Post Timepoint)}
+\title{Load Raw ccds longitudinal data from clinical study and Clean the dataset (Right Eye, Post Timepoint)}
 \format{
 A tibble with N rows and 4 variables:
 \describe{
@@ -15,14 +15,16 @@ A tibble with N rows and 4 variables:
 }
 }
 \source{
-Processed from \code{data-raw/ccds_preprocess.R} using the \code{here} and \code{dplyr} packages.
+Processed from \code{data-raw/ccds_load.R} using the \code{here} and \code{dplyr} packages.
 }
 \usage{
 data(ccds)
 }
 \description{
-This dataset is a cleaned subset of \code{ccds_raw}, including only measurements taken from the right eye
-at the post-intervention timepoint (\code{tp == "post"}). It is preprocessed and ready for functional outcome modeling.
+This dataset contains repeated measures of percent change over time
+for multiple subjects under two use categories. It includes both user and non-user groups,
+time points, and metadata related to eye side and frame timing. cleaning process make sure that the data only includes measurements taken from the right eye
+at the post-intervention timepoint (\code{tp == "post"}).
 }
 \details{
 The data was filtered to include only right-eye measurements at the post timepoint from the original \code{ccds_raw} dataset.

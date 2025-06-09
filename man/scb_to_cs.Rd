@@ -2,7 +2,7 @@
 % Please edit documentation in R/scb_to_cs.R
 \name{scb_to_cs}
 \alias{scb_to_cs}
-\title{Construct Confidence Sets from Simultaneous Confidence Bands}
+\title{Construct Inverse Confidence Sets from Simultaneous Confidence Bands}
 \usage{
 scb_to_cs(
   scb_up,

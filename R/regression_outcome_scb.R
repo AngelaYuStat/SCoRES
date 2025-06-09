@@ -13,9 +13,9 @@
 #'
 #' @return A data frame with the following columns:
 #' \describe{
-#'   \item{LowerBound}{Lower bound of the simultaneous confidence band.}
+#'   \item{scb_low}{Lower bound of the simultaneous confidence band.}
 #'   \item{Mean}{Predicted mean response from the fitted model.}
-#'   \item{UpperBound}{Upper bound of the simultaneous confidence band.}
+#'   \item{scb_up}{Upper bound of the simultaneous confidence band.}
 #'   \item{...}{All columns from \code{grid_df}, representing the prediction grid.}
 #' }
 #'
@@ -24,13 +24,15 @@
 #'
 #' @examples
 #' set.seed(262)
+
 #' x1 <- rnorm(100)
 #' x2 <- rnorm(100)
-#' y <- -1 + x1 + 0.5 * x1^2 - 1.1 * x1^3 - 0.5 * x2 + 0.8 * x2^2 - 1.1 * x2^3 - rnorm(100,0,sqrt(2))
+#' epsilon <- rnorm(100,0,sqrt(2))
+#' y <- -1 + x1 + 0.5 * x1^2 - 1.1 * x1^3 - 0.5 * x2 + 0.8 * x2^2 - 1.1 * x2^3 + epsilon
 #' df <- data.frame(x1 = x1, x2 = x2, y = y)
 #' grid <- data.frame(x1 = seq(-1, 1, length.out = 100), x2 = seq(-1, 1, length.out = 100))
 #' model <- "y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"
-#' SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
+#' results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
 #'
 SCB_linear_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0.05, grid_df_boot = NULL){
   formula_ = as.formula(model)
@@ -51,7 +53,8 @@ SCB_linear_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0.0
     res_max_v[i] = max(residual)
   }
   thres = quantile(res_max_v, probs = 1 - alpha)
-  sim_CB = data.frame(LowerBound = y_hat$fit - thres*y_hat$se.fit, Mean = y_hat$fit, UpperBound = y_hat$fit + thres*y_hat$se.fit, grid_df)
+  sim_CB = data.frame(scb_low = y_hat$fit - thres*y_hat$se.fit, Mean = y_hat$fit, scb_up = y_hat$fit + thres*y_hat$se.fit, grid_df)
+  return(sim_CB)
 }
 
 #' Expit (inverse logit) function
@@ -83,9 +86,9 @@ expit = function(x){
 #'
 #' @return A data frame with the following columns:
 #' \describe{
-#'   \item{LowerBound}{Lower bound of the simultaneous confidence band.}
+#'   \item{scb_low}{Lower bound of the simultaneous confidence band.}
 #'   \item{Mean}{Predicted mean response from the fitted model.}
-#'   \item{UpperBound}{Upper bound of the simultaneous confidence band.}
+#'   \item{scb_up}{Upper bound of the simultaneous confidence band.}
 #'   \item{grid_df}{All columns from \code{grid_df}, representing the prediction grid.}
 #' }
 #'
@@ -96,12 +99,13 @@ expit = function(x){
 #' set.seed(262)
 #' x1 <- rnorm(100)
 #' x2 <- rnorm(100)
-#' y <- -1 + x1 + 0.5 * x1^2 - 1.1 * x1^3 - 0.5 * x2 + 0.8 * x2^2 - 1.1 * x2^3 - rnorm(100,0,sqrt(2))
+#' epsilon <- rnorm(100,0,sqrt(2))
+#' y <- -1 + x1 + 0.5 * x1^2 - 1.1 * x1^3 - 0.5 * x2 + 0.8 * x2^2 - 1.1 * x2^3 + epsilon
 #' y <- expit(y)
 #' df <- data.frame(x1 = x1, x2 = x2, y = y)
 #' grid <- data.frame(x1 = seq(-1, 1, length.out = 100), x2 = seq(-1, 1, length.out = 100))
 #' model <- "y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"
-#' SCB_logistic_outcome(df_fit = df, model = model, grid_df = grid)
+#' results <- SCB_logistic_outcome(df_fit = df, model = model, grid_df = grid)
 #'
 SCB_logistic_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0.05){
   formula_ = as.formula(model)
@@ -116,8 +120,10 @@ SCB_logistic_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0
     res_max_v[i] = max(residual)
   }
   thres = quantile(res_max_v, probs = 1 - alpha)
-  sim_CB = data.frame(LowerBound = expit(y_hat$fit - thres*y_hat$se.fit), Mean = expit(y_hat$fit),
-                      UpperBound = expit(y_hat$fit + thres*y_hat$se.fit), grid_df)
+  sim_CB = data.frame(scb_low = expit(y_hat$fit - thres*y_hat$se.fit), Mean = expit(y_hat$fit),
+                      scb_up = expit(y_hat$fit + thres*y_hat$se.fit), grid_df)
+
+  return(sim_CB)
 }
 
 #' Construct Simultaneous Confidence Bands for Regression Coefficients
@@ -133,10 +139,9 @@ SCB_logistic_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0
 #'
 #' @return A data frame with the following columns:
 #' \describe{
-#'   \item{LowerBound}{Lower bound of the simultaneous confidence band for each coefficient.}
+#'   \item{scb_low}{Lower bound of the simultaneous confidence band for each coefficient.}
 #'   \item{Mean}{Estimated value of each coefficient from the fitted model.}
-#'   \item{UpperBound}{Upper bound of the simultaneous confidence band for each coefficient.}
-#'   \item{Row names}{Correspond to the model coefficients.}
+#'   \item{scb_up}{Upper bound of the simultaneous confidence band for each coefficient.}
 #' }
 #'
 #' @import stats
@@ -156,7 +161,7 @@ SCB_logistic_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0
 #' names(df) <- paste0("x", 1:M)
 #' df$y <- as.vector(y)
 #' model <- "y ~ ."
-#' SCB_regression_coef(df, model)
+#' reults <- SCB_regression_coef(df, model)
 #'
 SCB_regression_coef = function(df_fit, model, n_boot = 5000, alpha = 0.05, type = "linear"){
   # type: "linear" or "logistic"
@@ -184,5 +189,6 @@ SCB_regression_coef = function(df_fit, model, n_boot = 5000, alpha = 0.05, type 
     res_max_v[i] = max(residual)
   }
   thres = quantile(res_max_v, probs = 1 - alpha)
-  sim_CB = data.frame(LowerBound = coef_hat - thres*coef_sd, Mean = coef_hat, UpperBound = coef_hat + thres*coef_sd)
+  sim_CB = data.frame(scb_low = coef_hat - thres*coef_sd, Mean = coef_hat, scb_up = coef_hat + thres*coef_sd)
+  return(sim_CB)
 }

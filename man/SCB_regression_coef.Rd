@@ -26,10 +26,9 @@ SCB_regression_coef(
 \value{
 A data frame with the following columns:
 \describe{
-\item{LowerBound}{Lower bound of the simultaneous confidence band for each coefficient.}
+\item{scb_low}{Lower bound of the simultaneous confidence band for each coefficient.}
 \item{Mean}{Estimated value of each coefficient from the fitted model.}
-\item{UpperBound}{Upper bound of the simultaneous confidence band for each coefficient.}
-\item{Row names}{Correspond to the model coefficients.}
+\item{scb_up}{Upper bound of the simultaneous confidence band for each coefficient.}
 }
 }
 \description{
@@ -50,6 +49,6 @@ df <- as.data.frame(X)
 names(df) <- paste0("x", 1:M)
 df$y <- as.vector(y)
 model <- "y ~ ."
-SCB_regression_coef(df, model)
+reults <- SCB_regression_coef(df, model)
 
 }

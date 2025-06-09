@@ -4,34 +4,50 @@
 \alias{SCB_dense}
 \title{Construct Simultaneous Confidence Bands (SCB) for Dense Functional Data}
 \usage{
-SCB_dense(A, mean_A = NULL, alpha_level = 0.05)
+SCB_dense(
+  A,
+  mean_A = NULL,
+  alpha = 0.05,
+  Mboots = NULL,
+  method = "t",
+  weights = "rademacher"
+)
 }
 \arguments{
-\item{A}{An array of dimension (D₁, D₂, ..., N), where N is the number of repetitions.}
+\item{A}{A data array of dimension (D₁, D₂, ..., N), where N is the number of repetition/subjects. There should be no NA in A.}
 
-\item{mean_A}{Optional array of same shape as \code{A[,,1]}, representing the mean function.}
+\item{mean_A}{Optional array of same shape as \code{A[,,1]}, representing the estimated mean of the data.}
 
-\item{alpha_level}{Significance level for SCB. Default is 0.05.}
+\item{alpha}{Significance level for SCB. Default is 0.05.}
+
+\item{Mboots}{Number of bootstrap replications. Default is 5000.}
+
+\item{method}{Method for SD estimation: "t" or "regular". Default is "t".}
+
+\item{weights}{Multiplier type: "rademacher", "gaussian", or "mammen". Default is "rademacher"."}
 }
 \value{
-A list with upper and lower SCB bounds and the threshold used.
+A list containing:
+\item{yhat}{Estimated mean function for the group of interest.}
+\item{se_hat}{Standard errors of the estimated means.}
+\item{scb_low}{Lower bound of the simultaneous confidence band.}
+\item{scb_up}{Upper bound of the simultaneous confidence band.}
+\item{type}{A character description of the output type.}
 }
 \description{
 Construct Simultaneous Confidence Bands (SCB) for Dense Functional Data
 }
 \examples{
-A <- array(rnorm(100 * 50), dim = c(100, 50))
-result <- SCB_dense(A)
 
-data(ccds_fpca)
-data(ccds_cma)
+data(ccds)
+ccds_fpca <- prepare_ccds_fpca(ccds)
 
-Y_samples <- ccds_fpca$percent_change
-n_time <- length(unique(ccds_fpca$seconds))
-n_subject <- length(Y_samples) / n_time
+Y_samples_use <- ccds_fpca$percent_change[ccds_fpca$use == 1]
+n_time <- 401
+n_subject_use <- length(Y_samples_use) / n_time
 # transform to matrix (T, N)
-Y_mat <- matrix(Y_samples, nrow = n_time, ncol = n_subject)
-Y_mat[is.na(Y_mat)] <- 0 # replace NA
-SCB_dense(Y_mat, ccds_cma$yhat)
+Y_mat_use <- matrix(Y_samples_use, nrow = n_time, ncol = n_subject_use)
+# using sample mean for bootstrap
+SCB_dense(A = Y_mat_use[-1, ])
 
 }
