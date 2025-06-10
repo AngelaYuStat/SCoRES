@@ -63,6 +63,6 @@ fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
   s(subject, by = Phi4, bs="re"),
   method = "fREML", data = ccds_fpca, discrete = TRUE)
 
-cma(ccds_fpca, fosr_mod, time = "seconds", group_name = "use", group_value = 1, subject = "subject")
+results <- cma(ccds_fpca, fosr_mod, time = "seconds", group_name = "use", group_value = 1, subject = "subject")
 
 }

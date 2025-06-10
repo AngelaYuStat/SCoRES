@@ -213,7 +213,7 @@ In the wild bootstrap procedure, `invSCI` supports three types of multiplier dis
 - `"gaussian"`: $g_i \sim \mathcal{N}(0, 1)$
 - `"mammen"`: A two-point distribution with mean zero and variance one (see Mammen, 1993)
 
-Default is `rademache`.
+Default is `rademacher`.
 
 Two options are available for estimating the standard error 
 $\hat{\epsilon}_N^*(s_j)$, which is specified by `method_SD`:
@@ -250,7 +250,7 @@ plot_cs(results,
         color_level_label = "black")
 ```
 
-The plot demonstrate how to use SCB to find regions of s where the estimated mean is greater than or equal to the four levels -7, -8, -9, -10 for ccds data. The gray shaded area is the 95% SCB, the solid black line is the estimated mean. The red horizontal line shows the inner confidence sets (where the lower SCB is greater than the corresponding level) that are contained in the estimated inverse set represented by the union of the yellow and red horizontal line (where the estimated mean is greater than the corresponding levels); the outer confidence sets are the union of the blue, yellow and red line (where the upper SCB is greater than the corresponding levels) and contain both the estimated inverse sets and the inner confidence sets
+The plot demonstrate how to use SCB to find regions of s where the estimated mean is greater than or equal to the four levels -7, -8, -9, -10 for ccds data. The gray shaded area is the 95% SCB, the solid black line is the estimated mean. The red horizontal line shows the inner confidence sets (where the lower SCB is greater than the corresponding level) that are contained in the estimated inverse set represented by the union of the yellow and red horizontal line (where the estimated mean is greater than the corresponding levels); the outer confidence sets are the union of the blue, yellow and red line (where the upper SCB is greater than the corresponding levels) and contain both the estimated inverse sets and the inner confidence sets.
 
 ---------------
 

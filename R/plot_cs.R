@@ -45,8 +45,9 @@
 #'                                    time = "seconds", group_name = "use", group_value = 1, subject = "subject")
 #' ccds_cma <- tibble::as_tibble(ccds_cma)
 #'
-#' plot_cs(ccds_cma,levels = c(-7, -8, -9, -10), x = ccds_cma$time, mu_hat = ccds_cma$yhat,
-#'         xlab = "", ylab = "", level_label = T, min.size = 40, palette = "Spectral",
+#' plot_cs(ccds_cma,levels = c(-7, -8, -9, -10), x = ccds_cma$time,
+#'         mu_hat = ccds_cma$yhat, xlab = "", ylab = "",
+#'         level_label = T, min.size = 40, palette = "Spectral",
 #'         color_level_label = "black")
 plot_cs = function(SCB, levels, x, y, mu_hat, mu_true = NULL, together = T, xlab = "X1", ylab = "X2", level_label = T,
                    min.size = 5,palette = "gray",color_level_label = "black"){

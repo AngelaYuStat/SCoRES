@@ -143,6 +143,11 @@ SCB_functional_outcome = function(data, object = NULL, method, est_mean = FALSE,
       if (!val %in% levels(data[[var]])) {
         stop(paste0("The value '", val, "' is not a level of factor variable '", var, "'."))
       }
+    }else {  # numeric
+      unique_vals <- unique(data[[var]])
+      if (!(val %in% unique_vals)) {
+        warning(paste0("Value '", val, "' not found in numeric variable '", var, "'. Proceeding anyway."))
+      }
     }
   }
 

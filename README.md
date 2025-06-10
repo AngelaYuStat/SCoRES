@@ -213,7 +213,7 @@ multiplier distributions, which is specified by `weights`:
 -   `"mammen"`: A two-point distribution with mean zero and variance one
     (see Mammen, 1993)
 
-Default is `rademache`.
+Default is `rademacher`.
 
 Two options are available for estimating the standard error
 *ϵ̂*<sub>*N*</sub><sup>\*</sup>(*s*<sub>*j*</sub>)
@@ -252,7 +252,7 @@ the union of the yellow and red horizontal line (where the estimated
 mean is greater than the corresponding levels); the outer confidence
 sets are the union of the blue, yellow and red line (where the upper SCB
 is greater than the corresponding levels) and contain both the estimated
-inverse sets and the inner confidence sets
+inverse sets and the inner confidence sets.
 
 ------------------------------------------------------------------------
 
@@ -270,6 +270,7 @@ formula used for fitting the linear model.
 ``` r
 library(invSCI)
 # generate simulated data
+set.seed(262)
 x1 <- rnorm(100)
 x2 <- rnorm(100)
 epsilon <- rnorm(100,0,sqrt(2))
@@ -306,4 +307,4 @@ details, please refer to the corresponding package vignette.
 
 👉 [Full mathematical appendix (PDF)](invSCI.pdf)
 
-> This document contains all the LaTeX-rendered formulas, definitions of CS_in, SCBs, and simulations.
+> This document contains all the LaTeX-rendered formulas, definitions of CS, SCBs, and simulations.

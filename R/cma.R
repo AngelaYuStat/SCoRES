@@ -62,24 +62,39 @@ mean_response_predict = function(data, object, time, range = NULL, group_name, g
     )
   )
 
-  if(!is.null(group_name)){
-    # for group interested
-    groups_idx <- unlist(lapply(group_name, function(g) grep(g, coef_names)))
-    idx <- sort(unique(c(idx, groups_idx)))
-    for (i in seq_along(group_name)) {
-      var <- group_name[i]
-      val <- group_value[i]
+  for (i in seq_along(group_name)) {
+    var <- group_name[i]
+    val <- group_value[i]
 
-      if (is.character(df_pred[[var]])) {
-        stop(paste0("The variable '", var, "' is of type character. ",
-                    "Please convert it to a factor to ensure consistent prediction behavior."))
-      } else if (is.factor(df_pred[[var]])) {
-        df_pred[[var]] <- factor(val, levels = levels(df_pred[[var]]))
-      } else {
-        df_pred[[var]] <- val
+    if (!(var %in% names(data))) {
+      stop(paste0("Variable '", var, "' not found in data."))
+    }
+
+    if (is.character(data[[var]])) {
+      stop(paste0("The variable '", var, "' is of type character. ",
+                  "Please convert it to a factor or numeric."))
+    }
+
+    if (!(is.factor(data[[var]]) || is.numeric(data[[var]]))) {
+      stop(paste0("The variable '", var, "' must be either factor or numeric."))
+    }
+
+    if (is.factor(data[[var]])) {
+      if (!(val %in% levels(data[[var]]))) {
+        stop(paste0("Value '", val, "' is not a level of factor variable '", var, "'."))
       }
+      df_pred[[var]] <- factor(val, levels = levels(data[[var]]))
+    } else {  # numeric
+      unique_vals <- unique(data[[var]])
+      if (!(val %in% unique_vals)) {
+        warning(paste0("Value '", val, "' not found in numeric variable '", var, "'. Proceeding anyway."))
+      }
+      df_pred[[var]] <- val
     }
   }
+  # for group interested
+  groups_idx <- unlist(lapply(group_name, function(g) grep(g, coef_names)))
+  idx <- sort(unique(c(idx, groups_idx)))
 
   if(!is.null(subject)){
     df_pred[subject] <- as.character(model.frame(object)[[subject]][1])
@@ -148,7 +163,8 @@ mean_response_predict = function(data, object, time, range = NULL, group_name, g
 #'   s(subject, by = Phi4, bs="re"),
 #'   method = "fREML", data = ccds_fpca, discrete = TRUE)
 #'
-#' results <- cma(ccds_fpca, fosr_mod, time = "seconds", group_name = "use", group_value = 1, subject = "subject")
+#' results <- cma(ccds_fpca, fosr_mod, time = "seconds",
+#' group_name = "use", group_value = 1, subject = "subject")
 #'
 cma = function(data, object, alpha = 0.05, time, range = NULL, group_name, group_value, subject = NULL, nboot = NULL){
 
@@ -257,7 +273,8 @@ cma = function(data, object, alpha = 0.05, time, range = NULL, group_name, group
 #'   s(subject, by = Phi4, bs="re"),
 #'   method = "fREML", data = ccds_fpca, discrete = TRUE)
 #'
-#' ccds_cma <- cma(fosr_mod, time = "seconds", groups = "use", subject = "subject")
+#' ccds_cma <- cma(ccds_fpca, fosr_mod, time = "seconds", group_name = "use", group_value = 1,
+#'                 subject = "subject")
 #' ccds_cma <- tibble::as_tibble(ccds_cma)
 #' plot_cma(ccds_cma, xlab = "Time (s)", ylab = "Mean",
 #'          line_color = "blue", ci_color = "gray", ci_linetype = "dotted",
