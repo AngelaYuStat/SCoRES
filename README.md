@@ -187,72 +187,7 @@ results <- invSCI::SCB_functional_outcome(data = ccds,object = fosr_mod, method 
 results <- invSCI::SCB_functional_outcome(data = ccds, object = fosr_mod, method = "wild", est_mean = TRUE, alpha = 0.05, outcome = "percent_change", time = "seconds", group_name = "use", group_value = 1, subject = "subject")
 ```
 
-The followings are the mathematical details:
-
-#### Correlation and Multiplicity Adjusted (CMA) Confidence Bands Based on Parameter Simulations
-
-1.  Simulate model parameters
-    $$\boldsymbol{\beta}\_1, \ldots, \boldsymbol{\beta}\_B \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\hat{\boldsymbol{\beta}}, \hat{V}\_{\boldsymbol{\beta}}) $$
-    , where
-    $$\hat{\boldsymbol{\beta}}, \hat{V}\_{\boldsymbol{\beta}}$$
-    are estimated via a fitted FoSR model.
-
-2.  For each
-    *b* = 1, …, *B*
-    , compute
-    $$
-    \mathbf{X}\_b = \frac{\mathbf{B}(\boldsymbol{\beta}\_b - \hat{\boldsymbol{\beta}})}{\mathbf{D}\_f}
-    $$
-    , where the division is element-wise and **B** maps parameters to
-    functional effects.
-
-3.  Let
-    *d*<sub>*b*</sub> = max (\|**X**<sub>*b*</sub>\|),  *b* = 1, …, *B*
-    , where the absolute value is taken element-wise.
-
-4.  Estimate
-    *q*(*C*<sub>*f*</sub>, 1 − *α*)
-    as the
-    100 ⋅ (1 − *α*)
-    percentile of
-    {*d*<sub>1</sub>, …, *d*<sub>*B*</sub>}
-    .
-
-#### Multiplier-t Bootstrap Procedure for Constructing Confidence Bands
-
-1.  Compute residuals
-    *R*<sub>1</sub><sup>*N*</sup>, …, *R*<sub>*N*</sub><sup>*N*</sup>
-    , where
-    $$R_n^N = \sqrt{\frac{N}{N - 1}} \left( Y_n - \hat{\mu}\_N \right)$$
-    , and multipliers
-    $$g_1, \ldots, g_N \overset{\text{i.i.d.}}{\sim} g$$
-    with
-    𝔼\[*g*\] = 0
-    and
-    var\[*g*\] = 1
-    .
-
-2.  Estimate
-    *ϵ̂*<sub>*N*</sub><sup>\*</sup>(*s*)
-    from
-    *g*<sub>1</sub>*Y*<sub>1</sub>(*s*), …, *g*<sub>*N*</sub>*Y*<sub>*N*</sub>(*s*)
-    .
-
-3.  Compute
-    $$
-    T^\*(s) = \frac{1}{\sqrt{N}} \sum\_{n=1}^N g_n \frac{R_n^N(s)}{\hat{\epsilon}\_N^\*(s)}
-    $$
-    .
-
-4.  Repeat steps 1 to 3 many times. Take the
-    (1 − *α*) ⋅ 100%
-    quantile of
-    ℒ<sup>\*</sup>
-    to estimate
-    *q*<sub>*α*, *N*</sub>
-    .
-
-For details of the algorithm, please refer to Telschow et al. (2019)
+The mathematical details can be found in README.pdf:
 
 `invSCI` provides two options for estimating the mean function at
 *s*
@@ -263,10 +198,6 @@ the fitted regression object. If `est_mean = FALSE`, sample mean will be
 calculated. Default is `FALSE`.
 
 1.  The **sample mean**
-    $$
-    \hat{\mu}\_N(s) = \frac{1}{N} \sum\_{i=1}^N {Y}\_i(s)
-    $$
-    , where *Y*<sub>*i*</sub>(*s*) is the observed functional response.
 
 2.  The **fitted mean value** from a functional regression model (e.g.,
     using `mgcv::bam`).
@@ -288,22 +219,9 @@ Two options are available for estimating the standard error
 *ϵ̂*<sub>*N*</sub><sup>\*</sup>(*s*<sub>*j*</sub>)
 , which is specified by `method_SD`:
 
--   “regular” (empirical standard error based on residuals):
-    $$
-    \hat{\epsilon}\_N^\*(s_j) = \sqrt{ \frac{1}{n} \sum\_{i=1}^n \left( \tilde{Y}\_i(s_j) - \hat{\beta}(s_j) \right)^2 / (n-1) }
-    $$
-    .
-
--   “t” (bootstrap second moment-based estimator):
-    $$
-    \hat{\epsilon}\_N^\*(s_j) = \sqrt{ \frac{N}{N-1} \left\| \mathbb{E}\_b\left\[ \tilde{Y}^{b}(s_j)^2 \right\] - \left( \mathbb{E}\_b\left\[ \tilde{Y}^{b}(s_j) \right\] \right)^2 \right\| }
-    $$
-    , where expectations are taken over bootstrap replicates and
-    *Ỹ*<sup>*b*</sup>(*s*<sub>*j*</sub>)
-    is the perturbed sample in bootstrap iteration
-    *b*
-    . The absolute value ensures numerical stability when subtracting
-    large, nearly equal quantities.
+-   “regular” (empirical standard error based on residuals).
+    
+-   “t” (bootstrap second moment-based estimator).
 
 Default is `t`.
 
@@ -381,3 +299,11 @@ provides`invSCI::SCB_logistic_outcome()` for estimating the SCB for
 outcome of logistic regression, and `invSCI::SCB_regression_coef`can
 estimate the SCB for every coefficient in the linear/logistic model. For
 details, please refer to the corresponding package vignette.
+
+### 📄 Documentation
+
+------------------------------------------------------------------------
+
+👉 [Full mathematical appendix (PDF)](invSCI.pdf)
+
+> This document contains all the LaTeX-rendered formulas, definitions of CS_in, SCBs, and simulations.
