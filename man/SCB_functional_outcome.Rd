@@ -8,14 +8,15 @@ SCB_functional_outcome(
   data,
   object = NULL,
   method,
+  fitted = TRUE,
   est_mean = FALSE,
   alpha = 0.05,
   outcome,
   time,
   range = NULL,
-  group_name,
-  group_value,
-  subject = NULL,
+  group_name = NULL,
+  group_value = NULL,
+  subject,
   nboot = NULL,
   method_SD = "t",
   weights = "rademacher"
@@ -23,20 +24,29 @@ SCB_functional_outcome(
 }
 \arguments{
 \item{data}{A functional data frame, matrix or tibble.
-The input data must have column names, and should contain the functional outcome, time and subject}
+The input data must have column names, and should contain the functional outcome, time, subject}
 
-\item{object}{A fitted Function-on-Scalar Regression (FoSR) object (e.g., from mgcv::bam()/mgcv::gam()). Default is NULL.
-If provided when \code{method = "wild"}, the mean estimation from the output of functional regression model wil be used to calculate the SCBs, instead of sample mean}
+\item{object}{A fitted Function-on-Scalar Regression (FoSR) object (e.g., from mgcv::bam()/mgcv::gam()). Default is NULL.}
 
 \item{method}{A character string specifying the approach:
 \itemize{
 \item \code{"cma"} - Correlation and Multiplicity Adjusted (CMA) confidence bands
 via parametric approach (requires a fitted functional regression model)
 \item \code{"wild"} - Dense confidence bands via Multiplier-t Bootstrap method
-(requires raw data)
+For \code{method = "wild"} option, the user should check whether their input data (\code{data}) has zero entries on every subject for a specific time point.
+The function only allow all zero entries for time point zero. Otherwise, the function will return an error.
+Besides, for wild bootstrap, if there exist NA in data, will impute these NA's via fpca.face.
 }}
 
-\item{est_mean}{Logical. Whether to use the fitted mean from a functional regression model.
+\item{fitted}{Logical. Whether to estimate the simultaneous confidence bands for fitted mean function or fitted parameter function
+\itemize{
+\item \code{TRUE} - Estimate the simultaneous confidence bands for fitted mean outcome function.
+\item \code{FALSE} - estimate the simultaneous confidence bands for fitted parameter function.
+}
+Default is \code{TRUE}.}
+
+\item{est_mean}{Logical. Whether to use the fitted mean from a functional regression model in wild bootstrap (\code{method = "wild"}).
+This argument can be ignored if choose \code{method = "cma"}.
 If \code{TRUE}, the function will use:
 \itemize{
 \item \strong{Fitted mean:} The estimated mean function from a fitted model (e.g., \code{mgcv::bam}).
@@ -47,6 +57,7 @@ If \code{FALSE}, the function will instead use:
 \item \strong{Sample mean:}
 \deqn{\hat{\beta}(s) = \frac{1}{n} \sum_{i=1}^n \tilde{Y}_i(s)}
 where \eqn{\tilde{Y}_i(s)} is a smoothed version of the observed functional response.
+For this sample mean option, if there exists NA in \code{data}, will perform imputation to fill in those values.
 }
 Default is \code{FALSE}.}
 
@@ -58,10 +69,15 @@ Default is \code{FALSE}.}
 
 \item{range}{A numeric vector specifying the range or grid of time points interested. Defaut is the whole time points from the fitted model.}
 
-\item{group_name}{A character vector that specifies the names of grouping scalar variables to analyze.}
+\item{group_name}{A character vector that specifies the names of grouping scalar variables to analyze.
+Default is \code{NULL}, representing the reference group if \code{method = "cma"}.
+For \code{method = "wild"}, \code{NuULL} is not allowed.}
 
-\item{group_value}{A vector (numeric or character) that specifies the corresponding values of the variables listed in \code{group_name}.
-Each entry in \code{group_value} should match the respective variable in \code{group_name}.}
+\item{group_value}{A numeric vector that specifies the corresponding values of the variables listed in \code{group_name}.
+Each entry in \code{group_value} should match the respective variable in \code{group_name}.
+Character/factor is not allowed.
+Default is \code{NULL}, representing the reference group if \code{"cma"}.
+For \code{method = "wild"}, \code{NuULL} is not allowed.}
 
 \item{subject}{A character string specifying the name of the subject-level random effect variable.}
 
@@ -100,14 +116,17 @@ fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
   method = "fREML", data = ccds_fpca, discrete = TRUE)
 
 # CMA approach
-results <- SCB_functional_outcome(data = ccds, object = fosr_mod, method = "cma", est_mean = TRUE,
-                       outcome = "percent_change", time = "seconds",
-                       group_name = "use", group_value = 1, subject = "subject")
+results <- SCB_functional_outcome(data = ccds, object = fosr_mod, method = "cma", fitted = TRUE,
+                                  est_mean = TRUE,outcome = "percent_change", time = "seconds",
+                                  group_name = "use", group_value = 1, subject = "subject")
 
 
 # Wild bootstrap
-results <- SCB_functional_outcome(data = ccds, object = fosr_mod, method = "wild",
+results <- SCB_functional_outcome(data = ccds, object = fosr_mod, method = "wild", fitted = TRUE,
                        est_mean = TRUE, outcome = "percent_change",
+                       time = "seconds", group_name = "use", group_value = 1, subject = "subject")
+results <- SCB_functional_outcome(data = ccds, object = fosr_mod, method = "wild", fitted = TRUE,
+                       est_mean = FALSE, outcome = "percent_change",
                        time = "seconds", group_name = "use", group_value = 1, subject = "subject")
 
 

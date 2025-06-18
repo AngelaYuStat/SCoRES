@@ -31,7 +31,7 @@ Imports:
     matrixStats,
     abind,
     tidyr,
-    refund
+    refund,
 Depends: 
     R (>= 3.5)
 LazyData: true

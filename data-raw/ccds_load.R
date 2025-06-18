@@ -3,7 +3,8 @@
 library(readr)
 
 # read csv
-ccds_raw <- read_csv("D:/FDA/data/ccds1_functional.csv")
+dat_path <- system.file("extdata", "ccds1_functional.csv", package = "invSCI")
+ccds_raw <- read_csv(dat_path)
 
 # select right eye and tp = post
 ccds <- ccds_raw %>%

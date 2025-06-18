@@ -7,11 +7,12 @@
 cma(
   data,
   object,
+  fitted = TRUE,
   alpha = 0.05,
   time,
   range = NULL,
-  group_name,
-  group_value,
+  group_name = NULL,
+  group_value = NULL,
   subject = NULL,
   nboot = NULL
 )
@@ -22,16 +23,26 @@ The input data must have column names, and should contain the functional outcome
 
 \item{object}{A fitted Function-on-Scalar Regression (FoSR) object (e.g., from mgcv::bam()/mgcv::gam()).}
 
+\item{fitted}{Logical. Whether to estimate the simultaneous confidence bands for fitted mean function or fitted parameter function
+\itemize{
+\item \code{TRUE} - Estimate the simultaneous confidence bands for fitted mean outcome function.
+\item \code{FALSE} - estimate the simultaneous confidence bands for fitted parameter function.
+}
+Default is \code{TRUE}.}
+
 \item{alpha}{Significance level for SCB. Default is 0.05.}
 
 \item{time}{A character string specifying the name of the time variable used in the model.}
 
 \item{range}{A numeric vector specifying the range or grid of time points interested. Defaut is the whole time points from the fitted model.}
 
-\item{group_name}{A character vector that specifies the names of grouping scalar variables to analyze.}
+\item{group_name}{A character vector that specifies the names of grouping scalar variables to analyze.
+Default is \code{NULL}, representing the reference group.}
 
-\item{group_value}{A vector (numeric or character) that specifies the corresponding values of the variables listed in \code{group_name}.
-Each entry in \code{group_value} should match the respective variable in \code{group_name}.}
+\item{group_value}{A numeric vector that specifies the corresponding values of the variables listed in \code{group_name}.
+Each entry in \code{group_value} should match the respective variable in \code{group_name}.
+Character/factor is not allowed.
+Default is \code{NULL}, representing the reference group.}
 
 \item{subject}{A optional character string specifying the name of the subject-level random effect variable, if included in model fitting.}
 
@@ -63,6 +74,10 @@ fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
   s(subject, by = Phi4, bs="re"),
   method = "fREML", data = ccds_fpca, discrete = TRUE)
 
-results <- cma(ccds_fpca, fosr_mod, time = "seconds", group_name = "use", group_value = 1, subject = "subject")
+results <- cma(ccds_fpca, fosr_mod, fitted = TRUE, time = "seconds",
+group_name = "use", group_value = 1, subject = "subject")
+
+results <- cma(ccds_fpca, fosr_mod, fitted = FALSE, time = "seconds",
+group_name = "use", group_value = 1, subject = "subject")
 
 }

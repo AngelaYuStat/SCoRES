@@ -1,7 +1,5 @@
 ---
-output:
-  html_document: default
-  pdf_document: default
+output: github_document
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -117,7 +115,6 @@ Before calculating the SCBs, we first process ccds data by fitting a mean GAM mo
 Following the FPCA-based data augmentation, we fit a FoSR model using `mgcv::bam()`, which allows efficient estimation of Generalized Additive Mixed Models (GAMMs). The model formula is designed to capture both population-level smooth trends and subject-specific functional variation.
 
 ```{r fit gam-fpca model, echo = TRUE}
-data(ccds)
 ccds_fpca <- invSCI::prepare_ccds_fpca(ccds)
 fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
             s(seconds, by = use, k=30, bs = "cr") +
@@ -131,12 +128,28 @@ fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
 After obtaining the FoSR object `fosr_mod`, simultaneous confidence bands (SCB) can be constructed though `invSCI::SCB_functional_outcome` using pre-specified methods.
 The `invSCI` package provides two options for calculating the simultaneous confidence bands (SCB). Use `method` to specify.
 Use `groups` to specify the names of grouping variables to analyze. The input data should have numerical binary 0/1 values for all scalar group variables. Here, we analyze the user group by specifying `groups = "use"`.
+Use `fitted` to specify the object for SCB estimation. If `fitted = TRUE`, `invSCI::SCB_functional_outcome` will construct the SCB for the fitted mean outcome function. If `fitted = FALSE`, `invSCI::SCB_functional_outcome` will construct the SCB for the fitted parameter function.
+Use `est_mean` to specify the point estimate for constructing SCB. If `est_mean = TRUE`, `invSCI::SCB_functional_outcome` will estimate the simultaneous confidence bands for fitted mean outcome function. If `est_mean = FALSE`, `invSCI::SCB_functional_outcome` will estimate the simultaneous confidence bands for sample mean.
 
 ```{r ccds SCB, echo = TRUE}
 # CMA approach
-results <- invSCI::SCB_functional_outcome(data = ccds,
+results_ccds_cma <- invSCI::SCB_functional_outcome(data = ccds,
                                           object = fosr_mod, 
-                                          method = "cma", 
+                                          method = "cma",
+                                          fitted = TRUE,
+                                          est_mean = TRUE, 
+                                          alpha = 0.05, 
+                                          outcome = "percent_change", 
+                                          time = "seconds", 
+                                          group_name = "use", 
+                                          group_value = 1, 
+                                          subject = "subject")
+
+#CMA approach for parameter function
+results_ccds_cma_para <- invSCI::SCB_functional_outcome(data = ccds,
+                                          object = fosr_mod, 
+                                          method = "cma",
+                                          fitted = FALSE,
                                           est_mean = TRUE, 
                                           alpha = 0.05, 
                                           outcome = "percent_change", 
@@ -146,9 +159,10 @@ results <- invSCI::SCB_functional_outcome(data = ccds,
                                           subject = "subject")
 
 # Multiplier-t Bootstrap
-results <- invSCI::SCB_functional_outcome(data = ccds, 
+results_ccds_wild <- invSCI::SCB_functional_outcome(data = ccds, 
                                           object = fosr_mod, 
-                                          method = "wild", 
+                                          method = "wild",
+                                          fitted = TRUE,
                                           est_mean = TRUE, 
                                           alpha = 0.05, 
                                           outcome = "percent_change", 
@@ -157,7 +171,20 @@ results <- invSCI::SCB_functional_outcome(data = ccds,
                                           group_value = 1, 
                                           subject = "subject")
 
+# Multiplier-t Bootstrap (use sample mean)
+results_ccds_wild_sample <- invSCI::SCB_functional_outcome(data = ccds, 
+                                          object = fosr_mod, 
+                                          method = "wild",
+                                          fitted = TRUE,
+                                          est_mean = FALSE, 
+                                          alpha = 0.05, 
+                                          outcome = "percent_change", 
+                                          time = "seconds", 
+                                          group_name = "use", 
+                                          group_value = 1, 
+                                          subject = "subject")
 ```
+
 The followings are the mathematical details:
 
 #### Correlation and Multiplicity Adjusted (CMA) Confidence Bands Based on Parameter Simulations
@@ -236,14 +263,14 @@ The code below visualizes the **inverse confidence sets (CSs)** derived from SCB
 
 The `levels = c(-7, -8, -9, -10)` argument specifies a set of thresholds, and `invSCI::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse set, the inner confidence set, and the outer confidence set. 
 
-```{r ccds_plot_cs, echo = TRUE}
-results <- tibble::as_tibble(results)
-plot_cs(results,
+```{r ccds_plot_cs_cma, echo = TRUE}
+results_ccds_cma <- tibble::as_tibble(results_ccds_cma)
+plot_cs(results_ccds_cma,
         levels = c(-7, -8, -9, -10), 
-        x = results$time, 
-        mu_hat = results$yhat, 
-        xlab = "", 
-        ylab = "", 
+        x = results_ccds_cma$time, 
+        mu_hat = results_ccds_cma$yhat, 
+        xlab = "Seconds", 
+        ylab = "Percent_Outcome", 
         level_label = T, 
         min.size = 40, 
         palette = "Spectral", 
@@ -252,6 +279,136 @@ plot_cs(results,
 
 The plot demonstrate how to use SCB to find regions of s where the estimated mean is greater than or equal to the four levels -7, -8, -9, -10 for ccds data. The gray shaded area is the 95% SCB, the solid black line is the estimated mean. The red horizontal line shows the inner confidence sets (where the lower SCB is greater than the corresponding level) that are contained in the estimated inverse set represented by the union of the yellow and red horizontal line (where the estimated mean is greater than the corresponding levels); the outer confidence sets are the union of the blue, yellow and red line (where the upper SCB is greater than the corresponding levels) and contain both the estimated inverse sets and the inner confidence sets.
 
+The next plot shows the SCB for the coefficient funtion for the use group.
+
+```{r ccds_plot_cs_cma_para, echo = TRUE}
+results_ccds_cma_para <- tibble::as_tibble(results_ccds_cma_para)
+plot_cs(results_ccds_cma_para,
+        levels = c( c(1.5, 2, 2.5, 3)), 
+        x = results_ccds_cma_para$time, 
+        mu_hat = results_ccds_cma_para$yhat, 
+        xlab = "Seconds", 
+        ylab = "Percent_Outcome", 
+        level_label = T, 
+        min.size = 40, 
+        palette = "Spectral", 
+        color_level_label = "black")
+```
+
+The following plots show the results of wild bootstrap. The only difference between these two plots is that, the solid black line in the first one represents the estimated mean fitted through functional regresson object, while the second represents the sample mean. All possible NA's are imputed using `refund::fpca.face()`.
+
+```{r ccds_plot_cs_wild, echo = TRUE}
+results_ccds_wild <- tibble::as_tibble(results_ccds_wild)
+plot_cs(results_ccds_wild,
+        levels = c(-7, -8, -9, -10), 
+        x = results_ccds_wild$time, 
+        mu_hat = results_ccds_wild$yhat, 
+        xlab = "Seconds", 
+        ylab = "Percent_Outcome",
+        level_label = T, 
+        min.size = 40, 
+        palette = "Spectral", 
+        color_level_label = "black")
+```
+
+```{r ccds_plot_cs_wild_sample, echo = TRUE}
+results_ccds_wild_sample <- tibble::as_tibble(results_ccds_wild_sample)
+plot_cs(results_ccds_wild_sample,
+        levels = c(-7, -8, -9, -10), 
+        x = results_ccds_wild_sample$time, 
+        mu_hat = results_ccds_wild_sample$yhat, 
+        xlab = "Seconds", 
+        ylab = "Percent_Outcome", 
+        level_label = T, 
+        min.size = 40, 
+        palette = "Spectral", 
+        color_level_label = "black")
+```
+
+To further illustrate the power of `invSCI::SCB_functional_outcome` for 
+constructing SCBs for multiple group variables, we load the pupil data
+and perform the analysis introduced before.
+
+```{r pupil, echo = TRUE}
+data(pupil)
+library(dplyr)
+# filter all NA subjects
+pupil <- pupil %>% 
+  filter(!(id %in% c("003-1068", "003-112")))
+pupil_fpca <- invSCI::prepare_pupil_fpca(pupil)
+fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
+            s(seconds, by = use, k=30, bs = "cr") +
+            s(seconds, by = smoker, k=30, bs = "cr") +
+            s(seconds, by = daily, k=30, bs = "cr") +
+            s(seconds, by = gender, k=30, bs = "cr") +
+            s(id, by = Phi1, bs="re") +
+            s(id, by = Phi2, bs="re") +
+            s(id, by = Phi3, bs="re") +
+            s(id, by = Phi4, bs="re"),
+            method = "fREML", data = pupil_fpca, discrete = TRUE)
+```
+
+Here, we analyze the daily male user group by specifying
+`group_name = c("use", "daily", "gender")` and `group_value = c(1, 1, 0)`. We set `fitted = TRUE` and `est_mean= TRUE`.
+
+```{r pupil SCB, echo = TRUE}
+# CMA approach
+results_pupil_cma <- invSCI::SCB_functional_outcome(data = pupil,
+                                          object = fosr_mod, 
+                                          method = "cma", 
+                                          fitted = TRUE,
+                                          est_mean = TRUE, 
+                                          alpha = 0.05, 
+                                          outcome = "percent_change", 
+                                          time = "seconds", 
+                                          group_name = c("use", "daily", "gender"), 
+                                          group_value = c(1, 1, 0), 
+                                          subject = "id")
+
+# Multiplier-t Bootstrap
+results_pupil_wild <- invSCI::SCB_functional_outcome(data = pupil, 
+                                          object = fosr_mod,
+                                          fitted = TRUE,
+                                          method = "wild", 
+                                          est_mean = TRUE, 
+                                          alpha = 0.05, 
+                                          outcome = "percent_change", 
+                                          time = "seconds", 
+                                          group_name = c("use", "daily", "gender"), 
+                                          group_value = c(1, 1, 0), 
+                                          subject = "id")
+```
+
+The following plots show the SCBs and inverse SCBs for the mean outcome function. The first one is from CMA approach and the second is from wild bootstrap.
+
+
+```{r pupil_plot_cs_cma, echo = TRUE}
+results_pupil_cma <- tibble::as_tibble(results_pupil_cma)
+plot_cs(results_pupil_cma,
+        levels = c(-18, -20, -22, -24), 
+        x = results_pupil_cma$time, 
+        mu_hat = results_pupil_cma$yhat, 
+        xlab = "Seconds", 
+        ylab = "Percent_Outcome",
+        level_label = T, 
+        min.size = 40, 
+        palette = "Spectral", 
+        color_level_label = "black")
+```
+
+```{r pupil_plot_cs_wild, echo = TRUE}
+results_pupil_wild <- tibble::as_tibble(results_pupil_wild)
+plot_cs(results_pupil_wild,
+        levels = c(-18, -20, -22, -24), 
+        x = results_pupil_wild$time, 
+        mu_hat = results_pupil_wild$yhat, 
+        xlab = "Seconds", 
+        ylab = "Percent_Outcome",
+        level_label = T, 
+        min.size = 40, 
+        palette = "Spectral", 
+        color_level_label = "black")
+```
 ---------------
 
 The second example here is to use simulated data to construct the inverse confidence sets (CS) from simultaneous confidence bands (SCB) using linear regression. 

@@ -5,11 +5,20 @@
 #' @param data A functional data frame, matrix or tibble.
 #' The input data must have column names, and should contain the functional outcome, time and subject
 #' @param object A fitted Function-on-Scalar Regression (FoSR) model object (e.g., from mgcv::bam()/mgcv::gam()).
+#' @param fitted Logical. Whether to estimate the simultaneous confidence bands for fitted mean function or fitted parameter function
+#'   \itemize{
+#'     \item \code{TRUE} - Estimate the simultaneous confidence bands for fitted mean outcome function.
+#'     \item \code{FALSE} - estimate the simultaneous confidence bands for fitted parameter function.
+#'     }
+#'   Default is \code{TRUE}.
 #' @param time A character string specifying the name of the time variable used in the model.
 #' @param range A numeric vector specifying the range or grid of time points interested. Defaut is the whole time points from the fitted model.
 #' @param group_name A character vector that specifies the names of grouping scalar variables to analyze.
-#' @param group_value A vector (numeric or character) that specifies the corresponding values of the variables listed in \code{group_name}.
+#'   Default is \code{NULL}, representing the reference group.
+#' @param group_value A numeric vector that specifies the corresponding values of the variables listed in \code{group_name}.
 #'   Each entry in \code{group_value} should match the respective variable in \code{group_name}.
+#'   Character/factor is not allowed.
+#'   Default is \code{NULL}, representing the reference group.
 #' @param subject A optional character string specifying the name of the subject-level random effect variable, if included in model fitting.
 #'
 #' @returns A list containing the following elements:
@@ -38,11 +47,14 @@
 #'   s(subject, by = Phi4, bs="re"),
 #'   method = "fREML", data = ccds_fpca, discrete = TRUE)
 #'
-#' results <- mean_response_predict(ccds_fpca, fosr_mod, time = "seconds",
+#' results <- mean_response_predict(ccds_fpca, fosr_mod, fitted = TRUE, time = "seconds",
+#' group_name = "use", group_value = 1, subject = "subject")
+#'
+#' results <- mean_response_predict(ccds_fpca, fosr_mod, fitted = FALSE, time = "seconds",
 #' group_name = "use", group_value = 1, subject = "subject")
 #'
 #' @export
-mean_response_predict = function(data, object, time, range = NULL, group_name, group_value, subject = NULL){
+mean_response_predict = function(data, object, fitted = TRUE, time, range = NULL, group_name, group_value, subject = NULL){
 
   mod_coef <- object$coefficients
   mod_cov <- vcov(object) # containing all variance-covariance info for object
@@ -51,6 +63,7 @@ mean_response_predict = function(data, object, time, range = NULL, group_name, g
   # get index of the initial terms
   pattern <- paste0("^\\(Intercept\\)$|^s\\(", time, "\\)\\.[0-9]+$")
   idx <- grep(pattern, coef_names)
+  intercept_idx <- idx
 
   # initialize dataframe
   predictors <- all.vars(formula(object))[-1]
@@ -62,39 +75,40 @@ mean_response_predict = function(data, object, time, range = NULL, group_name, g
     )
   )
 
-  for (i in seq_along(group_name)) {
-    var <- group_name[i]
-    val <- group_value[i]
+  groups_idx <- NULL
+  if (!is.null(group_name) && !is.null(group_value)){
+    for (i in seq_along(group_name)) {
+      var <- group_name[i]
+      val <- group_value[i]
 
-    if (!(var %in% names(data))) {
-      stop(paste0("Variable '", var, "' not found in data."))
-    }
-
-    if (is.character(data[[var]])) {
-      stop(paste0("The variable '", var, "' is of type character. ",
-                  "Please convert it to a factor or numeric."))
-    }
-
-    if (!(is.factor(data[[var]]) || is.numeric(data[[var]]))) {
-      stop(paste0("The variable '", var, "' must be either factor or numeric."))
-    }
-
-    if (is.factor(data[[var]])) {
-      if (!(val %in% levels(data[[var]]))) {
-        stop(paste0("Value '", val, "' is not a level of factor variable '", var, "'."))
+      if (!(var %in% names(data))) {
+        stop(paste0("Variable '", var, "' not found in data."))
       }
-      df_pred[[var]] <- factor(val, levels = levels(data[[var]]))
-    } else {  # numeric
-      unique_vals <- unique(data[[var]])
-      if (!(val %in% unique_vals)) {
-        warning(paste0("Value '", val, "' not found in numeric variable '", var, "'. Proceeding anyway."))
+
+      if (is.character(data[[var]])) {
+        stop(paste0("The variable '", var, "' is of type character. ",
+                    "Please convert it to a numeric and consider refit your functional object."))
       }
-      df_pred[[var]] <- val
+
+      if (is.factor(data[[var]])) {
+        stop(paste0("The variable '", var, "' is of type factor. ",
+                    "Please convert it to a numeric and consider refit your functional object."))
+      } else {  # numeric
+        unique_vals <- unique(data[[var]])
+        if (!(val %in% unique_vals)) {
+          stop(paste0("Value '", val, "' not found in numeric variable '", var, "'."))
+        }
+        df_pred[[var]] <- val
+      }
+    }
+    # for group interested
+    groups_idx <- unlist(lapply(group_name, function(g) grep(g, coef_names)))
+    if (fitted){
+      idx <- sort(unique(c(idx, groups_idx)))
+    }else{
+      idx <- sort(unique(c(groups_idx)))
     }
   }
-  # for group interested
-  groups_idx <- unlist(lapply(group_name, function(g) grep(g, coef_names)))
-  idx <- sort(unique(c(idx, groups_idx)))
 
   if(!is.null(subject)){
     df_pred[subject] <- as.character(model.frame(object)[[subject]][1])
@@ -113,10 +127,18 @@ mean_response_predict = function(data, object, time, range = NULL, group_name, g
   lpmat <- predict(object, newdata=df_pred, se.fit=TRUE, type = "lpmatrix")
 
   # get mean response by groups with standard errors
-  pred_df <- df_pred %>% mutate(mean = c(lpmat %*% mod_coef), se = c(sqrt(diag(lpmat %*% mod_cov %*% t(lpmat)))))
-
+  if (!fitted && !is.null(groups_idx)){
+    lpmat_no_intercept <- lpmat[, -intercept_idx, drop = FALSE]
+    mod_coef_no_intercept <- mod_coef[-intercept_idx]
+    mod_cov_no_intercept <- mod_cov[-intercept_idx, -intercept_idx]
+    pred_df <- df_pred %>%
+      mutate(mean = c(lpmat_no_intercept %*% mod_coef_no_intercept),
+             se = c(sqrt(diag(lpmat_no_intercept %*% mod_cov_no_intercept %*% t(lpmat_no_intercept)))))
+  }else{
+    pred_df <- df_pred %>% mutate(mean = c(lpmat %*% mod_coef), se = c(sqrt(diag(lpmat %*% mod_cov %*% t(lpmat)))))
+  }
   lpmat <- lpmat[, idx]
-  # exract means and variance for group interested
+  # extract means and variance for group interested
   mod_coef <- mod_coef[idx]
   mod_cov <- mod_cov[idx, idx]
 
@@ -130,12 +152,21 @@ mean_response_predict = function(data, object, time, range = NULL, group_name, g
 #' @param data A functional data frame, matrix or tibble.
 #' The input data must have column names, and should contain the functional outcome, time and subject
 #' @param object A fitted Function-on-Scalar Regression (FoSR) object (e.g., from mgcv::bam()/mgcv::gam()).
+#' @param fitted Logical. Whether to estimate the simultaneous confidence bands for fitted mean function or fitted parameter function
+#'   \itemize{
+#'     \item \code{TRUE} - Estimate the simultaneous confidence bands for fitted mean outcome function.
+#'     \item \code{FALSE} - estimate the simultaneous confidence bands for fitted parameter function.
+#'     }
+#'   Default is \code{TRUE}.
 #' @param alpha Significance level for SCB. Default is 0.05.
 #' @param time A character string specifying the name of the time variable used in the model.
 #' @param range A numeric vector specifying the range or grid of time points interested. Defaut is the whole time points from the fitted model.
 #' @param group_name A character vector that specifies the names of grouping scalar variables to analyze.
-#' @param group_value A vector (numeric or character) that specifies the corresponding values of the variables listed in \code{group_name}.
+#'   Default is \code{NULL}, representing the reference group.
+#' @param group_value A numeric vector that specifies the corresponding values of the variables listed in \code{group_name}.
 #'   Each entry in \code{group_value} should match the respective variable in \code{group_name}.
+#'   Character/factor is not allowed.
+#'   Default is \code{NULL}, representing the reference group.
 #' @param subject A optional character string specifying the name of the subject-level random effect variable, if included in model fitting.
 #' @param nboot An integer specifying the number of bootstrap samples used to construct the confidence bands. Default is 10,000.
 #'
@@ -163,10 +194,13 @@ mean_response_predict = function(data, object, time, range = NULL, group_name, g
 #'   s(subject, by = Phi4, bs="re"),
 #'   method = "fREML", data = ccds_fpca, discrete = TRUE)
 #'
-#' results <- cma(ccds_fpca, fosr_mod, time = "seconds",
+#' results <- cma(ccds_fpca, fosr_mod, fitted = TRUE, time = "seconds",
 #' group_name = "use", group_value = 1, subject = "subject")
 #'
-cma = function(data, object, alpha = 0.05, time, range = NULL, group_name, group_value, subject = NULL, nboot = NULL){
+#' results <- cma(ccds_fpca, fosr_mod, fitted = FALSE, time = "seconds",
+#' group_name = "use", group_value = 1, subject = "subject")
+#'
+cma = function(data, object, fitted = TRUE, alpha = 0.05, time, range = NULL, group_name = NULL, group_value = NULL, subject = NULL, nboot = NULL){
 
   if (is.null(data)) {
     stop("Must provide the origin data!")
@@ -192,16 +226,16 @@ cma = function(data, object, alpha = 0.05, time, range = NULL, group_name, group
   if (is.null(time)) {
     stop("Must provide the time variable name.")
   }
-  if (is.null(group_name)) {
-    stop("Must provide a specified group variable name.")
+  if (!is.null(group_name) && !is.null(group_value)){
+    if (length(group_name) != length(group_value)) {
+      stop("The length of 'group_name' and 'group_value' must be the same.")
+    }
+  }else{
+    if(!is.null(group_name) && is.null(group_value)|is.null(group_name) && !is.null(group_value)){
+      stop("Must provide both group variable name and value.")
+    }
   }
-  if (is.null(group_value)) {
-    stop("Must provide a specified group level.")
-  }
-  if (length(group_name) != length(group_value)) {
-    stop("The length of 'group_name' and 'group_value' must be the same.")
-  }
-  results <- mean_response_predict(data, object, time, range, group_name, group_value, subject)
+  results <- mean_response_predict(data, object, fitted, time, range, group_name, group_value, subject)
 
   # Number of bootstrap samples (B)
   if(is.null(nboot)){
@@ -312,7 +346,7 @@ plot_cma <- function(data,
 
 #' Prepare ccds FPCA Dataset
 #'
-#' Processes ccds data by fitting a mean GAM model, extracting residuals, performing FPCA,
+#' Processes data by fitting a mean GAM model, extracting residuals, performing FPCA,
 #' and merging the results to create an enhanced dataset for functional regression analysis.
 #'
 #' @param input_data Raw ccds data frame containing:
@@ -385,3 +419,84 @@ prepare_ccds_fpca <- function(input_data, k_mean = 30, k_fpca = 15) {
 
   return(output_data)
 }
+
+#' Prepare pupil FPCA Dataset
+#'
+#' Processes data by fitting a mean GAM model, extracting residuals, performing FPCA,
+#' and merging the results to create an enhanced dataset for functional regression analysis.
+#'
+#' @param input_data Raw ccds data frame containing:
+#'   \itemize{
+#'     \item \code{percent_change}: Functional response variable
+#'     \item \code{seconds}: Time variable
+#'     \item{smoker}{Numeric. 1 = Daily or Occasional user, 0 = No Use.}
+#'     \item{Daily}{Numeric. 1 = Daily user only, 0 = otherwise.}
+#'     \item{gender}{Numeric. Binary gender: 1 = Female, 0 = Male.}
+#'   }
+#' @param k_mean Number of basis functions for mean model smooth terms (default: 30)
+#' @param k_fpca Number of knots for FPCA estimation (default: 15)
+#'
+#' @return A tibble containing:
+#'   \itemize{
+#'     \item Original ccds variables
+#'     \item FPCA eigenfunctions (Phi1, Phi2,...)
+#'     \item Sorted by subject and time
+#'   }
+#'
+#' @examples
+#' data(pupil)
+#' processed_data <- prepare_pupil_fpca(pupil)
+#'
+#' @importFrom dplyr mutate filter select arrange left_join
+#' @importFrom tidyr pivot_wider
+#' @importFrom refund fpca.face
+#' @importFrom tibble as_tibble
+#'
+#' @export
+prepare_pupil_fpca <- function(input_data, k_mean = 30, k_fpca = 15) {
+
+  # Fit mean model
+  mean_mod <- gam(
+    percent_change ~ s(seconds, k = k_mean, bs = "cr") +
+      s(seconds, by = use, k = k_mean, bs = "cr") +
+      s(seconds, by = smoker, k = k_mean, bs = "cr") +
+      s(seconds, by = daily, k = k_mean, bs = "cr") +
+      s(seconds, by = gender, k = k_mean, bs = "cr"),
+    data = input_data, method = "REML"
+  )
+
+  # Prepare residuals
+  resid_df <- input_data %>%
+    filter(!is.na(percent_change)) %>%
+    select(id, seconds) %>%
+    mutate(resid = mean_mod$residuals) %>%
+    pivot_wider(
+      names_from = seconds,
+      values_from = resid,
+      names_prefix = "resid."
+    )
+
+  resid_mat <- as.matrix(resid_df[, -1])
+  rownames(resid_mat) <- resid_df$subject
+
+  # FPCA estimation
+  fpca_results <- fpca.face(
+    Y = resid_mat,
+    argvals = unique(input_data$seconds),
+    knots = k_fpca
+  )
+
+  # Create output dataset
+  eigenfunctions <- as.data.frame(fpca_results$efunctions)
+  colnames(eigenfunctions) <- paste0("Phi", seq(1, fpca_results$npc))
+  eigenfunctions$seconds <- unique(input_data$seconds)
+
+  output_data <- input_data %>%
+    left_join(eigenfunctions, by = "seconds") %>%
+    as_tibble() %>%
+    arrange(id, seconds) %>%
+    mutate(id = factor(id))
+
+  return(output_data)
+}
+

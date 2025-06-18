@@ -48,6 +48,7 @@ n_subject_use <- length(Y_samples_use) / n_time
 # transform to matrix (T, N)
 Y_mat_use <- matrix(Y_samples_use, nrow = n_time, ncol = n_subject_use)
 # using sample mean for bootstrap
-SCB_dense(A = Y_mat_use[-1, ])
+Y_mat_use[is.na(Y_mat_use)] <- 0
+SCB_dense(A = Y_mat_use[-1,])
 
 }

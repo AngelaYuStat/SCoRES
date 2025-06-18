@@ -27,13 +27,14 @@
 #' # transform to matrix (T, N)
 #' Y_mat_use <- matrix(Y_samples_use, nrow = n_time, ncol = n_subject_use)
 #' # using sample mean for bootstrap
-#' SCB_dense(A = Y_mat_use[-1, ])
+#' Y_mat_use[is.na(Y_mat_use)] <- 0
+#' SCB_dense(A = Y_mat_use[-1,])
 #'
 SCB_dense = function(A, mean_A = NULL, alpha = 0.05, Mboots  = NULL,
                      method  = "t", weights = "rademacher"){
   # require(SIRF)
   # Get the number of repeats and dimension
-  if(any(is.na(A))){A[is.na(A)] <- 0}
+  # if(any(is.na(A))){A[is.na(A)] <- 0}
   dimA = dim(A)
   N = dimA[length(dimA)]
   D = length(dimA) - 1

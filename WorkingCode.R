@@ -18,6 +18,7 @@ usethis::use_package("stats")
 usethis::use_package("tibble")
 usethis::use_package("tidyr")
 usethis::use_package("refund")
+usethis::use_package("rlang")
 
 usethis::use_import("patchwork")
 usethis::use_import("reshape")

@@ -58,7 +58,8 @@ fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
   s(subject, by = Phi4, bs="re"),
   method = "fREML", data = ccds_fpca, discrete = TRUE)
 
-ccds_cma <- cma(fosr_mod, time = "seconds", groups = "use", subject = "subject")
+ccds_cma <- cma(ccds_fpca, fosr_mod, time = "seconds", group_name = "use", group_value = 1,
+                subject = "subject")
 ccds_cma <- tibble::as_tibble(ccds_cma)
 plot_cma(ccds_cma, xlab = "Time (s)", ylab = "Mean",
          line_color = "blue", ci_color = "gray", ci_linetype = "dotted",

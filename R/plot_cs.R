@@ -42,7 +42,8 @@
 #'
 #' ccds_cma <- SCB_functional_outcome(data = ccds_fpca, object = fosr_mod, method = "cma",
 #'                                    est_mean = TRUE, outcome = "percent_change",
-#'                                    time = "seconds", group_name = "use", group_value = 1, subject = "subject")
+#'                                    time = "seconds", group_name = "use",
+#'                                    group_value = 1, subject = "subject")
 #' ccds_cma <- tibble::as_tibble(ccds_cma)
 #'
 #' plot_cs(ccds_cma,levels = c(-7, -8, -9, -10), x = ccds_cma$time,
