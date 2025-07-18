@@ -64,7 +64,7 @@
 #'   \item{type}{A character description of the output type.}
 #'
 #'@importFrom tidyr pivot_wider
-#'@importFrom dplyr select mutate all_of :=
+#'@importFrom dplyr select mutate all_of
 #'@importFrom magrittr %>%
 #'@importFrom refund fpca.face
 #'

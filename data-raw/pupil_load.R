@@ -11,12 +11,10 @@ pupil_raw <- pupil
 pupil <- pupil_raw %>%
   mutate(id = as.factor(id)) %>%
   mutate(gender = as.numeric(gender == "Female")) %>%
-  mutate(smoker = ifelse(use_group %in% c("Daily - Concentrates",
-                                          "Daily - Flower",
-                                          "Occasional - Flower"), 1, 0)) %>%
-  mutate(daily = ifelse(use_group %in% c("Daily - Concentrates",
-                                         "Daily - Flower"), 1, 0)) %>%
   tibble::as_tibble()
+
+pupil <- pupil %>%
+  filter(!(id %in% c("003-1068", "003-112")))
 
 # save as .rda
 usethis::use_data(pupil, overwrite = TRUE)

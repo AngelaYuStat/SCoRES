@@ -1,24 +1,19 @@
-#' Load Raw ccds longitudinal data from clinical study and Clean the dataset (Right Eye, Post Timepoint)
+#' Trajectories of pupil response to light after cannabis use
 #'
-#' This dataset contains repeated measures of percent change over time
-#' for multiple subjects under two use categories. It includes both user and non-user groups,
-#' time points, and metadata related to eye side and frame timing. cleaning process make sure that the data only includes measurements taken from the right eye
-#' at the post-intervention timepoint (`tp == "post"`).
+#' Dataset contains functional observation of pupil size percent change after a light stimulus.
+#' Participants in the cannabis use group smoked cannabis flower or concentrate 40 minutes prior to the pupillometry measurement.
+#' Goal of this data is to understand differences in pupil response to light driven by acute cannabis users.
+#' Measurements were collected on the right eye.
 #'
 #' @format A tibble with N rows and 4 variables:
 #' \describe{
-#'   \item{subject_id}{Character. Subject identifier.}
-#'   \item{seconds}{Numeric. Time in seconds since initial measurement.}
-#'   \item{use}{Numeric. Binary indicator of usage status; \code{1} indicates "use", \code{0} otherwise.}
+#'   \item{subject}{Character. Subject identifier.}
+#'   \item{seconds}{Numeric. Time in seconds since light stimulus}
+#'   \item{use}{Numeric. Binary indicator of cannabis use 40 minute prior to the light stimulus}
 #'   \item{percent_change}{Numeric. Percent change in the outcome of interest.}
-#'   \item{subject}{Character. Equal to subject_id.}
 #' }
 #'
-#' @details
-#' The data was filtered to include only right-eye measurements at the post timepoint from the original \code{ccds_raw} dataset.
-#' The \code{use} variable is derived from a character column, with \code{"use"} mapped to \code{1}, and all other values to \code{0}.
-#'
-#' @source Processed from \code{data-raw/ccds_load.R} using the \code{here} and \code{dplyr} packages.
+#' @source Processed from \code{data-raw/ccds_load.R} using the \code{readr} and \code{dplyr} packages.
 #' @usage data(ccds)
 #' @keywords dataset
 "ccds"

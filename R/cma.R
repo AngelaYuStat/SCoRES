@@ -425,14 +425,7 @@ prepare_ccds_fpca <- function(input_data, k_mean = 30, k_fpca = 15) {
 #' Processes data by fitting a mean GAM model, extracting residuals, performing FPCA,
 #' and merging the results to create an enhanced dataset for functional regression analysis.
 #'
-#' @param input_data Raw ccds data frame containing:
-#'   \itemize{
-#'     \item \code{percent_change}: Functional response variable
-#'     \item \code{seconds}: Time variable
-#'     \item{smoker}{Numeric. 1 = Daily or Occasional user, 0 = No Use.}
-#'     \item{Daily}{Numeric. 1 = Daily user only, 0 = otherwise.}
-#'     \item{gender}{Numeric. Binary gender: 1 = Female, 0 = Male.}
-#'   }
+#' @param input_data Raw pupil data
 #' @param k_mean Number of basis functions for mean model smooth terms (default: 30)
 #' @param k_fpca Number of knots for FPCA estimation (default: 15)
 #'
@@ -459,8 +452,7 @@ prepare_pupil_fpca <- function(input_data, k_mean = 30, k_fpca = 15) {
   mean_mod <- gam(
     percent_change ~ s(seconds, k = k_mean, bs = "cr") +
       s(seconds, by = use, k = k_mean, bs = "cr") +
-      s(seconds, by = smoker, k = k_mean, bs = "cr") +
-      s(seconds, by = daily, k = k_mean, bs = "cr") +
+      s(seconds, by = age, k = k_mean, bs = "cr") +
       s(seconds, by = gender, k = k_mean, bs = "cr"),
     data = input_data, method = "REML"
   )

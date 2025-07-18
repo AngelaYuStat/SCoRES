@@ -17,8 +17,6 @@ A tibble with 16764 rows and 12 variables:
 \item{seconds}{Numeric. Time in seconds since stimulus onset.}
 \item{percent_change_baseline}{Numeric. Percent change relative to baseline.}
 \item{percent_change}{Numeric. Outcome: pupil percent change at each time point.}
-\item{smoker}{Numeric. 1 = Daily or Occasional user, 0 = No Use.}
-\item{daily}{Numeric. 1 = Daily user only, 0 = otherwise.}
 }
 }
 \source{

@@ -7,14 +7,7 @@
 prepare_pupil_fpca(input_data, k_mean = 30, k_fpca = 15)
 }
 \arguments{
-\item{input_data}{Raw ccds data frame containing:
-\itemize{
-\item \code{percent_change}: Functional response variable
-\item \code{seconds}: Time variable
-\item{smoker}{Numeric. 1 = Daily or Occasional user, 0 = No Use.}
-\item{Daily}{Numeric. 1 = Daily user only, 0 = otherwise.}
-\item{gender}{Numeric. Binary gender: 1 = Female, 0 = Male.}
-}}
+\item{input_data}{Raw pupil data}
 
 \item{k_mean}{Number of basis functions for mean model smooth terms (default: 30)}
 
