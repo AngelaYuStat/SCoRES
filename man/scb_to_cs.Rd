@@ -15,7 +15,8 @@ scb_to_cs(
   type = "upper",
   return_contain_only = F,
   return_plot = F,
-  ...
+  xlab = NULL,
+  ylab = NULL
 )
 }
 \arguments{
@@ -38,13 +39,16 @@ Should have the same dimension as \code{scb_up}.}
 \item{x2}{A numeric vector of coordinates for the second dimension (e.g., space or y-axis).}
 
 \item{type}{A character string specifying the type of inverse set to construct if levels are not a matrix.
-Choices are \code{"upper"}, \code{"lower"}, or \code{"two-sided"}.}
+Choices are \code{"upper"}, \code{"lower"}, \code{"two-sided"} or \code{"interval"}.
+Notice that \code{"two-sided"} type is not available for plotting (\code{return_plot = TRUE}).}
 
 \item{return_contain_only}{Logical. If \code{TRUE}, only return a matrix/logical map indicating whether the level set is contained.}
 
 \item{return_plot}{Logical. If \code{TRUE}, return a ggplot object for visualization.}
 
-\item{...}{Additional plotting parameters passed internally (e.g., to \verb{geom_*}, \code{theme}, or other components).}
+\item{xlab}{A character for the name of the x axis for the returned ggplot object.}
+
+\item{ylab}{A character for the name of the y axis for the returned ggplot object.}
 }
 \value{
 A list containing the following components:

@@ -14,6 +14,8 @@
 #'   \item{scb_up}{Upper bound of the simultaneous confidence band.}
 #'   \item{type}{A character description of the output type.}
 #'
+#' @importFrom stats var
+#'
 #' @export
 #'
 #' @examples

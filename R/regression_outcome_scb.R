@@ -1,4 +1,4 @@
-#' Construct Simultaneous Confidence Bands for a Linear Model
+#' Construct Simultaneous Confidence Bands for a Linear Regression Model
 #'
 #' This function fits a linear model and constructs simultaneous confidence bands (SCB)
 #' using a non-parametric bootstrap method for the mean outcome of regression on a fixed test set design matrix
@@ -19,7 +19,7 @@
 #'   \item{...}{All columns from \code{grid_df}, representing the prediction grid.}
 #' }
 #'
-#' @import stats
+#' @importFrom stats quantile as.formula lm predict
 #' @export
 #'
 #' @examples
@@ -92,7 +92,7 @@ expit = function(x){
 #'   \item{grid_df}{All columns from \code{grid_df}, representing the prediction grid.}
 #' }
 #'
-#' @import stats
+#' @importFrom stats quantile as.formula glm predict
 #' @export
 #'
 #' @examples
@@ -144,7 +144,7 @@ SCB_logistic_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0
 #'   \item{scb_up}{Upper bound of the simultaneous confidence band for each coefficient.}
 #' }
 #'
-#' @import stats
+#' @importFrom stats quantile as.formula lm glm predict binomial
 #' @export
 #'
 #' @examples

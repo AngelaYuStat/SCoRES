@@ -1,5 +1,5 @@
 ---
-output: html_document
+output: pdf_document
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -371,8 +371,8 @@ results_pupil_wild <- invSCI::SCB_functional_outcome(data = pupil,
                                           alpha = 0.05, 
                                           outcome = "percent_change", 
                                           time = "seconds", 
-                                          group_name = c("use", "age", "gender"), 
-                                          group_value = c(1, 40, 0), 
+                                          group_name = c("use", "gender"), 
+                                          group_value = c(1, 0), 
                                           subject = "id")
 ```
 

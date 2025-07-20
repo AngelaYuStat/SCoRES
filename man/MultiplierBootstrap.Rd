@@ -33,7 +33,7 @@ A list with fields: \code{z} (distribution), \code{q} (threshold), and \code{sam
 Multiplier Bootstrap
 }
 \examples{
-# Used internally by SCB_dense
+# Used internally by SCB_dense and functional_outcome_scb
 
 }
 \references{

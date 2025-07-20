@@ -7,6 +7,7 @@
 plot_cs(
   SCB,
   levels,
+  type = "upper",
   x,
   y,
   mu_hat,
@@ -24,6 +25,8 @@ plot_cs(
 \item{SCB}{A list returned by \code{SCB_dense()} or a custom list with two arrays: \code{scb_up} and \code{scb_low}, representing the upper and lower confidence bounds respectively.}
 
 \item{levels}{A numeric vector of scalers specifying the levels to plot the cs.}
+
+\item{type}{A character specifying the type of inverse sets to fit. Choices are \code{"upper"}, \code{"lower"} or \code{"interval"}. Default is \code{"upper"}.}
 
 \item{x}{A vector of x-axis coordinates. For discrete coordinates, use a character vector.}
 

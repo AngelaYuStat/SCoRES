@@ -9,6 +9,8 @@
 #'
 #' @return A list with fields: `z` (distribution), `q` (threshold), and `samples`
 #'
+#' @importFrom stats rbinom var
+#'
 #' @references
 #' Telschow, F. J. E., & Schwartzman, A. (2022).
 #' Simultaneous confidence bands for functional data using the Gaussian Kinematic formula.
@@ -18,7 +20,7 @@
 #' @keywords internal
 #'
 #' @examples
-#' # Used internally by SCB_dense
+#' # Used internally by SCB_dense and functional_outcome_scb
 #'
 MultiplierBootstrap <- function( R,
                                  Q       = NULL,

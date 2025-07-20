@@ -1,17 +1,73 @@
+#' Construct Simultaneous Confidence Bands for a Generalized Least Square Model
+#'
+#' @param Z A list containing the spatial coordinates and the observations.
+#'  Should include the following components:
+#'   \itemize{
+#'     \item \code{x}: A numeric vector of x-coordinates (e.g., longitude).
+#'     \item \code{y}: A numeric vector of y-coordinates (e.g., latitude).
+#'     \item \code{z}: A 3D array of observations with dimensions \code{length(x)} × \code{length(y)} × \code{n}.
+#'   }
+#' @param level A numeric threshold value used to test whether the estimated mean surface significantly deviates from it.
+#' @param X A design matrix used in the generalized least squares (GLS) model. Each row corresponds to an observation, and each column to a covariate.
+#' @param w A numeric vector specifying a linear combination of the regression coefficients.
+#' @param correlation A character string specifying the name of the correlation structure (e.g., \code{"corAR1"}, \code{"corCompSymm"})
+#'   to be used in the GLS model. If \code{NULL}, no correlation structure is assumed.
+#' @param corpar A list of parameters to be passed to the correlation structure function specified in \code{correlation}.
+#' @param groups A vector of group identifiers used to define the within-group correlation structure (e.g., repeated measures, time blocks).
+#'   If not specified, defaults to \code{rep(1, n)}, assuming all observations belong to a single group.
+#' @param V An optional array of known covariance matrices of shape \code{[length(x), length(y), n, n]},
+#'   where each \code{V[i,j,,]} corresponds to the covariance matrix for the observations at spatial location \code{(x[i], y[j])}.
+#'   If V is given, then the GLS model will be fitted based on V. Otherwise, the GLS model will be fitted based on correlation structure.
+#' @param alpha A numerical value specifying the confidence level for the Simultaneous Confidence Bands.
+#' @param N An integer specifying the number of bootstrap samples to construct the Simultaneous Confidence Bands.
+#' @param mask An optional logical matrix same dimensions as \code{mu_hat}, indicating spatial locations to include in the SCB computation.
+#'   Non-included locations (e.g., water areas) should be set to 0 or \code{NA}.
+#'
+#' @return A list containing the following components:
+#' \describe{
+#'   \item{\code{scb_up}}{A matrix of upper bounds for the simultaneous confidence bands at each spatial location.}
+#'   \item{\code{scb_low}}{A matrix of lower bounds for the simultaneous confidence bands at each spatial location.}
+#'   \item{\code{mu_hat}}{A matrix of estimated mean values at each spatial location.}
+#'   \item{\code{norm_est}}{A matrix of standardized test statistics \code{(mu_hat - level) / SE}.}
+#'   \item{\code{thres}}{The bootstrap threshold used to construct the confidence bands.}
+#'   \item{\code{x}}{The vector of x-coordinates corresponding to the columns of the spatial grid.}
+#'   \item{\code{y}}{The vector of y-coordinates corresponding to the rows of the spatial grid.}
+#' }
+#'
+#' @references
+#' Sommerfeld, M., Sain, S., & Schwartzman, A. (2018).
+#' Confidence regions for spatial excursion sets from repeated random field observations, with an application to climate.
+#' \emph{Journal of the American Statistical Association}, 113(523), 1327–1340.
+#' \doi{10.1080/01621459.2017.1356318}
+#'
+#' @importFrom MASS lm.gls
+#' @importFrom nlme gls corMatrix
+#' @importFrom stats quantile formula sd
+#'
+#' @export
+#'
+#' @examples
+#' data(climate_data)
+#' library(nlme)
+#' # construct confidence sets for the increase of the mean temperature (June-August)
+#' # in North America between the 20th and 21st centuries
+#' temp = SCB_gls_climate(Z = climate_data$Z, level = 2, X = climate_data$X,
+#'                        w = c(1,0,0,0), correlation = climate_data$correlation,
+#'                        mask = climate_data$mask, alpha = 0.1)
 SCB_gls_climate =
   function (Z, level, X = NULL, w = NULL, correlation = NULL, corpar = NULL,
-            groups = NULL, V = NULL, alpha = 0.1, N = 1000, mu = NULL,
+            groups = NULL, V = NULL, alpha = 0.1, N = 1000,
             mask = NULL)
   {
     # require(nlme)
     x = Z$x
     y = Z$y
-    Y = Z$z
+    Y = Z$z # observations
     n = dim(Y)[3]
     nloc <- length(x) * length(y)
     if (is.null(X)) {
-      X <- matrix(1, n, 1)
-      w <- matrix(1, 1, 1)
+      X <- matrix(1, n, 1) # design matrix
+      w <- matrix(1, 1, 1) # covariate (linear combination)
     }
     p <- ncol(X)
     if (is.null(groups)) {
@@ -23,13 +79,13 @@ SCB_gls_climate =
       D <- diag(E$values)
       U %*% diag(1/sqrt(E$values)) %*% t(U)
     }
-    deR <- array(0, c(length(x), length(y), n))
+    deR <- array(0, c(length(x), length(y), n)) # for bootstrap
     vabs <- matrix(0, length(x), length(y))
     norm_est <- matrix(0, length(x), length(y))
     mu_hat <- matrix(0, length(x), length(y))
     if (!is.null(correlation))
       correlation = do.call(get(correlation), c(corpar, form = ~1 |
-                                                  groups))
+                                                  groups)) # correlation structure between observations
     for (i in 1:length(x)) {
       for (j in 1:length(y)) {
         ytemp <- Y[i, j, ]
@@ -42,24 +98,26 @@ SCB_gls_climate =
           df <- df[order(groups), ]
           groups <- sort(groups)
           fo <- paste(names(df)[1], "~", paste(names(df)[-c(1,
-                                                            p + 2)], collapse = " + "), "-1")
-          if (is.null(V)) {
-            model <- nlme::gls(formula(fo), data = df,
+                                                            p + 2)], collapse = " + "), "-1") # include intercept in X
+          if (is.null(V) && !is.null(correlation)) {
+            model <- gls(formula(fo), data = df,
                                correlation = correlation)
           }
-          else {
-            model <- MASS::lm.gls(formula(fo), data = df,
+          else if(!is.null(V)) {
+            model <- lm.gls(formula(fo), data = df,
                                   W = V[i, j, , ], inverse = TRUE)
+          }else{
+            stop("Must provide one of 'correlation' and 'V'.")
           }
           mu_hat[i, j] <- t(w) %*% model$coefficients
           if (!is.null(correlation)) {
-            cM <- nlme::corMatrix(model$modelStruct$corStruct,
-                                  corr = F)
+            cM <- corMatrix(model$modelStruct$corStruct,
+                                  corr = F) # list of covariance matrix for all groups
             if (!is.list(cM))
               cM <- list(cM)
-            invsqrtmOmega <- Matrix::as.matrix(Matrix::bdiag(cM))
-            deR[i, j, ] <- invsqrtmOmega %*% model$residuals
-            deR[i, j, ] <- deR[i, j, ]/sd(deR[i, j, ])
+            invsqrtmOmega <- as.matrix(bdiag(cM)) # intergrate
+            deR[i, j, ] <- invsqrtmOmega %*% model$residuals # decorrelation
+            deR[i, j, ] <- deR[i, j, ]/sd(deR[i, j, ]) # standardization
           }
           else if (!is.null(V)) {
             deR[i, j, ] <- chol(solve(V[i, j, , ])) %*%
@@ -95,10 +153,28 @@ SCB_gls_climate =
     scb_up = mu_hat + a_MB*vabs
     scb_low = mu_hat - a_MB*vabs
     # return index, scb_up, scb_low
-    return(list(scb_up = scb_up, scb_low = scb_low, mu_hat = mu_hat, thres = a_MB,
+    return(list(scb_up = scb_up, scb_low = scb_low, mu_hat = mu_hat, norm_est = norm_est, thres = a_MB,
                 x = x, y = y))
   }
 
+#' Multiplier Bootstrap for Simultaneous Confidence Band Threshold
+#'
+#' Internal function used to compute the threshold value for constructing simultaneous confidence bands via multiplier bootstrap.
+#'
+#' @param x A numeric vector of x-coordinates.
+#' @param y A numeric vector of y-coordinates.
+#' @param R A 3D array of standardized residuals with dimensions \code{[length(x), length(y), n]}, where \code{n} is the sample size.
+#' @param N An integer specifying the number of bootstrap samples. Default is \code{1000}.
+#'
+#' @return A numeric vector of length \code{N}, containing the maximum standardized deviation across all spatial locations for each bootstrap sample.
+#'   These can be used to compute the \code{(1 - alpha)} quantile as the SCB threshold.
+#'
+#' @importFrom stats rnorm
+#' @keywords internal
+#'
+#' @examples
+#' # Used internally by SCB_gls_climate
+#'
 MB_ = function (x, y, R, N = 1000)
 {
   n = dim(R)[3]
@@ -107,119 +183,5 @@ MB_ = function (x, y, R, N = 1000)
                                                                   2)
 }
 
-
-
-
-###################################
-#Plotting
-###################################
-# library(fields)
-# library(maps)
-# data(worldMapEnv)
-
-#Functions
-##################################
-#Plotting values on the map.
-image.map = function(lon, lat, img, mask=NULL, xlab='longitude', ylab='latitude', ...) {
-  if(!is.null(mask)) {
-    img = img*mask
-    xlim = lon[range(which(rowSums(mask, na.rm=TRUE)>0))]
-    ylim = lat[range(which(colSums(mask, na.rm=TRUE)>0))]
-  } else {
-    xlim = range(lon)
-    ylim = range(lat)
-  }
-  image.plot(lon, lat, img, xlab=xlab, ylab=ylab, xlim=xlim, ylim=ylim, ...)
-  map('world', add=TRUE)
-}
-
-#Drawing the contour.
-drawContour<-function(x,y,z,c,col,lty=1){
-  C<-contourLines(x,y,z,levels=c,nlevels=1)
-  for(i in 1:length(C))
-    lines(C[[i]]$x,C[[i]]$y,pch=20,col=col,lwd=3,lty=lty)
-}
-
-#Create single peak test signal.
-single.peak = function(sx, sy, x, y, b) {
-  mu0 = matrix(0, length(sx), length(sy))
-  mu0[x, y] = 1
-  mu = image.smooth(mu0, theta = b, dx = sx[2]-sx[1], dy = sy[2]-sy[1])$z
-}
-
-#A and B are coincident matrices representing subsets of the plane (non-zero entry = point contained in set).
-#This function returns 1 if A is a subset of B and zero otherwise.
-subset = function(A,B){
-  all(!(A & (!B)))
-}
-
-false_pos = function(A_true,A_plus){
-  sum(A_plus & !A_true) / sum(!A_true)
-}
-
-false_neg = function(A_true,A_minus){
-  sum(A_true & !A_minus) / sum(A_true)
-}
-
-#This function takes realizations Y of a random field and returns a distribution functions
-# for the supremum of the limiting Gaussian field.
-MC_gauss = function(Y,N){
-  n = dim(Y)[3]
-  Y = matrix(Y,ncol=n)
-  g = matrix(rnorm(n*N),n,N)
-  maxima = apply(abs(Y %*% g), 2, max) / sqrt(n)
-
-  function(t) sum(maxima>=t) / length(maxima)
-}
-
-#Does the same as MC_gauss but uses a plug-in estimate of the excursion set A_c.
-MC_plug = function(Y,N,A){
-  n = dim(Y)[3]
-  Y = matrix(Y,ncol=n)
-  A = as.vector(A)
-  A[A==TRUE] = -1
-  A[A==FALSE] = 1
-  g = matrix(rnorm(n*N),n,N)
-  r = apply(Y %*% g * A,2,max) / sqrt(n)
-  function(t) sum(r>=t) / length(r)
-}
-
-#This function computes an estimate for the variance upper bound of the false area ratios by Monte Carlo integration.
-variance_mc = function(x,y,Y,A,a,N){
-  n = dim(Y)[3]
-
-  rx = range(x)
-  ry = range(y)
-
-  #Draw uniformly random points in SxS.
-  ux1 = runif(N,min=rx[1],max=rx[2])
-  uy1 = runif(N,min=ry[1],max=ry[2])
-  ux2 = runif(N,min=rx[1],max=rx[2])
-  uy2 = runif(N,min=ry[1],max=ry[2])
-
-  #Interpolate values of realizations to the locations of points.
-  Y1 = matrix(0,n,N)
-  for(i in 1:n) Y1[i,] = interp.surface(list(x=x,y=y,z=Y[,,i]),cbind(ux1,uy1))
-  Y2 = matrix(0,n,N)
-  for(i in 1:n) Y2[i,] = interp.surface(list(x=x,y=y,z=Y[,,i]),cbind(ux2,uy2))
-
-  #Compute empirical covariance.
-  cv = cov(Y1,Y2)
-
-  #Determine if random draws are in A or !A.
-  IndA1 = interp.surface(list(x=x,y=y,z=A),cbind(ux1,uy1))
-  IndA2 = interp.surface(list(x=x,y=y,z=A),cbind(ux2,uy2))
-
-  IndAc1 = interp.surface(list(x=x,y=y,z=!A),cbind(ux1,uy1))
-  IndAc2 = interp.surface(list(x=x,y=y,z=!A),cbind(ux2,uy2))
-
-  #Function from the variance bound as in the text.
-  M = function(cv) cv/(2*pi*sqrt(1-cv^2)) * exp(-1/(1+cv)*a^2)
-
-  #Computing volumes of A and !A.
-  volA = sum(A) * diff(range(x))/length(x) * diff(range(y))/length(y)
-  volAc = sum(!A) * diff(range(x))/length(x) * diff(range(y))/length(y)
-
-  #Compute MC integral.
-  c(mean(IndA1 %o% IndA2 * M(cv)) * length(A)^2 / sum(A)^2 , mean(IndAc1 %o% IndAc2 * M(cv)) * length(A)^2 / sum(!A)^2)
-}
+# Delete other functions
+# Make Data Object

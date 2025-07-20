@@ -21,7 +21,6 @@ Imports:
     MASS,
     metR,
     mgcv,
-    mvtnorm,
     nlme,
     patchwork,
     reshape,
@@ -29,7 +28,6 @@ Imports:
     tibble,
     Matrix,
     matrixStats,
-    abind,
     tidyr,
     refund,
 Depends: 

@@ -35,6 +35,8 @@
 #'   \item{mod_cov}{Variance-covariance matrix corresponding to the selected group coefficients}
 #' }
 #'
+#' @importFrom stats formula model.frame vcov
+#'
 #' @examples
 #' data(ccds)
 #' ccds_fpca <- prepare_ccds_fpca(ccds)
@@ -178,7 +180,9 @@ mean_response_predict = function(data, object, fitted = TRUE, time, range = NULL
 #'   \item{scb_up}{Upper bound of the simultaneous confidence band.}
 #'   \item{type}{A character description of the output type.}
 #'
-#' @import stats
+#' @importFrom MASS mvrnorm
+#' @importFrom stats quantile
+#'
 #' @export
 #'
 #' @examples

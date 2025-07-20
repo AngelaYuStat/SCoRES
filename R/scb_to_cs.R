@@ -15,10 +15,12 @@
 #' @param x1 A numeric vector of coordinates for the first dimension (e.g., time or x-axis).
 #' @param x2 A numeric vector of coordinates for the second dimension (e.g., space or y-axis).
 #' @param type A character string specifying the type of inverse set to construct if levels are not a matrix.
-#'        Choices are `"upper"`, `"lower"`, or `"two-sided"`.
+#'        Choices are `"upper"`, `"lower"`, `"two-sided"` or `"interval"`.
+#'        Notice that `"two-sided"` type is not available for plotting (\code{return_plot = TRUE}).
 #' @param return_contain_only Logical. If `TRUE`, only return a matrix/logical map indicating whether the level set is contained.
 #' @param return_plot Logical. If `TRUE`, return a ggplot object for visualization.
-#' @param ... Additional plotting parameters passed internally (e.g., to `geom_*`, `theme`, or other components).
+#' @param xlab A character for the name of the x axis for the returned ggplot object.
+#' @param ylab A character for the name of the y axis for the returned ggplot object.
 #'
 #' @return A list containing the following components:
 #' \describe{
@@ -32,7 +34,6 @@
 #'   \item{plot_cs}{(Optional) A list of ggplot2 objects for visualizing the confidence sets, returned when \code{return_plot = TRUE}. Includes both a combined plot and individual plots per level.}
 #' }
 #'
-#' @import stats
 #' @export
 #'
 #' @examples
@@ -47,26 +48,23 @@
 #' scb_to_cs(result$UpperBound, result$LowerBound, c(-1, -0.5, 0.5, 1),
 #' x1 = grid$x1, x2 = grid$x2, est_mean = results$Mean)
 #'
-scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL,est_mean = NULL, x1, x2, type = "upper", return_contain_only = F, return_plot = F,...)
+scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL,est_mean = NULL, x1, x2, type = "upper", return_contain_only = F, return_plot = F, xlab = NULL, ylab = NULL)
 {
-  incl_f <- function(A, B) {
-    min(B - A) >= 0 #if B includes A
-  }
   if(return_plot){
-    p_para <- list(...)
+    p_para <- list(xlab = xlab, ylab = ylab)
     if(is.null(true_mean)){
       pl_together = plot_cs(SCB = list(scb_up = scb_up, scb_low = scb_low),
-                            levels = levels, x = x1, y = x2, mu_hat = est_mean,
+                            levels = levels, type = type, x = x1, y = x2, mu_hat = est_mean,
                             together = T, xlab = p_para$xlab,ylab = p_para$ylab)
       pl = plot_cs(SCB = list(scb_up = scb_up, scb_low = scb_low),
-                   levels = levels, x = x1, y = x2, mu_hat = est_mean,
+                   levels = levels, type = type, x = x1, y = x2, mu_hat = est_mean,
                    together = F, xlab = p_para$xlab,ylab = p_para$ylab)
       pl = list(pl_together, pl)
     }else{
       pl_together = plot_cs(SCB = list(scb_up = scb_up, scb_low = scb_low),
-                            levels = levels, x = x1, y = x2,mu_true = true_mean,
+                            levels = levels, type = type, x = x1, y = x2,mu_true = true_mean,
                             mu_hat = est_mean, together = T,xlab = p_para$xlab,ylab = p_para$ylab)
-      pl = plot_cs(SCB = list(scb_up = scb_up, scb_low = scb_low), levels = levels,
+      pl = plot_cs(SCB = list(scb_up = scb_up, scb_low = scb_low), levels = levels, type = type,
                    x = x1, y = x2,mu_true = true_mean, mu_hat = est_mean,
                    together = F,
                    xlab = p_para$xlab,ylab = p_para$ylab)
@@ -129,7 +127,7 @@ scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL,est_mean = NULL, 
                   contain_individual = contain_v, contain_all = all(contain_v), plot_cs = plot_cs))
     }
 
-  }else{# When we have interval level sets
+  }else if(type == "interval"){# When we have interval level sets
     l_dim = dim(levels)
     for(i in 1:l_dim[1]){
       c = c(levels[i,])
@@ -144,7 +142,29 @@ scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL,est_mean = NULL, 
         contain_v = c(contain_v,incl_f(in_set, true_set) & incl_f(true_set, out_set))
       }
     }
+  }else{
+    stop("Type must be chosen between 'upper', 'lower', 'two-sided' or 'interval'.")
   }
   return(list(levels = levels, U_in = in_list, U_out = out_list,
               contain_individual = contain_v, contain_all = all(contain_v), plot_cs = pl))
 }
+
+#' Test inclusion relationship between two logical vectors
+#'
+#' This function tests whether all \code{TRUE} positions in vector \code{A} are also \code{TRUE} in vector \code{B},
+#' which is equivalent to testing whether \code{A} is element-wise included in \code{B}.
+#'
+#' @param A A logical vector.
+#' @param B A logical vector of the same length as \code{A}.
+#'
+#' @return A logical value: \code{TRUE} if all \code{TRUE} values in \code{A} are also \code{TRUE} in \code{B}; otherwise \code{FALSE}.
+#' @keywords internal
+#'
+#' @examples
+#' # Used internally by scb_to_cs
+#'
+incl_f <- function(A, B) {
+  min(B - A) >= 0 #if B includes A
+}
+# Make a data object
+

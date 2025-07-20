@@ -2,7 +2,7 @@
 % Please edit documentation in R/regression_outcome_scb.R
 \name{SCB_linear_outcome}
 \alias{SCB_linear_outcome}
-\title{Construct Simultaneous Confidence Bands for a Linear Model}
+\title{Construct Simultaneous Confidence Bands for a Linear Regression Model}
 \usage{
 SCB_linear_outcome(
   df_fit,

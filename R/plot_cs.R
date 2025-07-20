@@ -5,6 +5,7 @@
 #'
 #' @param SCB A list returned by `SCB_dense()` or a custom list with two arrays: `scb_up` and `scb_low`, representing the upper and lower confidence bounds respectively.
 #' @param levels A numeric vector of scalers specifying the levels to plot the cs.
+#' @param type A character specifying the type of inverse sets to fit. Choices are `"upper"`, `"lower"` or `"interval"`. Default is `"upper"`.
 #' @param x A vector of x-axis coordinates. For discrete coordinates, use a character vector.
 #' @param y Optional vector of y-axis coordinates, required when the SCB array is 2D.
 #' @param mu_hat A matrix or vector of estimated means. If `mu_true` is provided, this will be overwritten by the true mean.
@@ -50,7 +51,7 @@
 #'         mu_hat = ccds_cma$yhat, xlab = "", ylab = "",
 #'         level_label = T, min.size = 40, palette = "Spectral",
 #'         color_level_label = "black")
-plot_cs = function(SCB, levels, x, y, mu_hat, mu_true = NULL, together = T, xlab = "X1", ylab = "X2", level_label = T,
+plot_cs = function(SCB, levels, type = "upper", x, y, mu_hat, mu_true = NULL, together = T, xlab = "X1", ylab = "X2", level_label = T,
                    min.size = 5,palette = "gray",color_level_label = "black"){
   dim = length(dim(SCB$scb_up))
   if(dim == 0){# 1 dimension case
@@ -61,12 +62,34 @@ plot_cs = function(SCB, levels, x, y, mu_hat, mu_true = NULL, together = T, xlab
         p = df_plot %>% ggplot(aes(x = x))+ geom_errorbar(aes(ymin = low, ymax = up)) +
           geom_hline(yintercept = levels, linetype="dashed")
         p = p + geom_point(data = df_plot,aes(x = x, y = mu_hat),color = "black")
+        if(type == "interval"){ i <- 1 }
         for(l in levels){
-          df_plot_l = df_plot %>%
-            mutate(l_in = ifelse(low >= l, l, NA),
-                   l_est = ifelse(est_mean >= l & is.na(l_in), l, NA),
-                   l_out = ifelse(up >= l & is.na(l_est) & is.na(l_in), l, NA)
-            )
+          if(type == "upper"){
+            df_plot_l = df_plot %>%
+              mutate(l_in = ifelse(low >= l, l, NA),
+                     l_est = ifelse(est_mean >= l & is.na(l_in), l, NA),
+                     l_out = ifelse(up >= l & is.na(l_est) & is.na(l_in), l, NA)
+              )
+          }else if(type == "lower"){
+            df_plot_l = df_plot %>%
+              mutate(l_in = ifelse(up <= l, l, NA),
+                     l_est = ifelse(est_mean <= l & is.na(l_in), l, NA),
+                     l_out = ifelse(low <= l & is.na(l_est) & is.na(l_in), l, NA)
+              )
+          }else if(type == "interval"){
+            # l_dim = dim(levels)
+            l = levels[i,]
+            df_plot_l = df_plot %>%
+              mutate(l_in = ifelse(low >= l$low & up <= l$up, l, NA),
+                     l_est = ifelse((est_mean >= l$low & est_mean <= l$up) & is.na(l_in), l$low, NA),
+                     l_out = ifelse((up >= l$low & low <= up) & is.na(l_est) & is.na(l_in), l$low, NA)
+              )
+            i = i + 1
+          }else if(type == "two-sided"){
+            stop("'two-sided' is not avaliable for plotting, please choose between 'upper', 'lower' or 'interval'.")
+          }else{
+            stop("Type must be chosen between 'upper', 'lower' or 'interval'.")
+          }
           if(!all(is.na(df_plot_l$l_out))){
             p = p+ geom_point(aes(x, l_out), data = df_plot_l, color = "blue")
           }
@@ -86,12 +109,34 @@ plot_cs = function(SCB, levels, x, y, mu_hat, mu_true = NULL, together = T, xlab
                     aes(x = x, y = y, label = labels,vjust = -0.5, hjust = -0.05))
         #scale_y_continuous(breaks =levels)
         #p = p + geom_point(data = df_plot,aes(x = x, y = mu_hat),color = "black")
+        if(type == "interval"){ i <- 1}
         for(l in levels){
-          df_plot_l = df_plot %>%
-            mutate(l_in = ifelse(low >= l, l, NA),
-                   l_true = ifelse(true_mean >= l & is.na(l_in), l, NA),
-                   l_out = ifelse(up >= l & is.na(l_true) & is.na(l_in), l, NA)
-            )
+          if(type == "upper"){
+            df_plot_l = df_plot %>%
+              mutate(l_in = ifelse(low >= l, l, NA),
+                     l_est = ifelse(true_mean >= l & is.na(l_in), l, NA),
+                     l_out = ifelse(up >= l & is.na(l_est) & is.na(l_in), l, NA)
+              )
+          }else if(type == "lower"){
+            df_plot_l = df_plot %>%
+              mutate(l_in = ifelse(up <= l, l, NA),
+                     l_est = ifelse(true_mean <= l & is.na(l_in), l, NA),
+                     l_out = ifelse(low <= l & is.na(l_est) & is.na(l_in), l, NA)
+              )
+          }else if(type == "interval"){
+            # l_dim = dim(levels)
+            l = levels[i,]
+            df_plot_l = df_plot %>%
+              mutate(l_in = ifelse(low >= l$low & up <= l$up, l$low, NA),
+                     l_est = ifelse((true_mean >= l$low & true_mean <= l$up) & is.na(l_in), l$low, NA),
+                     l_out = ifelse((up >= l$low & low <= up) & is.na(l_est) & is.na(l_in), l$low, NA)
+              )
+            i = i + 1
+          }else if(type == "two-sided"){
+            stop("'two-sided' is not avaliable for plotting, please choose between 'upper', 'lower' or 'interval'.")
+          }else{
+            stop("Type must be chosen between 'upper', 'lower' or 'interval'.")
+          }
           if(!all(is.na(df_plot_l$l_out))){
             p = p+ geom_point(aes(x, l_out), data = df_plot_l, color = "blue")
           }
@@ -117,10 +162,28 @@ plot_cs = function(SCB, levels, x, y, mu_hat, mu_true = NULL, together = T, xlab
           geom_text(data = data.frame(x = rep(min(x), length(levels)), y = levels, labels = levels),
                     aes(x = x, y = y, label = labels,vjust = -0.5))
         p = p + geom_line(data = df_plot,aes(x = x, y = mu_hat),color = "black")
+        if(type == "interval"){ i <- 1}
         for(l in levels){
-          df_plot_l = df_plot %>% mutate(l_in = ifelse(low >= l, l, NA),
-                                         l_est = ifelse(est_mean >= l, l, NA),
-                                         l_out = ifelse(up >= l , l, NA))
+          if(type == "upper"){
+            df_plot_l = df_plot %>% mutate(l_in = ifelse(low >= l, l, NA),
+                                           l_est = ifelse(est_mean >= l, l, NA),
+                                           l_out = ifelse(up >= l , l, NA))
+          }else if(type == "lower"){
+            df_plot_l = df_plot %>% mutate(l_in = ifelse(up <= l, l, NA),
+                                           l_est = ifelse(est_mean <= l, l, NA),
+                                           l_out = ifelse(low <= l , l, NA))
+          }else if(type == "interval"){
+            # l_dim = dim(levels)
+            l = levels[i,]
+            df_plot_l = df_plot %>% mutate(l_in = ifelse(low >= l$low & up <= l$up, l$low, NA),
+                                           l_est = ifelse(est_mean >= l$low & est_mean <= l$up, l$low, NA),
+                                           l_out = ifelse(up >= l$low & low <= l$lup , l$low, NA))
+            i = i + 1
+          }else if(type == "two-sided"){
+            stop("'two-sided' is not avaliable for plotting, please choose between 'upper', 'lower' or 'interval'.")
+          }else{
+            stop("Type must be chosen between 'upper', 'lower' or 'interval'.")
+          }
           if(!all(is.na(df_plot_l$l_out))){
             p = p + geom_line(data = df_plot_l,aes(x = x, y = l_out),color = "blue",lwd=1.5)
           }
@@ -140,10 +203,28 @@ plot_cs = function(SCB, levels, x, y, mu_hat, mu_true = NULL, together = T, xlab
           geom_text(data = data.frame(x = rep(min(x), length(levels)), y = levels, labels = levels),
                     aes(x = x, y = y, label = labels, vjust = -0.5))
         #p = p + geom_line(data = df_plot,aes(x = x, y = mu_hat),color = "black")
+        if(type == "interval"){ i <- 1}
         for(l in levels){
-          df_plot_l = df_plot %>% mutate(l_in = ifelse(low >= l, l, NA),
-                                         l_true = ifelse(mu_true >= l, l, NA),
-                                         l_out = ifelse(up >= l , l, NA))
+          if(type == "upper"){
+            df_plot_l = df_plot %>% mutate(l_in = ifelse(low >= l, l, NA),
+                                           l_est = ifelse(true_mean >= l, l, NA),
+                                           l_out = ifelse(up >= l , l, NA))
+          }else if(type == "lower"){
+            df_plot_l = df_plot %>% mutate(l_in = ifelse(up <= l, l, NA),
+                                           l_est = ifelse(true_mean <= l, l, NA),
+                                           l_out = ifelse(low <= l , l, NA))
+          }else if(type == "interval"){
+            # l_dim = dim(levels)
+            l = levels[i,]
+            df_plot_l = df_plot %>% mutate(l_in = ifelse(low >= l$low & up <= l$up, l$low, NA),
+                                           l_est = ifelse(true_mean >= l$low & true_mean <= l$up, l$low, NA),
+                                           l_out = ifelse(up >= l$low & low <= l$up , l$low, NA))
+            i = i + 1
+          }else if(type == "two-sided"){
+            stop("'two-sided' is not avaliable for plotting, please choose between 'upper', 'lower' or 'interval'.")
+          }else{
+            stop("Type must be chosen between 'upper', 'lower' or 'interval'.")
+          }
           if(!all(is.na(df_plot_l$l_out))){
             p = p + geom_line(data = df_plot_l,aes(x = x, y = l_out),color = "blue",lwd=1.5)
           }
@@ -168,6 +249,7 @@ plot_cs = function(SCB, levels, x, y, mu_hat, mu_true = NULL, together = T, xlab
     }
 
   }else if(dim == 2){# 2 dimension case
+    # remember to explain why 2D don't need to specify the type of set fitted
     # normalized quantity dataframe
     if(is.null(x)){
       x = seq(0,1,dim(SCB$scb_up)[1])
@@ -192,14 +274,16 @@ plot_cs = function(SCB, levels, x, y, mu_hat, mu_true = NULL, together = T, xlab
       mu = mu_true
       rownames(mu) = x
       colnames(mu) = y
-      mu = suppressWarnings(reshape::melt(mu))
+      mu = suppressWarnings(melt(mu))
       colnames(mu)=c("X1","X2", "true_mean")
-    }else{
+    }else if(!is.null(mu_hat)){
       mu = mu_hat
-      # rownames(mu) = x
-      # colnames(mu) = y
-      # mu = suppressWarnings(reshape::melt(mu))
+      rownames(mu) = x
+      colnames(mu) = y
+      mu = suppressWarnings(melt(mu))
       colnames(mu)=c("X1","X2", "estimated_mean")
+    }else{
+      stop("Must provide 'mu_true' or 'mu_hat'.")
     }
     #Plotting]
 

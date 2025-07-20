@@ -1,0 +1,40 @@
+#' Historical and Future Summer Temperature Data in North America
+#'
+#' A spatial dataset containing historical (1971-1999) and future (2041-2069) mean summer (June–August) surface temperatures over North America,
+#' used for evaluating increase of mean summer temperature between the 20th and 21st centuries in North America,
+#' and constructing simultaneous confidence bands via generalized least squares (GLS) modeling.
+#'
+#' The data are arranged on a regular longitude–latitude grid, with spatial masking for land-only analysis.
+#' AR(1) correlation structure is assumed for statistical modeling.
+#'
+#' @format A list with the following components:
+#' \describe{
+#'   \item{\code{Z}}{A list containing spatial data with three components:
+#'     \code{x} (longitude), \code{y} (latitude), and \code{z}, a 3D array of observations with dimensions \code{[lon, lat, n]}.
+#'     The first \code{na} slices of \code{z} come from mean summer temperature (June-August) in North America recorded from 1971 to 1999,
+#'     and the last \code{nb} slices contain mean summer temperature from 2041 to 2069.}
+#'   \item{\code{mask}}{A logical or numeric matrix of dimensions \code{length(lon)} × \code{length(lat)}.
+#'     Values are set to 1 for land and \code{NA} elsewhere based on the elevation matrix \code{orog > 0}.}
+#'   \item{\code{X}}{A numeric design matrix with \code{na + nb} rows and 4 columns, constructed for generalized least squares (GLS) regression.
+#'     The rows correspond to spatial replicates from \code{na} current years and \code{nb} future years.
+#'     The columns are:
+#'     \enumerate{
+#'       \item \code{X1}: Group indicator (0 for current years (1971-1999), 1 for future years (2041-2069))
+#'       \item \code{X2}: Intercept
+#'       \item \code{X3}: Centered time variable \code{ta} for current years (1971-1999) (0 for future years (2041-2069))
+#'       \item \code{X4}: Centered time variable \code{tb} for future years (2041-2069) (0 for current years (1971-1999))
+#'     }}
+#'  \item{\code{correlation}}{A character string set to \code{"corAR1"}, indicating that an autoregressive correlation structure of order 1 (AR(1))
+#'    is used for GLS fitting.}
+#' }
+#'
+#' @references
+#' Sommerfeld, M., Sain, S., & Schwartzman, A. (2018).
+#' Confidence regions for spatial excursion sets from repeated random field observations, with an application to climate.
+#' \emph{Journal of the American Statistical Association}, 113(523), 1327–1340.
+#' \doi{10.1080/01621459.2017.1356318}
+#'
+#' @source Processed from \code{data-raw/climate_data.R} using the \code{readr} package.
+#' @usage data(climate_data)
+#' @keywords dataset
+"climate_data"

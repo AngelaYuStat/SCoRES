@@ -38,6 +38,11 @@ usethis::use_import_from("forcats","fct_reorder")
 usethis::use_import_from("tidyr","pivot_wider")
 usethis::use_import_from("refund","fpca.face")
 usethis::use_import_from("matrixStats","rowVars")
+usethis::use_import_from("reshape","melt")
+usethis::use_import_from("Matrix","as.matrix")
+usethis::use_import_from("Matrix","bdiag")
+# reshape::melt
+# Matrix::as.matrix(Matrix::bdiag(cM))
 
 dir.create("inst/extdata", recursive = TRUE, showWarnings = FALSE)
 

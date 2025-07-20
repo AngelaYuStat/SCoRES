@@ -1,3 +1,4 @@
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # invSCI
@@ -14,94 +15,78 @@ temperatures exceed a certain benchmark, which help policymakers focus
 on specific areas that are at higher risk for effects of climate change.
 
 Mathematically, the target region correspond to the inverse image of
-*U* ⊂ ℝ
-under an unknown function
-*μ* : 𝒮 → ℝ
-, can be defined as
-*μ*<sup>−1</sup>(*U*) = {*s* ∈ *S* : *μ*(*s*) ∈ *U*}
-, with
-*U*
-a pre-specified subset of a real line
-ℝ
-(e.g.,
-\[*c*, ∞)
-).
+$U \subset  \mathbb{R}$ under an unknown function
+$\mu: \mathcal{S} \to \mathbb{R}$, can be defined as $$
+\mu^{-1}(U) = \{s \in S: \mu(s) \in U\}
+$$ , with $U$ a pre-specified subset of a real line $\mathbb{R}$ (e.g.,
+$[c, \infty)$).
 
 A point estimator for the inverse set can be constructed as
-*μ̂*<sub>*n*</sub><sup>−1</sup>(*U*)
-, where
-*μ̂*<sub>*n*</sub>
-is an empirical estimator of
-*μ*
-based on
-*n*
-observations. To quantify the spatial uncertainty of this estimation,
-Sommerfeld et al. (2018) introduced Coverage Probability Excursion
-(CoPE) sets, defined as:
-CS<sub>in</sub>(*U*) ⊆ *μ*<sup>−1</sup>(*U*) ⊆ CS<sub>out</sub>(*U*)
-which satisfy:
-ℙ(CS<sub>in</sub>(*U*) ⊆ *μ*<sup>−1</sup>(*U*) ⊆ CS<sub>out</sub>(*U*)) ≥ 1 − *α*
-for a pre-specified confidence level
-1 − *α*
-(e.g.,
-*α* = 0.05
-).
+$\hat{\mu}_n^{-1}(U)$, where $\hat{\mu}_n$ is an empirical estimator of
+$\mu$ based on $n$ observations. To quantify the spatial uncertainty of
+this estimation, Sommerfeld et al. (2018) introduced Coverage
+Probability Excursion (CoPE) sets, defined as: $$
+\text{CS}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CS}_{\text{out}}(U)
+$$ which satisfy: $$
+\mathbb{P}\left(\text{CS}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CS}_{\text{out}}(U)\right) \geq 1 - \alpha
+$$ for a pre-specified confidence level $1-\alpha$ (e.g.,
+$\alpha = 0.05$).
 
 Existing approaches require restrictive assumptions, including domain
-density of
-*S*
-in
-*R*
-, continuity of
-*μ̂*<sub>*n*</sub>
-and *μ* near thresholds, and large-sample guarantees, which limit the
-applicability. Besides, the estimation and coverage depend on setting a
-fixed threshold level, which is difficult to determine.
+density of $S$ in $R$, continuity of $\hat{\mu}_n$ and $\mu$ near
+thresholds, and large-sample guarantees, which limit the applicability.
+Besides, the estimation and coverage depend on setting a fixed threshold
+level, which is difficult to determine.
 
 Ren et al. (2023) proposed a framework that generalizes the estimation
 of such inverse sets to dense and non-dense domains with protection
 against inflated Type I error, and constructs multiple upper, lower or
-interval confidence sets of
-*μ*<sup>−1</sup>(*U*)
-over arbitrary chosen thresholds. The coverage probability is achieved
-non-asymptotically and simultaneously through inverting simultaneous
-confidence intervals. For instance, suppose we are interested in inverse
-set
-*μ*<sup>−1</sup>(\[*c*, ∞))
-for a single value
-*c*
-, the inverse confidence sets (CSs) are constructed by inverting
-simultaneous confidence intervals (SCIs). Given SCI bounds
-*B̂*<sub>*l*</sub>(**s**)
-and
-*B̂*<sub>*u*</sub>(**s**)
-satisfying:
+interval confidence sets of $\mu^{-1}(U)$ over arbitrary chosen
+thresholds. The coverage probability is achieved non-asymptotically and
+simultaneously through inverting simultaneous confidence intervals. For
+instance, suppose we are interested in inverse set
+$\mu^{-1}([c,\infty))$ for a single value $c$, the inverse confidence
+sets (CSs) are constructed by inverting simultaneous confidence
+intervals (SCIs). Given SCI bounds $\hat{B}_{l}(\boldsymbol{s})$ and
+$\hat{B}_{u}(\boldsymbol{s})$ satisfying:
 
-ℙ(∀**s** ∈ 𝒮 : *B̂*<sub>*l*</sub>(**s**) ≤ *μ*(**s**) ≤ *B̂*<sub>*u*</sub>(**s**)) = 1 − *α*
+$$
+\mathbb{P}\left(\forall\boldsymbol{s}\in\mathcal{S}: \hat{B}_{l}(\boldsymbol{s}) \leq \mu(\boldsymbol{s}) \leq \hat{B}_{u}(\boldsymbol{s})\right) = 1-\alpha
+$$
 
 The inner and outer CSs for the inverse upper excursion set
-*μ*<sup>−1</sup>\[*c*, ∞)
-are defined as:  
-CS<sub>in</sub>\[*c*, ∞) := *B̂*<sub>ℓ</sub><sup>−1</sup>\[*c*, ∞)
+$$\mu^{-1}[c, \infty)$$ are defined as:  
+$$
+\text{CS}_{\text{in}}[c, \infty) := \hat{B}_\ell^{-1}[c, \infty)
+$$
 
-CS<sub>out</sub>\[*c*, ∞) := *B̂*<sub>*u*</sub><sup>−1</sup>\[*c*, ∞)
+$$
+\text{CS}_{\text{out}}[c,\infty) := \hat{B}_u^{-1}[c, \infty)
+$$
 
 The outer and inner confidence sets (CSs) for the inverse lower
-excursion set
-*μ*<sup>−1</sup>(−∞, *c*\]
+excursion set $\mu^{-1}\left(-\infty, c\right]$ are defined as:
+
+$$
+\text{CS}_{\text{in}}\left(-\infty, c\right] := \hat{B}_u^{-1}\left(-\infty, c\right]
+= \left( \hat{B}_u^{-1}\left[c, +\infty\right) \right)^{\complement}
+$$
+
+$$
+\text{CS}_{\text{out}}\left(-\infty, c\right] := \hat{B}_\ell^{-1}\left(-\infty, c\right]
+= \left( \hat{B}_\ell^{-1}\left[c, +\infty\right) \right)^{\complement}
+$$
+
+The inner and outer CSs for the inverse interval set $\mu^{-1}[a, b]$
 are defined as:
 
-CS<sub>in</sub>(−∞, *c*\] := *B̂*<sub>*u*</sub><sup>−1</sup>(−∞, *c*\] = (*B̂*<sub>*u*</sub><sup>−1</sup>\[*c*, +∞))<sup>∁</sup>
+$$
+\text{CS}_{\text{in}}[a, b] := \hat{B}_\ell^{-1}[a, \infty) \cap \hat{B}_u^{-1}(-\infty, b]
+$$
 
-CS<sub>out</sub>(−∞, *c*\] := *B̂*<sub>ℓ</sub><sup>−1</sup>(−∞, *c*\] = (*B̂*<sub>ℓ</sub><sup>−1</sup>\[*c*, +∞))<sup>∁</sup>
-
-The inner and outer CSs for the inverse interval set
-*μ*<sup>−1</sup>\[*a*, *b*\]
-are defined as:
-
-CS<sub>in</sub>\[*a*, *b*\] := *B̂*<sub>ℓ</sub><sup>−1</sup>\[*a*, ∞) ∩ *B̂*<sub>*u*</sub><sup>−1</sup>(−∞, *b*\]
-
-CS<sub>out</sub>\[*a*, *b*\] := *B̂*<sub>*u*</sub><sup>−1</sup>\[*a*, ∞) ∩ *B̂*<sub>ℓ</sub><sup>−1</sup>(−∞, *b*\]
+$$
+\text{CS}_{\text{out}}[a, b] := \hat{B}_u^{-1}[a, \infty) \cap \hat{B}_\ell^{-1}(-\infty, b]
+$$
 
 This package provides useful statistical tools for both the estimation
 of the inverse set and the corresponding simultaneous outer and inner
@@ -240,17 +225,54 @@ results_ccds_wild_sample <- invSCI::SCB_functional_outcome(data = ccds,
                                           subject = "subject")
 ```
 
-The mathematical details can be found in README.pdf:
+The followings are the mathematical details:
 
-`invSCI` provides two options for estimating the mean function at
-*s*
-, denoted as
-*μ̂*<sub>*N*</sub>(*s*)
-. If `est_mean = TRUE`, the mean function will be estimated though using
-the fitted regression object. If `est_mean = FALSE`, sample mean will be
-calculated. Default is `FALSE`.
+#### Correlation and Multiplicity Adjusted (CMA) Confidence Bands Based on Parameter Simulations
 
-1.  The **sample mean**
+1.  Simulate model parameters
+    $\boldsymbol{\beta}_1, \ldots, \boldsymbol{\beta}_B \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\hat{\boldsymbol{\beta}}, \hat{V}_{\boldsymbol{\beta}})$
+    , where $(\hat{\boldsymbol{\beta}}, \hat{V}_{\boldsymbol{\beta}})$
+    are estimated via a fitted FoSR model.
+
+2.  For each $b = 1, \ldots, B$, compute $$
+    \mathbf{X}_b = \frac{\mathbf{B}({\beta}_b - \hat{{\beta}})}{\mathbf{D}_f}
+    $$ , where the division is element-wise and $\mathbf{B}$ maps
+    parameters to functional effects.
+
+3.  Let $$
+    d_b = \max(|\mathbf{X}_b|), \quad b = 1, \ldots, B
+    $$ , where the absolute value is taken element-wise.
+
+4.  Estimate $q(C_f, 1 - \alpha)$ as the $100 \cdot (1 - \alpha)$
+    percentile of $\{d_1, \ldots, d_B\}$.
+
+#### Multiplier-t Bootstrap Procedure for Constructing Confidence Bands
+
+1.  Compute residuals $R_1^N, \ldots, R_N^N$, where
+    $R_n^N = \sqrt{\frac{N}{N - 1}} \left( Y_n - \hat{\mu}_N \right)$,
+    and multipliers $g_1, \ldots, g_N \overset{\text{i.i.d.}}{\sim} g$
+    with $\mathbb{E}[g] = 0$ and $\mathrm{var}[g] = 1$.
+
+2.  Estimate $\hat{\epsilon}_N^*(s)$ from
+    $g_1 Y_1(s), \ldots, g_N Y_N(s)$.
+
+3.  Compute $$
+    T^*(s) = \frac{1}{\sqrt{N}} \sum_{n=1}^N g_n \frac{R_n^N(s)}{\hat{\epsilon}_N^*(s)}
+    $$
+
+4.  Repeat steps 1 to 3 many times. Take the $(1 - \alpha) \cdot 100\%$
+    quantile of $\mathcal{L}^*$ to estimate $q_{\alpha, N}$.
+
+For details of the algorithm, please refer to Telschow et al. (2019)
+
+`invSCI` provides two options for estimating the mean function at $s$,
+denoted as $\hat{\mu}_N(s)$. If `est_mean = TRUE`, the mean function
+will be estimated though using the fitted regression object. If
+`est_mean = FALSE`, sample mean will be calculated. Default is `FALSE`.
+
+1.  The **sample mean** $$
+    \hat{\mu}_N(s) = \frac{1}{N} \sum_{i=1}^N {Y}_i(s)
+    $$ , where ${Y}_i(s)$ is the observed functional response.
 
 2.  The **fitted mean value** from a functional regression model (e.g.,
     using `mgcv::bam`).
@@ -258,23 +280,26 @@ calculated. Default is `FALSE`.
 In the wild bootstrap procedure, `invSCI` supports three types of
 multiplier distributions, which is specified by `weights`:
 
--   `"rademacher"`:
-    *g*<sub>*i*</sub> ∈ {−1, +1}
-    with equal probability
--   `"gaussian"`:
-    *g*<sub>*i*</sub> ∼ 𝒩(0, 1)
--   `"mammen"`: A two-point distribution with mean zero and variance one
-    (see Mammen, 1993)
+- `"rademacher"`: $g_i \in \{-1, +1\}$ with equal probability
+- `"gaussian"`: $g_i \sim \mathcal{N}(0, 1)$
+- `"mammen"`: A two-point distribution with mean zero and variance one
+  (see Mammen, 1993)
 
 Default is `rademacher`.
 
 Two options are available for estimating the standard error
-*ϵ̂*<sub>*N*</sub><sup>\*</sup>(*s*<sub>*j*</sub>)
-, which is specified by `method_SD`:
+$\hat{\epsilon}_N^*(s_j)$, which is specified by `method_SD`:
 
--   “regular” (empirical standard error based on residuals).
-    
--   “t” (bootstrap second moment-based estimator).
+- “regular” (empirical standard error based on residuals): $$
+  \hat{\epsilon}_N^*(s_j) = \sqrt{ \frac{1}{n} \sum_{i=1}^n \left( {Y}_i(s_j) - \hat{\beta}(s_j) \right)^2 / (n-1) }
+  $$.
+
+- “t” (bootstrap second moment-based estimator): $$
+  \hat{\epsilon}_N^*(s_j) = \sqrt{ \frac{N}{N-1} \left| \mathbb{E}_b\left[ {Y}^{b}(s_j)^2 \right] - \left( \mathbb{E}_b\left[ {Y}^{b}(s_j) \right] \right)^2 \right| }
+  $$ , where expectations are taken over bootstrap replicates and
+  ${Y}^{b}(s_j)$ is the perturbed sample in bootstrap iteration $b$. The
+  absolute value ensures numerical stability when subtracting large,
+  nearly equal quantities.
 
 Default is `t`.
 
@@ -381,13 +406,10 @@ and perform the analysis introduced before.
 data(pupil)
 library(dplyr)
 # filter all NA subjects
-pupil <- pupil %>% 
-  filter(!(id %in% c("003-1068", "003-112")))
 pupil_fpca <- invSCI::prepare_pupil_fpca(pupil)
 fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
             s(seconds, by = use, k=30, bs = "cr") +
-            s(seconds, by = smoker, k=30, bs = "cr") +
-            s(seconds, by = daily, k=30, bs = "cr") +
+            s(seconds, by = age, k = 30, bs = "cr") +
             s(seconds, by = gender, k=30, bs = "cr") +
             s(id, by = Phi1, bs="re") +
             s(id, by = Phi2, bs="re") +
@@ -397,8 +419,9 @@ fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
 ```
 
 Here, we analyze the daily male user group by specifying
-`group_name = c("use", "daily", "gender")` and
-`group_value = c(1, 1, 0)`. We set `fitted = TRUE` and `est_mean= TRUE`.
+`group_name = c("use", "age", "gender")` and
+`group_value = c(1, 40, 0)`. We set `fitted = TRUE` and
+`est_mean= TRUE`.
 
 ``` r
 # CMA approach
@@ -410,8 +433,8 @@ results_pupil_cma <- invSCI::SCB_functional_outcome(data = pupil,
                                           alpha = 0.05, 
                                           outcome = "percent_change", 
                                           time = "seconds", 
-                                          group_name = c("use", "daily", "gender"), 
-                                          group_value = c(1, 1, 0), 
+                                          group_name = c("use", "age", "gender"), 
+                                          group_value = c(1, 40, 0), 
                                           subject = "id")
 
 # Multiplier-t Bootstrap
@@ -423,8 +446,8 @@ results_pupil_wild <- invSCI::SCB_functional_outcome(data = pupil,
                                           alpha = 0.05, 
                                           outcome = "percent_change", 
                                           time = "seconds", 
-                                          group_name = c("use", "daily", "gender"), 
-                                          group_value = c(1, 1, 0), 
+                                          group_name = c("use", "gender"), 
+                                          group_value = c(1, 0), 
                                           subject = "id")
 ```
 
@@ -517,11 +540,3 @@ provides`invSCI::SCB_logistic_outcome()` for estimating the SCB for
 outcome of logistic regression, and `invSCI::SCB_regression_coef`can
 estimate the SCB for every coefficient in the linear/logistic model. For
 details, please refer to the corresponding package vignette.
-
-### 📄 Documentation
-
-------------------------------------------------------------------------
-
-👉 [Full mathematical appendix (PDF)](invSCI.pdf)
-
-> This document contains all the LaTeX-rendered formulas, definitions of CS, SCBs, and bootstrap methods.
