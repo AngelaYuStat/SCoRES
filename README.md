@@ -16,12 +16,12 @@ on specific areas that are at higher risk for effects of climate change.
 
 Therefore, a statistical framework is needed for estimating the set in
 the domain of a function whose image equals a predefined subset, which
-can be defined as $\mu^{-1}(U) = \{s \in S: \mu(s) \in U\}$, with $U$ a
-pre-specified subset of a real line $\mathbb{R}$ (e.g., $[c, \infty)$).
+can be defined as $\mu^{-1}(U) = \{s \in S: \mu(s) \in U\}$, with *U* a
+pre-specified subset of a real line ℝ (e.g., \[*c*, ∞)).
 Proposed by Sommerfeld et al. (2018), Coverage Probability Excursion
-(CoPE) sets, defined as: $$
-\text{CS}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CS}_{\text{out}}(U)
-$$ are used to assess the spatial uncertainty of the inverse set
+(CoPE) sets, defined as: 
+CS<sub>in</sub>(*U*) ⊆ *μ*<sup>−1</sup>(*U*) ⊆ CS<sub>out</sub>(*U*)
+are used to assess the spatial uncertainty of the inverse set
 estimation
 
 Ren et al. (2023) generalized the estimation to dense and non-dense
