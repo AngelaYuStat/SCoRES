@@ -1,0 +1,35 @@
+---
+title: "invSCI: a vignette"
+author: "Angela Yu"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+bibliography: references.bib
+vignette: >
+  %\VignetteEncoding{UTF-8}
+  
+  %\VignetteIndexEntry{invSCI: a vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The `invSCI` package is for estimating the simultaneous confidence intervals for inverse sets.
+
+This vignette outlines the general functionality of the package.
+The package can handle discrete data, continuous data, functional data, and geographic data. It also provides users with functions to estimate the simultaneous confidence bands for both the mean outcome and coefficients from linear regression, logistic regression, functional regression and spatial generalized least square regression.
+Details on how to estimate SCI of inverse set for linear and logistic regression with the `invSCI` package can be found in the vignette `"Linear_Model_Examples"`. For instructions on functional data, see vignette `"Functional_Data_Examples"`. For geographic data, see vignette `"Geographic_Data_Examples"`. For detailed explanation of the methods used for estimating SCI and inverse set SCI, see vignette `"Methods"`.
+
+```{r setup}
+library(invSCI)
+```

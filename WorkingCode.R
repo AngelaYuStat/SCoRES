@@ -57,6 +57,8 @@ usethis::use_r("data_climate")
 usethis::use_r("global")
 usethis::use_r("functional_outcome_scb")
 
+usethis::use_vignette("vignette")
+
 devtools::document()
 devtools::install()
 devtools::load_all()

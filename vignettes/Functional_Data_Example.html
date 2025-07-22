@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Angela Yu" />
+
+<meta name="date" content="2025-07-21" />
+
+<title>Functional_Data_Example</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Functional_Data_Example</h1>
+<h4 class="author">Angela Yu</h4>
+<h4 class="date">2025-07-21</h4>
+
+
+
+<p>The first example here is to use ccds functional data to construct
+the inverse confidence sets (CS) from simultaneous confidence bands
+(SCB) using Function-on-Scalar Regression (FoSR).</p>
+<p>The ccds dataset contains repeated measures of percent change over
+time for multiple subjects under two user categories (use: 1 and no use:
+0). It includes both user and non-user groups, time points, and metadata
+related to eye side and frame timing. cleaning process make sure that
+the data only includes measurements taken from the right eye at the
+post-intervention timepoint (<code>tp == &quot;post&quot;</code>).</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(invSCI)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">data</span>(ccds)</span></code></pre></div>
+<p>Before calculating the SCBs, we first process ccds data by fitting a
+mean GAM model, extracting residuals and performing FPCA using
+<code>invSCI::prepare_ccds_fpca()</code>, the function will return an
+enhanced dataset includes the FPCA-derived basis scores (Phi1, Phi2,
+Phi3, Phi4) for Function-on-Scalar Regression (FoSR) analysis.</p>
+<p>Following the FPCA-based data augmentation, we fit a FoSR model using
+<code>mgcv::bam()</code>, which allows efficient estimation of
+Generalized Additive Mixed Models (GAMMs). The model formula is designed
+to capture both population-level smooth trends and subject-specific
+functional variation.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>ccds_fpca <span class="ot">&lt;-</span> invSCI<span class="sc">::</span><span class="fu">prepare_ccds_fpca</span>(ccds)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>fosr_mod <span class="ot">&lt;-</span> mgcv<span class="sc">::</span><span class="fu">bam</span>(percent_change <span class="sc">~</span> <span class="fu">s</span>(seconds, <span class="at">k=</span><span class="dv">30</span>, <span class="at">bs=</span><span class="st">&quot;cr&quot;</span>) <span class="sc">+</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>            <span class="fu">s</span>(seconds, <span class="at">by =</span> use, <span class="at">k=</span><span class="dv">30</span>, <span class="at">bs =</span> <span class="st">&quot;cr&quot;</span>) <span class="sc">+</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>            <span class="fu">s</span>(subject, <span class="at">by =</span> Phi1, <span class="at">bs=</span><span class="st">&quot;re&quot;</span>) <span class="sc">+</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>            <span class="fu">s</span>(subject, <span class="at">by =</span> Phi2, <span class="at">bs=</span><span class="st">&quot;re&quot;</span>) <span class="sc">+</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>            <span class="fu">s</span>(subject, <span class="at">by =</span> Phi3, <span class="at">bs=</span><span class="st">&quot;re&quot;</span>) <span class="sc">+</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>            <span class="fu">s</span>(subject, <span class="at">by =</span> Phi4, <span class="at">bs=</span><span class="st">&quot;re&quot;</span>),</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>            <span class="at">method =</span> <span class="st">&quot;fREML&quot;</span>, <span class="at">data =</span> ccds_fpca, <span class="at">discrete =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>After obtaining the FoSR object <code>fosr_mod</code>, simultaneous
+confidence bands (SCB) can be constructed though
+<code>invSCI::SCB_functional_outcome</code> using pre-specified methods.
+The <code>invSCI</code> package provides two options for calculating the
+simultaneous confidence bands (SCB). Use <code>method</code> to specify.
+Use <code>groups</code> to specify the names of grouping variables to
+analyze. The input data should have numerical binary 0/1 values for all
+scalar group variables. Here, we analyze the user group by specifying
+<code>groups = &quot;use&quot;</code>. Use <code>fitted</code> to specify the
+object for SCB estimation. If <code>fitted = TRUE</code>,
+<code>invSCI::SCB_functional_outcome</code> will construct the SCB for
+the fitted mean outcome function. If <code>fitted = FALSE</code>,
+<code>invSCI::SCB_functional_outcome</code> will construct the SCB for
+the fitted parameter function. Use <code>est_mean</code> to specify the
+point estimate for constructing SCB. If <code>est_mean = TRUE</code>,
+<code>invSCI::SCB_functional_outcome</code> will estimate the
+simultaneous confidence bands for fitted mean outcome function. If
+<code>est_mean = FALSE</code>,
+<code>invSCI::SCB_functional_outcome</code> will estimate the
+simultaneous confidence bands for sample mean.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># CMA approach</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>results_ccds_cma <span class="ot">&lt;-</span> invSCI<span class="sc">::</span><span class="fu">SCB_functional_outcome</span>(<span class="at">data =</span> ccds,</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>                                          <span class="at">object =</span> fosr_mod, </span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>                                          <span class="at">method =</span> <span class="st">&quot;cma&quot;</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>                                          <span class="at">fitted =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>                                          <span class="at">est_mean =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>                                          <span class="at">alpha =</span> <span class="fl">0.05</span>, </span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>                                          <span class="at">outcome =</span> <span class="st">&quot;percent_change&quot;</span>, </span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>                                          <span class="at">time =</span> <span class="st">&quot;seconds&quot;</span>, </span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>                                          <span class="at">group_name =</span> <span class="st">&quot;use&quot;</span>, </span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>                                          <span class="at">group_value =</span> <span class="dv">1</span>, </span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>                                          <span class="at">subject =</span> <span class="st">&quot;subject&quot;</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#CMA approach for parameter function</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>results_ccds_cma_para <span class="ot">&lt;-</span> invSCI<span class="sc">::</span><span class="fu">SCB_functional_outcome</span>(<span class="at">data =</span> ccds,</span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a>                                          <span class="at">object =</span> fosr_mod, </span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>                                          <span class="at">method =</span> <span class="st">&quot;cma&quot;</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>                                          <span class="at">fitted =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a>                                          <span class="at">est_mean =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a>                                          <span class="at">alpha =</span> <span class="fl">0.05</span>, </span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a>                                          <span class="at">outcome =</span> <span class="st">&quot;percent_change&quot;</span>, </span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a>                                          <span class="at">time =</span> <span class="st">&quot;seconds&quot;</span>, </span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a>                                          <span class="at">group_name =</span> <span class="st">&quot;use&quot;</span>, </span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a>                                          <span class="at">group_value =</span> <span class="dv">1</span>, </span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a>                                          <span class="at">subject =</span> <span class="st">&quot;subject&quot;</span>)</span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="co"># Multiplier-t Bootstrap</span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a>results_ccds_wild <span class="ot">&lt;-</span> invSCI<span class="sc">::</span><span class="fu">SCB_functional_outcome</span>(<span class="at">data =</span> ccds, </span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a>                                          <span class="at">object =</span> fosr_mod, </span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a>                                          <span class="at">method =</span> <span class="st">&quot;wild&quot;</span>,</span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a>                                          <span class="at">fitted =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a>                                          <span class="at">est_mean =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a>                                          <span class="at">alpha =</span> <span class="fl">0.05</span>, </span>
+<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a>                                          <span class="at">outcome =</span> <span class="st">&quot;percent_change&quot;</span>, </span>
+<span id="cb3-35"><a href="#cb3-35" tabindex="-1"></a>                                          <span class="at">time =</span> <span class="st">&quot;seconds&quot;</span>, </span>
+<span id="cb3-36"><a href="#cb3-36" tabindex="-1"></a>                                          <span class="at">group_name =</span> <span class="st">&quot;use&quot;</span>, </span>
+<span id="cb3-37"><a href="#cb3-37" tabindex="-1"></a>                                          <span class="at">group_value =</span> <span class="dv">1</span>, </span>
+<span id="cb3-38"><a href="#cb3-38" tabindex="-1"></a>                                          <span class="at">subject =</span> <span class="st">&quot;subject&quot;</span>)</span>
+<span id="cb3-39"><a href="#cb3-39" tabindex="-1"></a></span>
+<span id="cb3-40"><a href="#cb3-40" tabindex="-1"></a><span class="co"># Multiplier-t Bootstrap (use sample mean)</span></span>
+<span id="cb3-41"><a href="#cb3-41" tabindex="-1"></a>results_ccds_wild_sample <span class="ot">&lt;-</span> invSCI<span class="sc">::</span><span class="fu">SCB_functional_outcome</span>(<span class="at">data =</span> ccds, </span>
+<span id="cb3-42"><a href="#cb3-42" tabindex="-1"></a>                                          <span class="at">object =</span> fosr_mod, </span>
+<span id="cb3-43"><a href="#cb3-43" tabindex="-1"></a>                                          <span class="at">method =</span> <span class="st">&quot;wild&quot;</span>,</span>
+<span id="cb3-44"><a href="#cb3-44" tabindex="-1"></a>                                          <span class="at">fitted =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-45"><a href="#cb3-45" tabindex="-1"></a>                                          <span class="at">est_mean =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb3-46"><a href="#cb3-46" tabindex="-1"></a>                                          <span class="at">alpha =</span> <span class="fl">0.05</span>, </span>
+<span id="cb3-47"><a href="#cb3-47" tabindex="-1"></a>                                          <span class="at">outcome =</span> <span class="st">&quot;percent_change&quot;</span>, </span>
+<span id="cb3-48"><a href="#cb3-48" tabindex="-1"></a>                                          <span class="at">time =</span> <span class="st">&quot;seconds&quot;</span>, </span>
+<span id="cb3-49"><a href="#cb3-49" tabindex="-1"></a>                                          <span class="at">group_name =</span> <span class="st">&quot;use&quot;</span>, </span>
+<span id="cb3-50"><a href="#cb3-50" tabindex="-1"></a>                                          <span class="at">group_value =</span> <span class="dv">1</span>, </span>
+<span id="cb3-51"><a href="#cb3-51" tabindex="-1"></a>                                          <span class="at">subject =</span> <span class="st">&quot;subject&quot;</span>)</span></code></pre></div>
+<p>For mathematical details, see vignette Methods.</p>
+<p><code>invSCI</code> provides two options for estimating the mean
+function at <span class="math inline">\(s\)</span>, denoted as <span class="math inline">\(\hat{\mu}_N(s)\)</span>. If
+<code>est_mean = TRUE</code>, the mean function will be estimated though
+using the fitted regression object. If <code>est_mean = FALSE</code>,
+sample mean will be calculated. Default is <code>FALSE</code>.</p>
+<p>In the wild bootstrap procedure, <code>invSCI</code> supports three
+types of multiplier distributions, which is specified by
+<code>weights</code>:</p>
+<ul>
+<li><code>&quot;rademacher&quot;</code>: <span class="math inline">\(g_i \in \{-1,
++1\}\)</span> with equal probability</li>
+<li><code>&quot;gaussian&quot;</code>: <span class="math inline">\(g_i \sim
+\mathcal{N}(0, 1)\)</span></li>
+<li><code>&quot;mammen&quot;</code>: A two-point distribution with mean zero and
+variance one (see Mammen, 1993)</li>
+</ul>
+<p>Default is <code>rademacher</code>.</p>
+<p>Two options are available for estimating the standard error <span class="math inline">\(\hat{\epsilon}_N^*(s_j)\)</span>, which is
+specified by <code>method_SD</code>:</p>
+<ul>
+<li><p>“regular” (empirical standard error based on residuals):</p></li>
+<li><p>“t” (bootstrap second moment-based estimator):</p></li>
+</ul>
+<p>Default is <code>t</code>.</p>
+<p>The code below visualizes the <strong>inverse confidence sets
+(CSs)</strong> derived from SCB results using the
+<code>invSCI::plot_cs()</code> function. The <code>results</code> object
+is first converted to a tibble for easier manipulation.</p>
+<p>The <code>levels = c(-7, -8, -9, -10)</code> argument specifies a set
+of thresholds, and <code>invSCI::plot_cs()</code> function estimates
+multiple inverse upper excursion sets corresponding to these thresholds,
+and plot the estimated inverse set, the inner confidence set, and the
+outer confidence set.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>results_ccds_cma <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">as_tibble</span>(results_ccds_cma)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">plot_cs</span>(results_ccds_cma,</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">7</span>, <span class="sc">-</span><span class="dv">8</span>, <span class="sc">-</span><span class="dv">9</span>, <span class="sc">-</span><span class="dv">10</span>), </span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>        <span class="at">x =</span> results_ccds_cma<span class="sc">$</span>time, </span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>        <span class="at">mu_hat =</span> results_ccds_cma<span class="sc">$</span>yhat, </span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;Seconds&quot;</span>, </span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">&quot;Percent_Outcome&quot;</span>, </span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>        <span class="at">level_label =</span> T, </span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>        <span class="at">min.size =</span> <span class="dv">40</span>, </span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>        <span class="at">palette =</span> <span class="st">&quot;Spectral&quot;</span>, </span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>        <span class="at">color_level_label =</span> <span class="st">&quot;black&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning: Removed 376 rows containing missing values or values outside the scale range
+## (`geom_line()`).</code></pre>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+<p>The plot demonstrate how to use SCB to find regions of s where the
+estimated mean is greater than or equal to the four levels -7, -8, -9,
+-10 for ccds data. The gray shaded area is the 95% SCB, the solid black
+line is the estimated mean. The red horizontal line shows the inner
+confidence sets (where the lower SCB is greater than the corresponding
+level) that are contained in the estimated inverse set represented by
+the union of the yellow and red horizontal line (where the estimated
+mean is greater than the corresponding levels); the outer confidence
+sets are the union of the blue, yellow and red line (where the upper SCB
+is greater than the corresponding levels) and contain both the estimated
+inverse sets and the inner confidence sets.</p>
+<p>The next plot shows the SCB for the coefficient funtion for the use
+group.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>results_ccds_cma_para <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">as_tibble</span>(results_ccds_cma_para)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">plot_cs</span>(results_ccds_cma_para,</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>        <span class="at">levels =</span> <span class="fu">c</span>( <span class="fu">c</span>(<span class="fl">1.5</span>, <span class="dv">2</span>, <span class="fl">2.5</span>, <span class="dv">3</span>)), </span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>        <span class="at">x =</span> results_ccds_cma_para<span class="sc">$</span>time, </span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>        <span class="at">mu_hat =</span> results_ccds_cma_para<span class="sc">$</span>yhat, </span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;Seconds&quot;</span>, </span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">&quot;Percent_Outcome&quot;</span>, </span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>        <span class="at">level_label =</span> T, </span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>        <span class="at">min.size =</span> <span class="dv">40</span>, </span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>        <span class="at">palette =</span> <span class="st">&quot;Spectral&quot;</span>, </span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>        <span class="at">color_level_label =</span> <span class="st">&quot;black&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning: Removed 31 rows containing missing values or values outside the scale range
+## (`geom_line()`).</code></pre>
+<pre><code>## Warning: Removed 326 rows containing missing values or values outside the scale range
+## (`geom_line()`).</code></pre>
+<pre><code>## Warning: Removed 46 rows containing missing values or values outside the scale range
+## (`geom_line()`).</code></pre>
+<pre><code>## Warning: Removed 339 rows containing missing values or values outside the scale range
+## (`geom_line()`).</code></pre>
+<pre><code>## Warning: Removed 61 rows containing missing values or values outside the scale range
+## (`geom_line()`).</code></pre>
+<pre><code>## Warning: Removed 352 rows containing missing values or values outside the scale range
+## (`geom_line()`).</code></pre>
+<pre><code>## Warning: Removed 132 rows containing missing values or values outside the scale range
+## (`geom_line()`).</code></pre>
+<pre><code>## Warning: Removed 371 rows containing missing values or values outside the scale range
+## (`geom_line()`).</code></pre>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+<p>The following plots show the results of wild bootstrap. The only
+difference between these two plots is that, the solid black line in the
+first one represents the estimated mean fitted through functional
+regresson object, while the second represents the sample mean. All
+possible NA’s are imputed using <code>refund::fpca.face()</code>.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>results_ccds_wild <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">as_tibble</span>(results_ccds_wild)</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="fu">plot_cs</span>(results_ccds_wild,</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">7</span>, <span class="sc">-</span><span class="dv">8</span>, <span class="sc">-</span><span class="dv">9</span>, <span class="sc">-</span><span class="dv">10</span>), </span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>        <span class="at">x =</span> results_ccds_wild<span class="sc">$</span>time, </span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>        <span class="at">mu_hat =</span> results_ccds_wild<span class="sc">$</span>yhat, </span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;Seconds&quot;</span>, </span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">&quot;Percent_Outcome&quot;</span>,</span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>        <span class="at">level_label =</span> T, </span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a>        <span class="at">min.size =</span> <span class="dv">40</span>, </span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a>        <span class="at">palette =</span> <span class="st">&quot;Spectral&quot;</span>, </span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a>        <span class="at">color_level_label =</span> <span class="st">&quot;black&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning: Removed 377 rows containing missing values or values outside the scale range
+## (`geom_line()`).</code></pre>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>results_ccds_wild_sample <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">as_tibble</span>(results_ccds_wild_sample)</span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a><span class="fu">plot_cs</span>(results_ccds_wild_sample,</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">7</span>, <span class="sc">-</span><span class="dv">8</span>, <span class="sc">-</span><span class="dv">9</span>, <span class="sc">-</span><span class="dv">10</span>), </span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>        <span class="at">x =</span> results_ccds_wild_sample<span class="sc">$</span>time, </span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a>        <span class="at">mu_hat =</span> results_ccds_wild_sample<span class="sc">$</span>yhat, </span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;Seconds&quot;</span>, </span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">&quot;Percent_Outcome&quot;</span>, </span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a>        <span class="at">level_label =</span> T, </span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a>        <span class="at">min.size =</span> <span class="dv">40</span>, </span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a>        <span class="at">palette =</span> <span class="st">&quot;Spectral&quot;</span>, </span>
+<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a>        <span class="at">color_level_label =</span> <span class="st">&quot;black&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning: Removed 379 rows containing missing values or values outside the scale range
+## (`geom_line()`).</code></pre>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+<p>To further illustrate the power of
+<code>invSCI::SCB_functional_outcome</code> for constructing SCBs for
+multiple group variables, we load the pupil data and perform the
+analysis introduced before.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">data</span>(pupil)</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<pre><code>## Warning: 程序包&#39;dplyr&#39;是用R版本4.4.3 来建造的</code></pre>
+<pre><code>## 
+## 载入程序包：&#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="co"># filter all NA subjects</span></span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>pupil_fpca <span class="ot">&lt;-</span> invSCI<span class="sc">::</span><span class="fu">prepare_pupil_fpca</span>(pupil)</span></code></pre></div>
+<pre><code>## Warning: Unknown or uninitialised column: `subject`.</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a>fosr_mod <span class="ot">&lt;-</span> mgcv<span class="sc">::</span><span class="fu">bam</span>(percent_change <span class="sc">~</span> <span class="fu">s</span>(seconds, <span class="at">k=</span><span class="dv">30</span>, <span class="at">bs=</span><span class="st">&quot;cr&quot;</span>) <span class="sc">+</span></span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a>            <span class="fu">s</span>(seconds, <span class="at">by =</span> use, <span class="at">k=</span><span class="dv">30</span>, <span class="at">bs =</span> <span class="st">&quot;cr&quot;</span>) <span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>            <span class="fu">s</span>(seconds, <span class="at">by =</span> age, <span class="at">k =</span> <span class="dv">30</span>, <span class="at">bs =</span> <span class="st">&quot;cr&quot;</span>) <span class="sc">+</span></span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a>            <span class="fu">s</span>(seconds, <span class="at">by =</span> gender, <span class="at">k=</span><span class="dv">30</span>, <span class="at">bs =</span> <span class="st">&quot;cr&quot;</span>) <span class="sc">+</span></span>
+<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a>            <span class="fu">s</span>(id, <span class="at">by =</span> Phi1, <span class="at">bs=</span><span class="st">&quot;re&quot;</span>) <span class="sc">+</span></span>
+<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a>            <span class="fu">s</span>(id, <span class="at">by =</span> Phi2, <span class="at">bs=</span><span class="st">&quot;re&quot;</span>) <span class="sc">+</span></span>
+<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a>            <span class="fu">s</span>(id, <span class="at">by =</span> Phi3, <span class="at">bs=</span><span class="st">&quot;re&quot;</span>) <span class="sc">+</span></span>
+<span id="cb26-8"><a href="#cb26-8" tabindex="-1"></a>            <span class="fu">s</span>(id, <span class="at">by =</span> Phi4, <span class="at">bs=</span><span class="st">&quot;re&quot;</span>),</span>
+<span id="cb26-9"><a href="#cb26-9" tabindex="-1"></a>            <span class="at">method =</span> <span class="st">&quot;fREML&quot;</span>, <span class="at">data =</span> pupil_fpca, <span class="at">discrete =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>Here, we analyze the daily male user group by specifying
+<code>group_name = c(&quot;use&quot;, &quot;age&quot;, &quot;gender&quot;)</code> and
+<code>group_value = c(1, 40, 0)</code>. We set
+<code>fitted = TRUE</code> and <code>est_mean= TRUE</code>.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="co"># CMA approach</span></span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>results_pupil_cma <span class="ot">&lt;-</span> invSCI<span class="sc">::</span><span class="fu">SCB_functional_outcome</span>(<span class="at">data =</span> pupil,</span>
+<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a>                                          <span class="at">object =</span> fosr_mod, </span>
+<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a>                                          <span class="at">method =</span> <span class="st">&quot;cma&quot;</span>, </span>
+<span id="cb27-5"><a href="#cb27-5" tabindex="-1"></a>                                          <span class="at">fitted =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb27-6"><a href="#cb27-6" tabindex="-1"></a>                                          <span class="at">est_mean =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb27-7"><a href="#cb27-7" tabindex="-1"></a>                                          <span class="at">alpha =</span> <span class="fl">0.05</span>, </span>
+<span id="cb27-8"><a href="#cb27-8" tabindex="-1"></a>                                          <span class="at">outcome =</span> <span class="st">&quot;percent_change&quot;</span>, </span>
+<span id="cb27-9"><a href="#cb27-9" tabindex="-1"></a>                                          <span class="at">time =</span> <span class="st">&quot;seconds&quot;</span>, </span>
+<span id="cb27-10"><a href="#cb27-10" tabindex="-1"></a>                                          <span class="at">group_name =</span> <span class="fu">c</span>(<span class="st">&quot;use&quot;</span>, <span class="st">&quot;age&quot;</span>, <span class="st">&quot;gender&quot;</span>), </span>
+<span id="cb27-11"><a href="#cb27-11" tabindex="-1"></a>                                          <span class="at">group_value =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">40</span>, <span class="dv">0</span>), </span>
+<span id="cb27-12"><a href="#cb27-12" tabindex="-1"></a>                                          <span class="at">subject =</span> <span class="st">&quot;id&quot;</span>)</span>
+<span id="cb27-13"><a href="#cb27-13" tabindex="-1"></a></span>
+<span id="cb27-14"><a href="#cb27-14" tabindex="-1"></a><span class="co"># Multiplier-t Bootstrap</span></span>
+<span id="cb27-15"><a href="#cb27-15" tabindex="-1"></a>results_pupil_wild <span class="ot">&lt;-</span> invSCI<span class="sc">::</span><span class="fu">SCB_functional_outcome</span>(<span class="at">data =</span> pupil, </span>
+<span id="cb27-16"><a href="#cb27-16" tabindex="-1"></a>                                          <span class="at">object =</span> fosr_mod,</span>
+<span id="cb27-17"><a href="#cb27-17" tabindex="-1"></a>                                          <span class="at">fitted =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb27-18"><a href="#cb27-18" tabindex="-1"></a>                                          <span class="at">method =</span> <span class="st">&quot;wild&quot;</span>, </span>
+<span id="cb27-19"><a href="#cb27-19" tabindex="-1"></a>                                          <span class="at">est_mean =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb27-20"><a href="#cb27-20" tabindex="-1"></a>                                          <span class="at">alpha =</span> <span class="fl">0.05</span>, </span>
+<span id="cb27-21"><a href="#cb27-21" tabindex="-1"></a>                                          <span class="at">outcome =</span> <span class="st">&quot;percent_change&quot;</span>, </span>
+<span id="cb27-22"><a href="#cb27-22" tabindex="-1"></a>                                          <span class="at">time =</span> <span class="st">&quot;seconds&quot;</span>, </span>
+<span id="cb27-23"><a href="#cb27-23" tabindex="-1"></a>                                          <span class="at">group_name =</span> <span class="fu">c</span>(<span class="st">&quot;use&quot;</span>, <span class="st">&quot;gender&quot;</span>), </span>
+<span id="cb27-24"><a href="#cb27-24" tabindex="-1"></a>                                          <span class="at">group_value =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>), </span>
+<span id="cb27-25"><a href="#cb27-25" tabindex="-1"></a>                                          <span class="at">subject =</span> <span class="st">&quot;id&quot;</span>)</span></code></pre></div>
+<p>The following plots show the SCBs and inverse SCBs for the mean
+outcome function. The first one is from CMA approach and the second is
+from wild bootstrap.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a>results_pupil_cma <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">as_tibble</span>(results_pupil_cma)</span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a><span class="fu">plot_cs</span>(results_pupil_cma,</span>
+<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">18</span>, <span class="sc">-</span><span class="dv">20</span>, <span class="sc">-</span><span class="dv">22</span>, <span class="sc">-</span><span class="dv">24</span>), </span>
+<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a>        <span class="at">x =</span> results_pupil_cma<span class="sc">$</span>time, </span>
+<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a>        <span class="at">mu_hat =</span> results_pupil_cma<span class="sc">$</span>yhat, </span>
+<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;Seconds&quot;</span>, </span>
+<span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">&quot;Percent_Outcome&quot;</span>,</span>
+<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a>        <span class="at">level_label =</span> T, </span>
+<span id="cb28-9"><a href="#cb28-9" tabindex="-1"></a>        <span class="at">min.size =</span> <span class="dv">40</span>, </span>
+<span id="cb28-10"><a href="#cb28-10" tabindex="-1"></a>        <span class="at">palette =</span> <span class="st">&quot;Spectral&quot;</span>, </span>
+<span id="cb28-11"><a href="#cb28-11" tabindex="-1"></a>        <span class="at">color_level_label =</span> <span class="st">&quot;black&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning: Removed 106 rows containing missing values or values outside the scale range
+## (`geom_line()`).</code></pre>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a>results_pupil_wild <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">as_tibble</span>(results_pupil_wild)</span>
+<span id="cb30-2"><a href="#cb30-2" tabindex="-1"></a><span class="fu">plot_cs</span>(results_pupil_wild,</span>
+<span id="cb30-3"><a href="#cb30-3" tabindex="-1"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">18</span>, <span class="sc">-</span><span class="dv">20</span>, <span class="sc">-</span><span class="dv">22</span>, <span class="sc">-</span><span class="dv">24</span>), </span>
+<span id="cb30-4"><a href="#cb30-4" tabindex="-1"></a>        <span class="at">x =</span> results_pupil_wild<span class="sc">$</span>time, </span>
+<span id="cb30-5"><a href="#cb30-5" tabindex="-1"></a>        <span class="at">mu_hat =</span> results_pupil_wild<span class="sc">$</span>yhat, </span>
+<span id="cb30-6"><a href="#cb30-6" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;Seconds&quot;</span>, </span>
+<span id="cb30-7"><a href="#cb30-7" tabindex="-1"></a>        <span class="at">ylab =</span> <span class="st">&quot;Percent_Outcome&quot;</span>,</span>
+<span id="cb30-8"><a href="#cb30-8" tabindex="-1"></a>        <span class="at">level_label =</span> T, </span>
+<span id="cb30-9"><a href="#cb30-9" tabindex="-1"></a>        <span class="at">min.size =</span> <span class="dv">40</span>, </span>
+<span id="cb30-10"><a href="#cb30-10" tabindex="-1"></a>        <span class="at">palette =</span> <span class="st">&quot;Spectral&quot;</span>, </span>
+<span id="cb30-11"><a href="#cb30-11" tabindex="-1"></a>        <span class="at">color_level_label =</span> <span class="st">&quot;black&quot;</span>)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
