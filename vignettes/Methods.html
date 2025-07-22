@@ -328,7 +328,63 @@ c\right]\)</span> are defined as:</p>
 <p><span class="math display">\[
 \text{CS}_{\text{out}}[a, b] := \hat{B}_u^{-1}[a, \infty) \cap
 \hat{B}_\ell^{-1}(-\infty, b]
+\]</span> ## Linear Function-on-Scalar Regression (FoSR)</p>
+<p>A simple example for function-on-scalar regression model is</p>
+<p><span class="math display">\[
+Y_i(t) = \beta_0(t) + \beta_1(t) X_{i1} + b_i(t) + \epsilon_i(t),
 \]</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(Y_i(t)\)</span> is a functional
+outcome</li>
+<li><span class="math inline">\(X_{i1}\)</span> is a scalar
+covariate</li>
+<li>Each <span class="math inline">\(\beta_j(t)\)</span> is a
+coefficient function<br />
+</li>
+<li><span class="math inline">\(b_i(t)\)</span> is a subject-specific
+functional random effect. This captures correlation within subjects over
+time that is not captured by the mean. This term is not always included
+in FoSR models, but it’s generally a good idea because it gives better
+inference<br />
+</li>
+<li><span class="math inline">\(\epsilon_i(t)\)</span> are normally
+distributed iid errors</li>
+</ul>
+<p>Here, the same bases are used for <span class="math inline">\(\beta_1(t)\)</span> and <span class="math inline">\(\beta_2(t)\)</span>.</p>
+<div id="accounting-for-error-correlation" class="section level3" number="1.1">
+<h3><span class="header-section-number">1.1</span> Accounting for Error
+Correlation</h3>
+<p>The fitted GAM model above didn’t take the correlation of residuals
+into account. Here, we combined random effects and FPCA into the GAM
+model to resolve this.</p>
+<div id="modeling-residuals-with-fpca-and-gam" class="section level4" number="1.1.1">
+<h4><span class="header-section-number">1.1.1</span> Modeling residuals
+with FPCA and gam</h4>
+<p>First, fit the mean model:</p>
+<p><span class="math display">\[
+Y_i(t) = \beta_0(t) + \beta_1(t) X_{i1} + e_i(t),
+\]</span></p>
+</div>
+<div id="estimate-the-fpca-for-gamm-fpca-model" class="section level4" number="1.1.2">
+<h4><span class="header-section-number">1.1.2</span> Estimate the FPCA
+for GAMM FPCA model</h4>
+<p>After obtaining residuals from the mean model, FPCA models the
+residuals using equation <span class="math inline">\(e_i(s) = b_i(s) +
+\epsilon_i(s)\)</span>, where <span class="math inline">\(b_i(s)\)</span> follows a mean zero Gaussian
+Process (GP) with covariance function <span class="math inline">\(\Sigma\)</span>, and <span class="math inline">\(\epsilon_i(s)\)</span> are independent <span class="math inline">\(N(0, \sigma_e^2)\)</span> random errors.</p>
+<p>Assuming that <span class="math inline">\(\phi_k(\cdot)\)</span> are
+the eigenfunctions of the covariance operator <span class="math inline">\(K_X\)</span> of <span class="math inline">\(b_i(\cdot)\)</span>, one can express:</p>
+<p><span class="math display">\[
+b_i(t) = \sum_{k=1}^{\infty} \xi_{ik} \phi_k(t)
+\]</span></p>
+<p>The GAMM-FPCA model will be :</p>
+<p><span class="math display">\[
+Y_i(t) = \beta_0(t) + \beta_1(t) X_{i1} + \sum_{k=1}^{K} \xi_{ik}
+\phi_k(t) + \epsilon_i(t),
+\]</span></p>
+</div>
+</div>
 </div>
 <div id="construction-of-simultaneous-confidence-bands-for-functional-regression-model" class="section level2" number="2">
 <h2><span class="header-section-number">2</span> Construction of

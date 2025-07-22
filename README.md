@@ -1,3 +1,8 @@
+---
+editor_options: 
+  markdown: 
+    wrap: 72
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -17,12 +22,11 @@ on specific areas that are at higher risk for effects of climate change.
 Therefore, a statistical framework is needed for estimating the set in
 the domain of a function whose image equals a predefined subset, which
 can be defined as $\mu^{-1}(U) = \{s \in S: \mu(s) \in U\}$, with *U* a
-pre-specified subset of a real line ℝ (e.g., \[*c*, ∞)).
-Proposed by Sommerfeld et al. (2018), Coverage Probability Excursion
-(CoPE) sets, defined as: 
-CS<sub>in</sub>(*U*) ⊆ *μ*<sup>−1</sup>(*U*) ⊆ CS<sub>out</sub>(*U*)
-are used to assess the spatial uncertainty of the inverse set
-estimation
+pre-specified subset of a real line ℝ (e.g., [*c*, ∞)). Proposed by
+Sommerfeld et al. (2018), Coverage Probability Excursion (CoPE) sets,
+defined as:
+CS<sub>in</sub>(*U*) ⊆ *μ*<sup>−1</sup>(*U*) ⊆ CS<sub>out</sub>(*U*) are
+used to assess the spatial uncertainty of the inverse set estimation
 
 Ren et al. (2023) generalized the estimation to dense and non-dense
 domains, and developed a fast and reliable construction method of
@@ -83,6 +87,10 @@ Mixed Models (GAMMs). The model formula is designed to capture both
 population-level smooth trends and subject-specific functional
 variation.
 
+The function-on-scalar regression model is
+
+$Y_i(t) = \beta_0(t) + \beta_1(t) X_{i1} + b_i(t) + \epsilon_i(t),$
+
 ``` r
 ccds_fpca <- invSCI::prepare_ccds_fpca(ccds)
 fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
@@ -110,6 +118,13 @@ constructing SCB. If `est_mean = TRUE`, `invSCI::SCB_functional_outcome`
 will estimate the simultaneous confidence bands for fitted mean outcome
 function. If `est_mean = FALSE`, `invSCI::SCB_functional_outcome` will
 estimate the simultaneous confidence bands for sample mean.
+
+Here, we estimated SCBs using both options seperately for the mean
+outcome Y(t) of user's group:
+$\hat{f}(t) = E[Y(t) | X_{1} = 1]= \beta_0(t) + \beta_1(t),$ where:
+
+-   $Y_i(t)$ is a functional outcome (percent_change)
+-   $X_{i1}$ is a scalar covariate (use)
 
 ``` r
 # CMA approach

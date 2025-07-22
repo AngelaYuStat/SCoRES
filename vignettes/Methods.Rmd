@@ -71,6 +71,53 @@ $$
 $$
 \text{CS}_{\text{out}}[a, b] := \hat{B}_u^{-1}[a, \infty) \cap \hat{B}_\ell^{-1}(-\infty, b]
 $$
+## Linear Function-on-Scalar Regression (FoSR)
+
+A simple example for function-on-scalar regression model is
+
+$$
+Y_i(t) = \beta_0(t) + \beta_1(t) X_{i1} + b_i(t) + \epsilon_i(t),
+$$
+
+where:
+
+- \( Y_i(t) \) is a functional outcome
+- \( X_{i1} \) is a scalar covariate 
+- Each \( \beta_j(t) \) is a coefficient function  
+- \( b_i(t) \) is a subject-specific functional random effect. This captures correlation within subjects over time that is not captured by the mean. This term is not always included in FoSR models, but it’s generally a good idea because it gives better inference  
+- \( \epsilon_i(t) \) are normally distributed iid errors
+
+Here, the same bases are used for \( \beta_1(t) \) and \( \beta_2(t) \).
+
+### Accounting for Error Correlation
+
+The fitted GAM model above didn't take the correlation of residuals into account. Here, we combined random effects and FPCA into the GAM model to resolve this.
+
+#### Modeling residuals with FPCA and gam
+
+First, fit the mean model:
+
+$$
+Y_i(t) = \beta_0(t) + \beta_1(t) X_{i1} + e_i(t),
+$$
+
+#### Estimate the FPCA for GAMM FPCA model
+
+After obtaining residuals from the mean model, FPCA models the residuals using equation \(e_i(s) = b_i(s) + \epsilon_i(s)\), where \(b_i(s)\) 
+follows a mean zero Gaussian Process (GP) with covariance function \(\Sigma\), and \(\epsilon_i(s)\) are independent \(N(0, \sigma_e^2)\) random errors.
+
+Assuming that \(\phi_k(\cdot)\) are the eigenfunctions of the covariance operator 
+\(K_X\) of \(b_i(\cdot)\), one can express:
+
+$$
+b_i(t) = \sum_{k=1}^{\infty} \xi_{ik} \phi_k(t)
+$$
+
+The GAMM-FPCA model will be :
+
+$$
+Y_i(t) = \beta_0(t) + \beta_1(t) X_{i1} + \sum_{k=1}^{K} \xi_{ik} \phi_k(t) + \epsilon_i(t),
+$$
 
 ## Construction of Simultaneous Confidence Bands for Functional Regression Model
 

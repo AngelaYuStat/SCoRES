@@ -7,7 +7,6 @@ output:
     toc: true
     toc_depth: 2
     number_sections: true
-bibliography: references.bib
 vignette: >
   %\VignetteEncoding{UTF-8}
   

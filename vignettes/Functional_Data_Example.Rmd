@@ -28,6 +28,14 @@ Before calculating the SCBs, we first process ccds data by fitting a mean GAM mo
 
 Following the FPCA-based data augmentation, we fit a FoSR model using `mgcv::bam()`, which allows efficient estimation of Generalized Additive Mixed Models (GAMMs). The model formula is designed to capture both population-level smooth trends and subject-specific functional variation.
 
+The response here is percent_change. Time variable t is seconds. And the covariate is use, which is a binary variable (1:use, 0:no use).
+
+The function-on-scalar regression model is
+
+$$
+Y_i(t) = \beta_0(t) + \beta_1(t) X_{i1} + b_i(t) + \epsilon_i(t),
+$$
+
 ```{r fit gam-fpca model, echo = TRUE}
 ccds_fpca <- invSCI::prepare_ccds_fpca(ccds)
 fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
@@ -44,6 +52,15 @@ The `invSCI` package provides two options for calculating the simultaneous confi
 Use `groups` to specify the names of grouping variables to analyze. The input data should have numerical binary 0/1 values for all scalar group variables. Here, we analyze the user group by specifying `groups = "use"`.
 Use `fitted` to specify the object for SCB estimation. If `fitted = TRUE`, `invSCI::SCB_functional_outcome` will construct the SCB for the fitted mean outcome function. If `fitted = FALSE`, `invSCI::SCB_functional_outcome` will construct the SCB for the fitted parameter function.
 Use `est_mean` to specify the point estimate for constructing SCB. If `est_mean = TRUE`, `invSCI::SCB_functional_outcome` will estimate the simultaneous confidence bands for fitted mean outcome function. If `est_mean = FALSE`, `invSCI::SCB_functional_outcome` will estimate the simultaneous confidence bands for sample mean.
+
+Here, we estimated SCBs using both options seperately for the mean outcome Y(t) of user's group:
+$$
+\hat{f}(t) = E[Y(t) | X_{1} = 1]= \beta_0(t) + \beta_1(t),
+$$
+where:
+
+- \( Y_i(t) \) is a functional outcome (percent_change)
+- \( X_{i1} \) is a scalar covariate (use)
 
 ```{r ccds SCB, echo = TRUE}
 # CMA approach
@@ -186,9 +203,7 @@ plot_cs(results_ccds_wild_sample,
         color_level_label = "black")
 ```
 
-To further illustrate the power of `invSCI::SCB_functional_outcome` for 
-constructing SCBs for multiple group variables, we load the pupil data
-and perform the analysis introduced before.
+To further illustrate the power of `invSCI::SCB_functional_outcome` for constructing SCBs for multiple group variables, we load the pupil data and perform the analysis introduced before.
 
 ```{r pupil, echo = TRUE}
 data(pupil)
@@ -206,8 +221,19 @@ fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
             method = "fREML", data = pupil_fpca, discrete = TRUE)
 ```
 
-Here, we analyze the daily male user group by specifying
+Here, we analyze the 40-years-old male user group by specifying
 `group_name = c("use", "age", "gender")` and `group_value = c(1, 40, 0)`. We set `fitted = TRUE` and `est_mean= TRUE`.
+
+The SCBs are estimated using both options seperately for the mean outcome Y(t) of the specified group:
+$$
+\hat{f}(t) = E[Y(t) | X_{1} = 1, X_{2} = 40, X_{3} = 0]= \beta_0(t) + \beta_1(t) + 40*\beta_2(t),
+$$
+where:
+
+- \( Y_i(t) \) is a functional outcome (percent_change)
+- \( X_{1} \) is a scalar covariate (use)
+- \( X_{2} \) is a continuous covariate (age)
+- \( X_{3} \) is a scalar covariate (gender)
 
 ```{r pupil SCB, echo = TRUE}
 # CMA approach
