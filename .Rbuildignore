@@ -1,4 +1,4 @@
-^invSCI\.Rproj$
+^SCoRES\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^data-raw$
@@ -6,4 +6,4 @@
 ^README\.pdf$
 ^README_files$
 ^WorkingCode\.R$
-^invSCI\.pdf$
+^SCoRES\.pdf$

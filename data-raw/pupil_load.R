@@ -4,7 +4,7 @@ library(readr)
 library(dplyr)
 
 # read Rdata
-dat_path <- system.file("extdata", "pupil.Rdata", package = "invSCI")
+dat_path <- system.file("extdata", "pupil.Rdata", package = "SCoRES")
 load(dat_path)
 pupil_raw <- pupil
 

@@ -4,7 +4,7 @@ library(usethis)
 library(readr)
 
 # read .dat file
-dat_path <- system.file("extdata", "climate_data.dat", package = "invSCI")
+dat_path <- system.file("extdata", "climate_data.dat", package = "SCoRES")
 attach(temp)
 #load(dat_path)
 #ls()

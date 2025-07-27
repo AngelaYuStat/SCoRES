@@ -4,7 +4,7 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# invSCI
+# SCoRES
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,
@@ -36,7 +36,7 @@ Ren et al. (2023) generalized the estimation to dense and non-dense domains, and
 To install from `CRAN`, please use:
 
 ```{r, eval = FALSE, echo = TRUE}
-# install.packages("invSCI")
+# install.packages("SCoRES")
 ```
 
 
@@ -44,7 +44,7 @@ To install the latest version directly from Github, please use:
 
 ```{r, eval = FALSE, echo = TRUE}
 install.packages("devtools")
-devtools::install_github("AngelaYuStat/invSCI")
+devtools::install_github("AngelaYuStat/SCoRES")
 ```
 
 
@@ -57,11 +57,11 @@ The example here is to use ccds functional data to construct the inverse confide
 The ccds dataset contains repeated measures of percent change over time for multiple subjects under two user categories (use: 1 and no use: 0). It includes both user and non-user groups, time points, and metadata related to eye side and frame timing. cleaning process make sure that the data only includes measurements taken from the right eye at the post-intervention time point (`tp == "post"`).
 
 ```{r load ccds data, echo = TRUE}
-library(invSCI)
+library(SCoRES)
 data(ccds)
 ```
 
-Before calculating the SCBs, we first process ccds data by fitting a mean GAM model, extracting residuals and performing FPCA using `invSCI::prepare_ccds_fpca()`, the function will return an enhanced dataset includes the FPCA-derived basis scores (Phi1, Phi2, Phi3, Phi4) for Function-on-Scalar Regression (FoSR) analysis.
+Before calculating the SCBs, we first process ccds data by fitting a mean GAM model, extracting residuals and performing FPCA using `SCoRES::prepare_ccds_fpca()`, the function will return an enhanced dataset includes the FPCA-derived basis scores (Phi1, Phi2, Phi3, Phi4) for Function-on-Scalar Regression (FoSR) analysis.
 
 Following the FPCA-based data augmentation, we fit a FoSR model using `mgcv::bam()`, which allows efficient estimation of Generalized Additive Mixed Models (GAMMs). The model formula is designed to capture both population-level smooth trends and subject-specific functional variation.
 
@@ -72,7 +72,7 @@ Y_i(t) = \beta_0(t) + \beta_1(t) X_{i1} + b_i(t) + \epsilon_i(t),
 $$
 
 ```{r fit gam-fpca model, echo = TRUE}
-ccds_fpca <- invSCI::prepare_ccds_fpca(ccds)
+ccds_fpca <- SCoRES::prepare_ccds_fpca(ccds)
 fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
             s(seconds, by = use, k=30, bs = "cr") +
             s(subject, by = Phi1, bs="re") +
@@ -82,11 +82,11 @@ fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
             method = "fREML", data = ccds_fpca, discrete = TRUE)
 ```
 
-After obtaining the FoSR object `fosr_mod`, simultaneous confidence bands (SCB) can be constructed though `invSCI::SCB_functional_outcome` using pre-specified methods.
-The `invSCI` package provides two options for calculating the simultaneous confidence bands (SCB). Use `method` to specify.
+After obtaining the FoSR object `fosr_mod`, simultaneous confidence bands (SCB) can be constructed though `SCoRES::SCB_functional_outcome` using pre-specified methods.
+The `SCoRES` package provides two options for calculating the simultaneous confidence bands (SCB). Use `method` to specify.
 Use `groups` to specify the names of grouping variables to analyze. The input data should have numerical binary 0/1 values for all scalar group variables. Here, we analyze the user group by specifying `groups = "use"`.
-Use `fitted` to specify the object for SCB estimation. If `fitted = TRUE`, `invSCI::SCB_functional_outcome` will construct the SCB for the fitted mean outcome function. If `fitted = FALSE`, `invSCI::SCB_functional_outcome` will construct the SCB for the fitted parameter function.
-Use `est_mean` to specify the point estimate for constructing SCB. If `est_mean = TRUE`, `invSCI::SCB_functional_outcome` will estimate the simultaneous confidence bands for fitted mean outcome function. If `est_mean = FALSE`, `invSCI::SCB_functional_outcome` will estimate the simultaneous confidence bands for sample mean.
+Use `fitted` to specify the object for SCB estimation. If `fitted = TRUE`, `SCoRES::SCB_functional_outcome` will construct the SCB for the fitted mean outcome function. If `fitted = FALSE`, `SCoRES::SCB_functional_outcome` will construct the SCB for the fitted parameter function.
+Use `est_mean` to specify the point estimate for constructing SCB. If `est_mean = TRUE`, `SCoRES::SCB_functional_outcome` will estimate the simultaneous confidence bands for fitted mean outcome function. If `est_mean = FALSE`, `SCoRES::SCB_functional_outcome` will estimate the simultaneous confidence bands for sample mean.
 
 Here, we estimated SCBs using both options seperately for the mean outcome Y(t) of user's group:
 $$
@@ -99,7 +99,7 @@ where:
 
 ```{r ccds SCB, echo = TRUE}
 # CMA approach
-results_ccds_cma <- invSCI::SCB_functional_outcome(data = ccds,
+results_ccds_cma <- SCoRES::SCB_functional_outcome(data = ccds,
                                           object = fosr_mod, 
                                           method = "cma",
                                           fitted = TRUE,
@@ -113,9 +113,9 @@ results_ccds_cma <- invSCI::SCB_functional_outcome(data = ccds,
 
 ```
 
-The code below visualizes the **inverse confidence sets (CSs)** derived from SCB results using the `invSCI::plot_cs()` function. The `results` object is first converted to a tibble for easier manipulation.
+The code below visualizes the **inverse confidence sets (CSs)** derived from SCB results using the `SCoRES::plot_cs()` function. The `results` object is first converted to a tibble for easier manipulation.
 
-The `levels = c(-7, -8, -9, -10)` argument specifies a set of thresholds, and `invSCI::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse set, the inner confidence set, and the outer confidence set. 
+The `levels = c(-7, -8, -9, -10)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse set, the inner confidence set, and the outer confidence set. 
 
 ```{r ccds_plot_cs_cma, echo = TRUE}
 results_ccds_cma <- tibble::as_tibble(results_ccds_cma)

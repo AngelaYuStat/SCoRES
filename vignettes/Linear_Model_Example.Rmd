@@ -18,10 +18,10 @@ encoding: UTF-8
 
 The example here is to use simulated data to construct the inverse confidence sets (CS) from simultaneous confidence bands (SCB) using linear regression. 
 
-`invSCI::SCB_linear_outcome()` function use a non-parametric bootstrap algorithm to construct the SCB in linear regression. The argument `df_fit` specifies a data frame containing the training design matrix used to fit the linear model, while `grid_df` contains the test set design matrix for constructing SCB. Use argument `model` to specify the formula used for fitting the linear model.
+`SCoRES::SCB_linear_outcome()` function use a non-parametric bootstrap algorithm to construct the SCB in linear regression. The argument `df_fit` specifies a data frame containing the training design matrix used to fit the linear model, while `grid_df` contains the test set design matrix for constructing SCB. Use argument `model` to specify the formula used for fitting the linear model.
 
 ```{r simulate data_estimate SCI_linear, echo = TRUE}
-library(invSCI)
+library(SCoRES)
 set.seed(262)
 # generate simulated data
 x1 <- rnorm(100)
@@ -35,7 +35,7 @@ model <- "y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"
 results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
 ```
 
-The `levels = c(-0.3, 0, 0.3)` argument specifies a set of thresholds, and `invSCI::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse set, the inner confidence set, and the outer confidence set.
+The `levels = c(-0.3, 0, 0.3)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse set, the inner confidence set, and the outer confidence set.
 
 ```{r simulate_plot_cs_linear, echo = TRUE}
 results <- tibble::as_tibble(results)
@@ -51,7 +51,7 @@ suppressWarnings(plot_cs(results,
         color_level_label = "black"))
 ```
 
-In addition to linear regression, `invSCI` also  provides`invSCI::SCB_logistic_outcome()` for estimating the SCB for outcome of logistic regression.
+In addition to linear regression, `SCoRES` also  provides`SCoRES::SCB_logistic_outcome()` for estimating the SCB for outcome of logistic regression.
 ```{r simulate data_estimate SCI_logistic, echo = TRUE}
 # generate simulated data
 x1 <- rnorm(100)
@@ -66,7 +66,7 @@ model <- "y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"
 results <- SCB_logistic_outcome(df_fit = df, model = model, grid_df = grid)
 ```
 
-Likewise, the `levels = c(0.3, 0.4, 0.5)` argument specifies a set of thresholds, and `invSCI::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse set, the inner confidence set, and the outer confidence set.
+Likewise, the `levels = c(0.3, 0.4, 0.5)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse set, the inner confidence set, and the outer confidence set.
 
 ```{r simulate_plot_cs_logistic, echo = TRUE}
 results <- tibble::as_tibble(results)
@@ -82,7 +82,7 @@ plot_cs(results,
         color_level_label = "black")
 ```
 
-Besides, `invSCI::SCB_regression_coef` can estimate the SCB for every coefficient in the linear/logistic model.
+Besides, `SCoRES::SCB_regression_coef` can estimate the SCB for every coefficient in the linear/logistic model.
 
 ```{r simulate data_estimate SCI_coef, echo = TRUE}
 library(MASS)
@@ -103,7 +103,7 @@ model <- "y ~ ."
 results <- SCB_regression_coef(df, model)
 ```
 
-Likewise, the `levels = c(-2, -0.5, -0.1, 0.2)` argument specifies a set of thresholds, and `invSCI::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse set, the inner confidence set, and the outer confidence set.
+Likewise, the `levels = c(-2, -0.5, -0.1, 0.2)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse set, the inner confidence set, and the outer confidence set.
 
 ```{r simulate_plot_cs_coef, echo = TRUE}
 results <- tibble::as_tibble(results)

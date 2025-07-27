@@ -158,7 +158,7 @@ $$
 
 For details of the algorithm, please refer to Telschow et al. (2019)
 
-`invSCI` provides two options for estimating the mean function at $s$, denoted as $\hat{\mu}_N(s)$. If `est_mean = TRUE`, the mean function will be estimated though using the fitted regression object. If `est_mean = FALSE`, sample mean will be calculated. Default is `FALSE`.
+`SCoRES` provides two options for estimating the mean function at $s$, denoted as $\hat{\mu}_N(s)$. If `est_mean = TRUE`, the mean function will be estimated though using the fitted regression object. If `est_mean = FALSE`, sample mean will be calculated. Default is `FALSE`.
 
 1. The **sample mean** 
 $$
@@ -168,7 +168,7 @@ $$
 
 2. The **fitted mean value** from a functional regression model (e.g., using `mgcv::bam`).
 
-In the wild bootstrap procedure, `invSCI` supports three types of multiplier distributions, which is specified by `weights`:
+In the wild bootstrap procedure, `SCoRES` supports three types of multiplier distributions, which is specified by `weights`:
 
 - `"rademacher"`: $g_i \in \{-1, +1\}$ with equal probability
 - `"gaussian"`: $g_i \sim \mathcal{N}(0, 1)$

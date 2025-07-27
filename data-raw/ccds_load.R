@@ -4,7 +4,7 @@ library(readr)
 library(dplyr)
 
 # read csv
-dat_path <- system.file("extdata", "ccds1_functional.csv", package = "invSCI")
+dat_path <- system.file("extdata", "ccds1_functional.csv", package = "SCoRES")
 ccds_raw <- read_csv(dat_path)
 
 # select right eye and tp = post
