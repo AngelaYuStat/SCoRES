@@ -278,9 +278,9 @@ plot_cs = function(SCB, levels, type = "upper", x, y, mu_hat, mu_true = NULL, to
       colnames(mu)=c("X1","X2", "true_mean")
     }else if(!is.null(mu_hat)){
       mu = mu_hat
-      rownames(mu) = x
-      colnames(mu) = y
-      mu = suppressWarnings(melt(mu))
+      #rownames(mu) = x
+      #colnames(mu) = y
+      #mu = suppressWarnings(melt(mu))
       colnames(mu)=c("X1","X2", "estimated_mean")
     }else{
       stop("Must provide 'mu_true' or 'mu_hat'.")

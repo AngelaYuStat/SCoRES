@@ -7,3 +7,5 @@
 ^README_files$
 ^WorkingCode\.R$
 ^SCoRES\.pdf$
+^doc$
+^Meta$

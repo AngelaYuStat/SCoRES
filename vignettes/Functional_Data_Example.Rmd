@@ -15,6 +15,16 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse  = TRUE,
+  comment   = "#>",
+  message   = FALSE,
+  warning   = FALSE,
+  fig.width = 6
+)
+```
+
 The first example here is to use ccds functional data to construct the inverse confidence sets (CS) from simultaneous confidence bands (SCB) using Function-on-Scalar Regression (FoSR).
 
 The ccds dataset contains repeated measures of percent change over time for multiple subjects under two user categories (use: 1 and no use: 0). It includes both user and non-user groups, time points, and metadata related to eye side and frame timing. cleaning process make sure that the data only includes measurements taken from the right eye at the post-intervention timepoint (`tp == "post"`).
@@ -90,9 +100,9 @@ results_ccds_cma_para <- SCoRES::SCB_functional_outcome(data = ccds,
                                           subject = "subject")
 
 # Multiplier-t Bootstrap
-results_ccds_wild <- SCoRES::SCB_functional_outcome(data = ccds, 
+results_ccds_multiplier <- SCoRES::SCB_functional_outcome(data = ccds,
                                           object = fosr_mod, 
-                                          method = "wild",
+                                          method = "multiplier",
                                           fitted = TRUE,
                                           est_mean = TRUE, 
                                           alpha = 0.05, 
@@ -102,10 +112,36 @@ results_ccds_wild <- SCoRES::SCB_functional_outcome(data = ccds,
                                           group_value = 1, 
                                           subject = "subject")
 
-# Multiplier-t Bootstrap (use sample mean)
-results_ccds_wild_sample <- SCoRES::SCB_functional_outcome(data = ccds, 
+results_ccds_multiplier_para <- SCoRES::SCB_functional_outcome(
+                                          data = ccds,
                                           object = fosr_mod, 
-                                          method = "wild",
+                                          method = "multiplier",
+                                          fitted = FALSE,
+                                          est_mean = TRUE, 
+                                          alpha = 0.05, 
+                                          outcome = "percent_change", 
+                                          time = "seconds", 
+                                          group_name = "use", 
+                                          group_value = 1, 
+                                          subject = "subject")
+
+# Multiplier-t Bootstrap (use sample mean)
+results_ccds_multiplier_sample <- SCoRES::SCB_functional_outcome(
+                                          data = ccds, 
+                                          object = fosr_mod, 
+                                          method = "multiplier",
+                                          fitted = TRUE,
+                                          est_mean = FALSE, 
+                                          alpha = 0.05, 
+                                          outcome = "percent_change", 
+                                          time = "seconds", 
+                                          group_name = "use", 
+                                          group_value = 1, 
+                                          subject = "subject")
+
+results_ccds_multiplier_overall <- SCoRES::SCB_functional_outcome(
+                                          data = ccds,  
+                                          method = "multiplier",
                                           fitted = TRUE,
                                           est_mean = FALSE, 
                                           alpha = 0.05, 
@@ -120,7 +156,7 @@ For mathematical details, see vignette Methods.
 
 `SCoRES` provides two options for estimating the mean function at $s$, denoted as $\hat{\mu}_N(s)$. If `est_mean = TRUE`, the mean function will be estimated though using the fitted regression object. If `est_mean = FALSE`, sample mean will be calculated. Default is `FALSE`.
 
-In the wild bootstrap procedure, `SCoRES` supports three types of multiplier distributions, which is specified by `weights`:
+In the multiplier bootstrap procedure, `SCoRES` supports three types of multiplier distributions, which is specified by `weights`:
 
 - `"rademacher"`: $g_i \in \{-1, +1\}$ with equal probability
 - `"gaussian"`: $g_i \sim \mathcal{N}(0, 1)$
@@ -162,7 +198,7 @@ The next plot shows the SCB for the coefficient funtion for the use group.
 ```{r ccds_plot_cs_cma_para, echo = TRUE}
 results_ccds_cma_para <- tibble::as_tibble(results_ccds_cma_para)
 plot_cs(results_ccds_cma_para,
-        levels = c( c(1.5, 2, 2.5, 3)), 
+        levels = c(1.5, 2, 2.5, 3), 
         x = results_ccds_cma_para$time, 
         mu_hat = results_ccds_cma_para$yhat, 
         xlab = "Seconds", 
@@ -173,14 +209,14 @@ plot_cs(results_ccds_cma_para,
         color_level_label = "black")
 ```
 
-The following plots show the results of wild bootstrap. The only difference between these two plots is that, the solid black line in the first one represents the estimated mean fitted through functional regresson object, while the second represents the sample mean. All possible NA's are imputed using `refund::fpca.face()`.
+The following plots show the results of multiplier bootstrap. The only difference between these two plots is that, the solid black line in the first one represents the estimated mean fitted through functional regresson object, while the second represents the sample mean. All possible NA's are imputed using `refund::fpca.face()`.
 
-```{r ccds_plot_cs_wild, echo = TRUE}
-results_ccds_wild <- tibble::as_tibble(results_ccds_wild)
-plot_cs(results_ccds_wild,
+```{r ccds_plot_cs_multiplier, echo = TRUE}
+results_ccds_multiplier <- tibble::as_tibble(results_ccds_multiplier)
+plot_cs(results_ccds_multiplier,
         levels = c(-7, -8, -9, -10), 
-        x = results_ccds_wild$time, 
-        mu_hat = results_ccds_wild$yhat, 
+        x = results_ccds_multiplier$time, 
+        mu_hat = results_ccds_multiplier$yhat, 
         xlab = "Seconds", 
         ylab = "Percent_Outcome",
         level_label = T, 
@@ -189,12 +225,40 @@ plot_cs(results_ccds_wild,
         color_level_label = "black")
 ```
 
-```{r ccds_plot_cs_wild_sample, echo = TRUE}
-results_ccds_wild_sample <- tibble::as_tibble(results_ccds_wild_sample)
-plot_cs(results_ccds_wild_sample,
+```{r ccds_plot_cs_multiplier_para, echo = TRUE}
+results_ccds_multiplier_para <- tibble::as_tibble(results_ccds_multiplier_para)
+plot_cs(results_ccds_multiplier_para,
+        levels = c(1.5, 2, 2.5, 3), 
+        x = results_ccds_multiplier_para$time, 
+        mu_hat = results_ccds_multiplier_para$yhat, 
+        xlab = "Seconds", 
+        ylab = "Percent_Outcome",
+        level_label = T, 
+        min.size = 40, 
+        palette = "Spectral", 
+        color_level_label = "black")
+```
+
+```{r ccds_plot_cs_multiplier_sample, echo = TRUE}
+results_ccds_multiplier_sample <- tibble::as_tibble(results_ccds_multiplier_sample)
+plot_cs(results_ccds_multiplier_sample,
         levels = c(-7, -8, -9, -10), 
-        x = results_ccds_wild_sample$time, 
-        mu_hat = results_ccds_wild_sample$yhat, 
+        x = results_ccds_multiplier_sample$time, 
+        mu_hat = results_ccds_multiplier_sample$yhat, 
+        xlab = "Seconds", 
+        ylab = "Percent_Outcome", 
+        level_label = T, 
+        min.size = 40, 
+        palette = "Spectral", 
+        color_level_label = "black")
+```
+
+```{r ccds_plot_cs_multiplier_overall, echo = TRUE}
+results_ccds_multiplier_overall <- tibble::as_tibble(results_ccds_multiplier_overall)
+plot_cs(results_ccds_multiplier_overall,
+        levels = c(-7, -8, -9, -10), 
+        x = results_ccds_multiplier_overall$time, 
+        mu_hat = results_ccds_multiplier_overall$yhat, 
         xlab = "Seconds", 
         ylab = "Percent_Outcome", 
         level_label = T, 
@@ -250,21 +314,21 @@ results_pupil_cma <- SCoRES::SCB_functional_outcome(data = pupil,
                                           subject = "id")
 
 # Multiplier-t Bootstrap
-results_pupil_wild <- SCoRES::SCB_functional_outcome(data = pupil, 
+results_pupil_multiplier <- SCoRES::SCB_functional_outcome(
+                                          data = pupil, 
                                           object = fosr_mod,
                                           fitted = TRUE,
-                                          method = "wild", 
+                                          method = "multiplier", 
                                           est_mean = TRUE, 
                                           alpha = 0.05, 
                                           outcome = "percent_change", 
                                           time = "seconds", 
-                                          group_name = c("use", "gender"), 
-                                          group_value = c(1, 0), 
+                                          group_name = c("use", "age",                                           "gender"), 
+                                          group_value = c(1, 40, 0), 
                                           subject = "id")
 ```
 
-The following plots show the SCBs and inverse SCBs for the mean outcome function. The first one is from CMA approach and the second is from wild bootstrap.
-
+The following plots show the SCBs and inverse SCBs for the mean outcome function. The first one is from CMA approach and the second is from multiplier bootstrap.
 
 ```{r pupil_plot_cs_cma, echo = TRUE}
 results_pupil_cma <- tibble::as_tibble(results_pupil_cma)
@@ -280,12 +344,12 @@ plot_cs(results_pupil_cma,
         color_level_label = "black")
 ```
 
-```{r pupil_plot_cs_wild, echo = TRUE}
-results_pupil_wild <- tibble::as_tibble(results_pupil_wild)
-plot_cs(results_pupil_wild,
+```{r pupil_plot_cs_multiplier, echo = TRUE}
+results_pupil_multiplier <- tibble::as_tibble(results_pupil_multiplier)
+plot_cs(results_pupil_multiplier,
         levels = c(-18, -20, -22, -24), 
-        x = results_pupil_wild$time, 
-        mu_hat = results_pupil_wild$yhat, 
+        x = results_pupil_multiplier$time, 
+        mu_hat = results_pupil_multiplier$yhat, 
         xlab = "Seconds", 
         ylab = "Percent_Outcome",
         level_label = T, 

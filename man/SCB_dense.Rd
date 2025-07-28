@@ -10,7 +10,8 @@ SCB_dense(
   alpha = 0.05,
   Mboots = NULL,
   method = "t",
-  weights = "rademacher"
+  weights = "rademacher",
+  SCB = TRUE
 )
 }
 \arguments{
@@ -25,14 +26,19 @@ SCB_dense(
 \item{method}{Method for SD estimation: "t" or "regular". Default is "t".}
 
 \item{weights}{Multiplier type: "rademacher", "gaussian", or "mammen". Default is "rademacher"."}
+
+\item{SCB}{Logical value for whether to calculate the SCB or not. Default is TRUE.}
 }
 \value{
-A list containing:
+If \code{SCB = TRUE}, returns a list containing:
 \item{yhat}{Estimated mean function for the group of interest.}
 \item{se_hat}{Standard errors of the estimated means.}
 \item{scb_low}{Lower bound of the simultaneous confidence band.}
 \item{scb_up}{Upper bound of the simultaneous confidence band.}
 \item{type}{A character description of the output type.}
+
+If \code{SCB = FALSE}, returns:
+\item{thres}{The alpha quantile estimated by Multiplier Bootstrap}
 }
 \description{
 Construct Simultaneous Confidence Bands (SCB) for Dense Functional Data

@@ -20,6 +20,16 @@ The example here is to use simulated data to construct the inverse confidence se
 
 `SCoRES::SCB_linear_outcome()` function use a non-parametric bootstrap algorithm to construct the SCB in linear regression. The argument `df_fit` specifies a data frame containing the training design matrix used to fit the linear model, while `grid_df` contains the test set design matrix for constructing SCB. Use argument `model` to specify the formula used for fitting the linear model.
 
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse  = TRUE,
+  comment   = "#>",
+  message   = FALSE,
+  warning   = FALSE,
+  fig.width = 6
+)
+```
+
 ```{r simulate data_estimate SCI_linear, echo = TRUE}
 library(SCoRES)
 set.seed(262)
@@ -82,7 +92,7 @@ plot_cs(results,
         color_level_label = "black")
 ```
 
-Besides, `SCoRES::SCB_regression_coef` can estimate the SCB for every coefficient in the linear/logistic model.
+Besides, `SCoRES::SCB_regression_coef` can estimate the SCB for every coefficient (50 in total) in the linear/logistic model.
 
 ```{r simulate data_estimate SCI_coef, echo = TRUE}
 library(MASS)
@@ -96,7 +106,7 @@ X <- MASS::mvrnorm(n = n, mu = rep(0, M), Sigma = Sigma)
 epsilon <- rnorm(n, mean = 0, sd = 1)
 y <- X %*% beta + epsilon
 df <- as.data.frame(X)
-names(df) <- paste0("Beta", 1:M)
+names(df) <- paste0(1:M)
 df$y <- as.vector(y)
 # fit the linear regression model and obtain the SCB for all betas
 model <- "y ~ ."

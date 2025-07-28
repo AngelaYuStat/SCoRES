@@ -5,7 +5,7 @@ library(readr)
 
 # read .dat file
 dat_path <- system.file("extdata", "climate_data.dat", package = "SCoRES")
-attach(temp)
+# attach(temp)
 #load(dat_path)
 #ls()
 

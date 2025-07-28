@@ -9,7 +9,7 @@ SCB_functional_outcome(
   object = NULL,
   method,
   fitted = TRUE,
-  est_mean = FALSE,
+  est_mean = TRUE,
   alpha = 0.05,
   outcome,
   time,
@@ -26,16 +26,16 @@ SCB_functional_outcome(
 \item{data}{A functional data frame, matrix or tibble.
 The input data must have column names, and should contain the functional outcome, time, subject}
 
-\item{object}{A fitted Function-on-Scalar Regression (FoSR) object (e.g., from mgcv::bam()/mgcv::gam()). Default is NULL.}
+\item{object}{A fitted Function-on-Scalar Regression (FoSR) object (e.g., from mgcv::bam()/mgcv::gam()). Default is \code{NULL}}
 
 \item{method}{A character string specifying the approach:
 \itemize{
 \item \code{"cma"} - Correlation and Multiplicity Adjusted (CMA) confidence bands
 via parametric approach (requires a fitted functional regression model)
-\item \code{"wild"} - Dense confidence bands via Multiplier-t Bootstrap method
-For \code{method = "wild"} option, the user should check whether their input data (\code{data}) has zero entries on every subject for a specific time point.
+\item \code{"multiplier"} - Dense confidence bands via Multiplier-t Bootstrap method
+For \code{method = "multiplier"} option, the user should check whether their input data (\code{data}) has zero entries on every subject for a specific time point.
 The function only allow all zero entries for time point zero. Otherwise, the function will return an error.
-Besides, for wild bootstrap, if there exist NA in data, will impute these NA's via fpca.face.
+Besides, for Multiplier Bootstrap, if there exist NA in data, the function will impute these NA's via fpca.face.
 }}
 
 \item{fitted}{Logical. Whether to estimate the simultaneous confidence bands for fitted mean function or fitted parameter function
@@ -45,7 +45,7 @@ Besides, for wild bootstrap, if there exist NA in data, will impute these NA's v
 }
 Default is \code{TRUE}.}
 
-\item{est_mean}{Logical. Whether to use the fitted mean from a functional regression model in wild bootstrap (\code{method = "wild"}).
+\item{est_mean}{Logical. Whether to use the fitted mean from a functional regression model in Multiplier Bootstrap (\code{method = "multiplier"}) for estimating the quantile.
 This argument can be ignored if choose \code{method = "cma"}.
 If \code{TRUE}, the function will use:
 \itemize{
@@ -63,7 +63,7 @@ Default is \code{FALSE}.}
 
 \item{alpha}{Significance level for SCB. Default is 0.05.}
 
-\item{outcome}{A character string specifying the name of the outcome variable used in the model. Must be provided if choose \code{method = "wild"}.}
+\item{outcome}{A character string specifying the name of the outcome variable used in the model. Must be provided if choose \code{method = "multiplier"}.}
 
 \item{time}{A character string specifying the name of the time variable used in the model.}
 
@@ -71,24 +71,24 @@ Default is \code{FALSE}.}
 
 \item{group_name}{A character vector that specifies the names of grouping scalar variables to analyze.
 Default is \code{NULL}, representing the reference group if \code{method = "cma"}.
-For \code{method = "wild"}, \code{NuULL} is not allowed.}
+For \code{method = "multiplier"}, \code{NuULL} is not allowed.}
 
 \item{group_value}{A numeric vector that specifies the corresponding values of the variables listed in \code{group_name}.
 Each entry in \code{group_value} should match the respective variable in \code{group_name}.
 Character/factor is not allowed.
 Default is \code{NULL}, representing the reference group if \code{"cma"}.
-For \code{method = "wild"}, \code{NuULL} is not allowed.}
+For \code{method = "multiplier"}, \code{NuULL} is not allowed.}
 
 \item{subject}{A character string specifying the name of the subject-level random effect variable.}
 
-\item{nboot}{An integer specifying the number of bootstrap samples used to construct the confidence bands. Default is 10,000 for cma, 5000 for wild bootstrap.}
+\item{nboot}{An integer specifying the number of bootstrap samples used to construct the confidence bands. Default is 10,000 for cma, 5000 for Multiplier Bootstrap.}
 
 \item{method_SD}{Method for SD estimation: "t" or "regular". Default is "t".}
 
 \item{weights}{Multiplier type: "rademacher", "gaussian", or "mammen". Default is "rademacher"."
 
 For CMA bands (\code{method = "cma"}), please provide a pre-fitted functional regression model
-For wild bootstrap bands (\code{method = "wild"}), the original input data is required.}
+For Multiplier Bootstrap bands (\code{method = "multiplier"}), the original input data is required.}
 }
 \value{
 A list containing:
@@ -117,15 +117,15 @@ fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
 
 # CMA approach
 results <- SCB_functional_outcome(data = ccds, object = fosr_mod, method = "cma", fitted = TRUE,
-                                  est_mean = TRUE,outcome = "percent_change", time = "seconds",
+                                  est_mean = TRUE, outcome = "percent_change", time = "seconds",
                                   group_name = "use", group_value = 1, subject = "subject")
 
 
-# Wild bootstrap
-results <- SCB_functional_outcome(data = ccds, object = fosr_mod, method = "wild", fitted = TRUE,
+# multiplier bootstrap
+results <- SCB_functional_outcome(data = ccds, object = fosr_mod, method = "multiplier", fitted = TRUE,
                        est_mean = TRUE, outcome = "percent_change",
                        time = "seconds", group_name = "use", group_value = 1, subject = "subject")
-results <- SCB_functional_outcome(data = ccds, object = fosr_mod, method = "wild", fitted = TRUE,
+results <- SCB_functional_outcome(data = ccds, object = fosr_mod, method = "multiplier", fitted = TRUE,
                        est_mean = FALSE, outcome = "percent_change",
                        time = "seconds", group_name = "use", group_value = 1, subject = "subject")
 
