@@ -160,7 +160,7 @@ plot_cs(results_ccds_cma,
         color_level_label = "black")
 ```
 
-![](README_files/figure-gfm/ccds_plot_cs_cma-1.png)<!-- -->
+![](index_files/figure-html/ccds_plot_cs_cma-1.png)<!-- -->
 
 The plot demonstrate how to use SCB to find regions of s where the
 estimated mean is greater than or equal to the four levels -7, -8, -9,
