@@ -82,7 +82,7 @@
       <h1 data-toc-skip>Functional_Data_Example</h1>
                         <h4 data-toc-skip class="author">Angela Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-07-27</h4>
+            <h4 data-toc-skip class="date">2025-07-28</h4>
       
 
       <div class="hidden name"><code>Functional_Data_Example.Rmd</code></div>
@@ -131,24 +131,30 @@ Y_i(t) = \beta_0(t) + \beta_1(t) X_{i1} + b_i(t) + \epsilon_i(t),
 <p>After obtaining the FoSR object <code>fosr_mod</code>, simultaneous
 confidence bands (SCB) can be constructed though
 <code><a href="../reference/SCB_functional_outcome.html">SCoRES::SCB_functional_outcome</a></code> using pre-specified methods.
-The <code>SCoRES</code> package provides two options for calculating the
-simultaneous confidence bands (SCB). Use <code>method</code> to specify.
-Use <code>groups</code> to specify the names of grouping variables to
-analyze. The input data should have numerical binary 0/1 values for all
-scalar group variables. Here, we analyze the user group by specifying
+The SCoRES package provides two options for calculating simultaneous
+confidence bands (SCBs), specified via the method argument:
+<code>cma</code>: Correlation and Multiplicity Adjusted (CMA) confidence
+bands via parametric approach. <code>multiplier</code>: Dense confidence
+bands via Multiplier-t Bootstrap method. Use <code>groups</code> to
+specify the names of grouping variables to analyze. The input data
+should have numerical binary 0/1 values for all scalar group variables.
+Here, we analyze the user group by specifying
 <code>groups = "use"</code>. Use <code>fitted</code> to specify the
 object for SCB estimation. If <code>fitted = TRUE</code>,
 <code><a href="../reference/SCB_functional_outcome.html">SCoRES::SCB_functional_outcome</a></code> will construct the SCB for
 the fitted mean outcome function. If <code>fitted = FALSE</code>,
 <code><a href="../reference/SCB_functional_outcome.html">SCoRES::SCB_functional_outcome</a></code> will construct the SCB for
-the fitted parameter function. Use <code>est_mean</code> to specify the
-point estimate for constructing SCB. If <code>est_mean = TRUE</code>,
-<code><a href="../reference/SCB_functional_outcome.html">SCoRES::SCB_functional_outcome</a></code> will estimate the
-simultaneous confidence bands for fitted mean outcome function. If
-<code>est_mean = FALSE</code>,
-<code><a href="../reference/SCB_functional_outcome.html">SCoRES::SCB_functional_outcome</a></code> will estimate the
-simultaneous confidence bands for sample mean.</p>
-<p>Here, we estimated SCBs using both options seperately for the mean
+the fitted parameter function. Use est_mean to specify the point
+estimate used for constructing SCBs in SCoRES::SCB_functional_outcome.
+This argument is for <code>multiplier</code> If est_mean =
+<code>TRUE</code>, the multiplier bootstrap will be performed based on
+the fitted mean outcome function. If est_mean = <code>FALSE</code>, the
+multiplier bootstrap will be performed based on the sample mean. For
+<code>multiplier</code> option, users need to provide a functional
+regression object through argument object. If object =
+<code>NULL</code>, the function will only output the SCB for an overall
+mean outcome function regardless of the group specified.</p>
+<p>Here, we estimated SCBs using both options separately for the mean
 outcome Y(t) of user’s group:
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>f</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>Y</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="prefix">|</mo><msub><mi>X</mi><mn>1</mn></msub><mo>=</mo><mn>1</mn><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
 \hat{f}(t) = E[Y(t) | X_{1} = 1]= \beta_0(t) + \beta_1(t),
@@ -240,16 +246,6 @@ is a scalar covariate (use)</li>
 <span>                                          group_value <span class="op">=</span> <span class="fl">1</span>, </span>
 <span>                                          subject <span class="op">=</span> <span class="st">"subject"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "No Functional Regression Object provided, will only compute an overall SCB for the outcome regardless of the group specified."</span></span></code></pre></div>
-<p>For mathematical details, see vignette Methods.</p>
-<p><code>SCoRES</code> provides two options for estimating the mean
-function at
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>,
-denoted as
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>μ</mi><mo accent="true">̂</mo></mover><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat{\mu}_N(s)</annotation></semantics></math>.
-If <code>est_mean = TRUE</code>, the mean function will be estimated
-though using the fitted regression object. If
-<code>est_mean = FALSE</code>, sample mean will be calculated. Default
-is <code>FALSE</code>.</p>
 <p>In the multiplier bootstrap procedure, <code>SCoRES</code> supports
 three types of multiplier distributions, which is specified by
 <code>weights</code>:</p>
@@ -275,6 +271,7 @@ which is specified by <code>method_SD</code>:</p>
 <li><p>“t” (bootstrap second moment-based estimator):</p></li>
 </ul>
 <p>Default is <code>t</code>.</p>
+<p>For mathematical details, see vignette Methods.</p>
 <p>The code below visualizes the <strong>inverse confidence sets
 (CSs)</strong> derived from SCB results using the
 <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code> function. The <code>results</code> object
@@ -402,7 +399,7 @@ analysis introduced before.</p>
 <code>group_name = c("use", "age", "gender")</code> and
 <code>group_value = c(1, 40, 0)</code>. We set
 <code>fitted = TRUE</code> and <code>est_mean= TRUE</code>.</p>
-<p>The SCBs are estimated using both options seperately for the mean
+<p>The SCBs are estimated using both options separately for the mean
 outcome Y(t) of the specified group:
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>f</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>Y</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="prefix">|</mo><msub><mi>X</mi><mn>1</mn></msub><mo>=</mo><mn>1</mn><mo>,</mo><msub><mi>X</mi><mn>2</mn></msub><mo>=</mo><mn>40</mn><mo>,</mo><msub><mi>X</mi><mn>3</mn></msub><mo>=</mo><mn>0</mn><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mn>40</mn><mo>*</mo><msub><mi>β</mi><mn>2</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
 \hat{f}(t) = E[Y(t) | X_{1} = 1, X_{2} = 40, X_{3} = 0]= \beta_0(t) + \beta_1(t) + 40*\beta_2(t),
