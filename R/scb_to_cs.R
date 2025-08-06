@@ -3,28 +3,32 @@
 #' This function constructs inverse confidence sets (CS) from simultaneous confidence bands (SCB),
 #' allowing visualization and containment check of level sets of true or estimated functions.
 #'
-#' @param scb_up A matrix or array containing the upper simultaneous confidence interval.
-#'               Must have the same dimensions as defined by the grid from `x1` and `x2`.
-#' @param scb_low A matrix or array containing the lower bounds of the simultaneous confidence bands.
-#'               Must have the same dimensions as defined by the grid from `x1` and `x2`.
-#' @param levels A list of scalers for different levels or matrix containing interval sets to construct the confidence sets.
-#' @param true_mean Optional matrix of the true mean function (for simulation study or evaluation purposes).
-#'                  Should have the same dimension as `scb_up`.
+#' @param scb_up A numeric vector (1D) or matrix (2D) containing the upper simultaneous confidence interval.
+#' @param scb_low A numeric vector (1D) or matrix (2D) containing the lower bounds of the simultaneous confidence bands.
+#'                Dimensions of `scb_up` and `scb_low` must match.
+#' @param levels A numeric vector or list of scalers for different levels or matrix containing interval sets to construct the confidence sets.
+#'               If \code{type} = "upper", "lower", or "two-sided", `levels` should be a vector.
+#'               If \code{type} = "interval", then \code{levels} should be a \code{list} containing two elements: \code{$low} and \code{$up},
+#'               corresponding to the interval defined by [\verb{levels$low}, \verb{levels$up}].
+#' @param true_mean Optional matrix of the true mean function.
+#'                  Should have the same dimension as `scb_up` and `scb_low`.
 #' @param est_mean Optional matrix of the estimated mean function, used for plotting if `true_mean` is not available.
-#'                  Should have the same dimension as `scb_up`.
-#' @param x1 A numeric vector of coordinates for the first dimension (e.g., time or x-axis).
-#' @param x2 A numeric vector of coordinates for the second dimension (e.g., space or y-axis).
+#'                 Should have the same dimension as `scb_up` and `scb_low`.
+#' @param x1 A numeric vector of coordinates for the first dimension used for plotting the inner and outer confidence sets (CSs). Default is NULL.
+#'           Dimension of `x1` must match the first dimension of `scb_up` and `scb_low`.
+#' @param x2 A numeric vector of coordinates for the second dimension used for plotting inner and outer confidence sets (CSs). Default is NULL.
+#'           Dimension of `x1` must match the second dimension of `scb_up` and `scb_low`.
 #' @param type A character string specifying the type of inverse set to construct if levels are not a matrix.
-#'        Choices are `"upper"`, `"lower"`, `"two-sided"` or `"interval"`.
-#'        Notice that `"two-sided"` type is not available for plotting (\code{return_plot = TRUE}).
+#'             Choices are `"upper"`, `"lower"`, `"two-sided"` or `"interval"`.
+#'             Notice that `"two-sided"` type is not available for plotting (\code{return_plot = TRUE}).
 #' @param return_contain_only Logical. If `TRUE`, only return a matrix/logical map indicating whether the level set is contained.
-#' @param return_plot Logical. If `TRUE`, return a ggplot object for visualization.
-#' @param xlab A character for the name of the x axis for the returned ggplot object.
-#' @param ylab A character for the name of the y axis for the returned ggplot object.
+#' @param return_plot Logical. If `TRUE`, return a ggplot object for visualizing the inner and outer confidence sets (CSs).
+#' @param xlab A character for the name of the x axis used for plotting the inner and outer confidence sets (CSs). Default is NULL.
+#' @param ylab A character for the name of the y axis used for plotting the inner and outer confidence sets (CSs). Default is NULL.
 #'
 #' @return A list containing the following components:
 #' \describe{
-#'   \item{levels}{A vector (or matrix) of threshold levels used to define the confidence sets.}
+#'   \item{levels}{A vector (or list) of threshold levels used to define the confidence sets. Same as the input `levels`.}
 #'   \item{U_in}{(Optional) A list of logical matrices indicating whether each point is within the conservative inner confidence set for each level. Returned only when \code{return_contain_only = FALSE} and \code{type != "two-sided"}.}
 #'   \item{U_out}{(Optional) A list of logical matrices indicating whether each point is within the liberal outer confidence set for each level. Returned only when \code{return_contain_only = FALSE} and \code{type != "two-sided"}.}
 #'   \item{L_out}{(Two-sided only) A list of logical matrices indicating lower bound containment (for \code{type = "two-sided"}).}
@@ -48,8 +52,43 @@
 #' scb_to_cs(result$UpperBound, result$LowerBound, c(-1, -0.5, 0.5, 1),
 #' x1 = grid$x1, x2 = grid$x2, est_mean = results$Mean)
 #'
-scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL,est_mean = NULL, x1, x2, type = "upper", return_contain_only = F, return_plot = F, xlab = NULL, ylab = NULL)
+scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL, est_mean = NULL, x1 = NULL, x2 = NULL, type = "upper", return_contain_only = F, return_plot = F, xlab = NULL, ylab = NULL)
 {
+  if(!identical(dim(scb_up), dim(scb_low))||
+     !identical(dim(scb_up), dim(true_mean))) {
+    stop("Dimensions of `scb_up`, `scb_low` and `true_mean` must match.")
+  }
+
+  if(!is.numeric(scb_up) && !is.numeric(scb_low) && !is.numeric(true_mean)) {
+    stop("Values of `scb_up` and `scb_low` must be numeric.")
+  }
+
+  if (!all(sapply(list(scb_up, scb_low, true_mean),
+                  function(x) is.vector(x) || is.matrix(x) || is.array(x)))) {
+    stop("`scb_up`, `scb_low`, and `true_mean` must each be a vector or matrix.")
+  }
+
+  if(is.null(levels)) {
+    stop("Must provide input for `levels`.")
+  }else{
+    if(!is.numeric(levels)) {
+      stop("Values of `levels` must be numeric.")
+    }
+    if(type %in% c("upper", "lower", "two-sided")){
+      if(!is.vector(levels)) stop("`levels` should be a vector if `type` = upper, lower, or two-sided")
+    }else if(type == "interval"){
+      if(!is.list(levels)) stop("`levels` should be a list if `type` = interval")
+      if (!all(c("low", "up") %in% names(levels))) {
+        stop("`levels` must have elements named 'low' and 'up'.")
+      }
+    }else{
+      stop("`type` must be chosen between 'upper', 'lower', 'two-sided' or 'interval'.")
+    }
+  }
+
+  if(!is.logical(return_contain_only)) stop("`return_contain_only` must be logical.")
+  if(!is.logical(return_plot)) stop("`return_plot` must be logical.")
+
   if(return_plot){
     p_para <- list(xlab = xlab, ylab = ylab)
     if(is.null(true_mean)){
@@ -142,8 +181,6 @@ scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL,est_mean = NULL, 
         contain_v = c(contain_v,incl_f(in_set, true_set) & incl_f(true_set, out_set))
       }
     }
-  }else{
-    stop("Type must be chosen between 'upper', 'lower', 'two-sided' or 'interval'.")
   }
   return(list(levels = levels, U_in = in_list, U_out = out_list,
               contain_individual = contain_v, contain_all = all(contain_v), plot_cs = pl))
@@ -166,5 +203,4 @@ scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL,est_mean = NULL, 
 incl_f <- function(A, B) {
   min(B - A) >= 0 #if B includes A
 }
-# Make a data object
-
+# remember to explain the 4 choose of types, especially "two-sided"

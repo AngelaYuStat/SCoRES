@@ -123,7 +123,8 @@ $\hat{f}(t) = E[Y(t) | X_{1} = 1]= \beta_0(t) + \beta_1(t),$ where:
 
 ``` r
 # CMA approach
-results_ccds_cma <- SCoRES::SCB_functional_outcome(data = ccds,
+results_ccds_cma <- SCoRES::SCB_functional_outcome(
+                                          data_df = ccds,
                                           object = fosr_mod, 
                                           method = "cma",
                                           fitted = TRUE,

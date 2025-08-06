@@ -3,20 +3,27 @@
 #' Visualizes 1D or 2D inversion of simultaneous confidence sets using contour or band plots.
 #' Supports plotting CSs at multiple levels and labeling contours.
 #'
-#' @param SCB A list returned by `SCB_dense()` or a custom list with two arrays: `scb_up` and `scb_low`, representing the upper and lower confidence bounds respectively.
-#' @param levels A numeric vector of scalers specifying the levels to plot the cs.
+#' @param SCB A numeric list returned by `regression_outcome_scb()`, `functional_outcome_scb()` or a custom list with two arrays of the same dimension: `scb_up` and `scb_low`,
+#'            representing the upper and lower confidence bounds respectively.
+#'            \verb{SCB$scb_up} and \verb{SCB$scb_low} should be numeric vectors (1D) or matrices (2D) containing the upper simultaneous confidence interval.
+#'            Dimensions of `SCB$scb_up` and `SCB$scb_low` must match.
+#' @param levels A numeric vector or list of scalers for different levels or matrix containing interval sets to construct the confidence sets.
+#'               If \code{type} = "upper" or "lower", `levels` should be a vector.
+#'               If \code{type} = "interval", then \code{levels} should be a \code{list} containing two elements: \code{$low} and \code{$up},
+#'               corresponding to the interval defined by [\verb{levels$low}, \verb{levels$up}].
 #' @param type A character specifying the type of inverse sets to fit. Choices are `"upper"`, `"lower"` or `"interval"`. Default is `"upper"`.
-#' @param x A vector of x-axis coordinates. For discrete coordinates, use a character vector.
-#' @param y Optional vector of y-axis coordinates, required when the SCB array is 2D.
-#' @param mu_hat A matrix or vector of estimated means. If `mu_true` is provided, this will be overwritten by the true mean.
-#' @param mu_true Optional matrix or vector of true means, which overrides `mu_hat` if provided.
-#' @param together Logical. If `TRUE`, plots all confidence levels on the same figure; otherwise, generates one plot per level.
-#' @param xlab Character. Label for the x-axis.
-#' @param ylab Character. Label for the y-axis.
-#' @param level_label Logical. If `TRUE`, displays numeric level labels on contour lines for 2D confidence sets.
-#' @param min.size Integer. Minimum number of points required for a contour to be labeled.
-#' @param palette Character. Name of the HCL color palette to use when plotting multiple levels together (e.g., "Dynamic").
-#' @param color_level_label Character. Color used for contour level labels (e.g., "black").
+#' @param x A numerical vector of x-axis coordinates for 1D and 2D cases. For discrete coordinates, use a character vector.
+#' @param y Optional vector of y-axis coordinates for 2D data.
+#' @param mu_hat A numeric array (1D) or matrix (2D) of estimated means. If `mu_true` is provided, this will be overwritten by the true mean. Default is NULL.
+#'               An input must be provided for either `mu_hat` or `mu_true`.
+#' @param mu_true Optional numeric array (1D) or matrix (2D) of true means, which overrides `mu_hat` if provided. Default is NULL.
+#' @param together Optional logical value for plotting option. If `TRUE`, plots all confidence levels on the same figure; otherwise, generates one plot per level. Default is `TRUE`.
+#' @param xlab Optional character for the label of the x-axis. Default is `"x1"`.
+#' @param ylab Optional character for the label of the y-axis. Default is `"x2"`.
+#' @param level_label Optional logical value for level displaying option. If `TRUE`, displays numeric level labels on contour lines for 2D confidence sets. Default is `TRUE`.
+#' @param min.size Optional logical value for minimum number of points required for a contour to be labeled. Default is `5`.
+#' @param palette Optional character value for the name of the HCL color palette to use when plotting multiple levels together. Default is `"gray"`.
+#' @param color_level_label Optional character value for the color used for contour level labels. Default is `"black"`.
 #'
 #' @returns A \code{ggplot2} object representing the inversion of simultaneous confidence intervals.
 #'
@@ -51,8 +58,86 @@
 #'         mu_hat = ccds_cma$yhat, xlab = "", ylab = "",
 #'         level_label = T, min.size = 40, palette = "Spectral",
 #'         color_level_label = "black")
-plot_cs = function(SCB, levels, type = "upper", x, y, mu_hat, mu_true = NULL, together = T, xlab = "X1", ylab = "X2", level_label = T,
-                   min.size = 5,palette = "gray",color_level_label = "black"){
+plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_true = NULL, together = TRUE, xlab = "X1", ylab = "X2", level_label = TRUE,
+                   min.size = 5, palette = "gray", color_level_label = "black"){
+
+  if(!is.list(SCB)) stop("`SCB` should be a list.")
+  if(!all(c("scb_low", "scb_up") %in% names(SCB))) {
+    stop("`SCB` must have elements named 'scb_low' and 'scb_up'.")
+  }else{
+    if(!identical(dim(SCB$scb_up), dim(SCB$scb_low))) {
+      stop("Dimensions of `SCB$scb_up` and `SCB$scb_low` must match.")
+    }
+    if(!is.numeric(SCB$scb_up)||!is.numeric(SCB$scb_low)) {
+      stop("Values of `SCB$scb_up` and `SCB$scb_low` must be numeric.")
+    }
+  }
+
+  if(is.null(levels)) {
+    stop("Must provide input for `levels`.")
+  }else{
+    if(!is.numeric(levels)) {
+      stop("Values of `levels` must be numeric.")
+    }
+    if(type %in% c("upper", "lower", "two-sided")){
+      if(!is.vector(levels)) stop("`levels` should be a vector if `type` = upper, lower, or two-sided")
+    }else if(type == "interval"){
+      if(!is.list(levels)) stop("`levels` should be a list if `type` = interval")
+      if (!all(c("low", "up") %in% names(levels))) {
+        stop("`levels` must have elements named 'low' and 'up'.")
+      }
+    }else if(type == "two-sided"){
+      stop("'two-sided' is not avaliable for plotting, please choose between 'upper', 'lower' or 'interval'.")
+    }else{
+      stop("`type` must be chosen between 'upper', 'lower' or 'interval'.")
+    }
+  }
+
+  if(is.null(x)) {
+    stop("Must provide input for `x`.")
+  }else{
+    if(!is.numeric(x)|| !is.vector(x) || !is.array(x)) stop("`x` should be a numeric vector.")
+  }
+
+  if(!is.null(y)) {
+    if(!is.numeric(y)|| !is.vector(y) || !is.array(y)) stop("`y` should be a numeric vector.")
+  }
+
+  if(!is.null(mu_hat)){
+    if(!is.numeric(mu_hat)) stop("Input values of `mu_hat` must be numeric.")
+    if(!identical(dim(SCB$scb_up), dim(mu_hat))) {
+      stop("Dimensions of `SCB$scb_up`, `SCB$scb_low` and `mu_hat` must match.")
+    }
+    if (!is.vector(mu_hat) || is.matrix(mu_hat) || !is.array(mu_hat)) {
+      stop("`mu_hat` must be a vector or matrix.")
+    }
+  }
+  if(!is.null(mu_true)){
+    if(!is.numeric(mu_true)) stop("Input values of `mu_true` must be numeric.")
+    if(!identical(dim(SCB$scb_up), dim(mu_true))) {
+      stop("Dimensions of `SCB$scb_up`, `SCB$scb_low` and `mu_true` must match.")
+    }
+    if (!is.vector(mu_true) || is.matrix(mu_true) || !is.array(mu_true)) {
+      stop("`mu_true` must be a vector or matrix.")
+    }
+  }
+  if(!is.null(mu_hat) && !is.null(mu_true)) stop("An input must be provided for either `mu_hat` or `mu_true`.")
+
+  if (!is.character(palette) || length(palette) != 1) {
+    stop("`palette` must be a single character string.")
+  }
+  if (!(palette %in% hcl.pals())) {
+    stop(paste0("`palette` must be one of the values returned by `hcl.pals()`."))
+  }
+
+  if (!is.character(color_level_label) || length(color_level_label) != 1) {
+    stop("`color_level_label` must be a single character string.")
+  }
+  if (!(color_level_label %in% colors() ||
+        grepl("^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$", color_level_label))) {
+    stop("`color_level_label` must be a valid R color name or HEX code.")
+  }
+
   dim = length(dim(SCB$scb_up))
   if(dim == 0){# 1 dimension case
     if(is.character(x)){# if we have discrete coordinates
@@ -88,7 +173,7 @@ plot_cs = function(SCB, levels, type = "upper", x, y, mu_hat, mu_true = NULL, to
           }else if(type == "two-sided"){
             stop("'two-sided' is not avaliable for plotting, please choose between 'upper', 'lower' or 'interval'.")
           }else{
-            stop("Type must be chosen between 'upper', 'lower' or 'interval'.")
+            stop("`type` must be chosen between 'upper', 'lower' or 'interval'.")
           }
           if(!all(is.na(df_plot_l$l_out))){
             p = p+ geom_point(aes(x, l_out), data = df_plot_l, color = "blue")
@@ -132,10 +217,6 @@ plot_cs = function(SCB, levels, type = "upper", x, y, mu_hat, mu_true = NULL, to
                      l_out = ifelse((up >= l$low & low <= up) & is.na(l_est) & is.na(l_in), l$low, NA)
               )
             i = i + 1
-          }else if(type == "two-sided"){
-            stop("'two-sided' is not avaliable for plotting, please choose between 'upper', 'lower' or 'interval'.")
-          }else{
-            stop("Type must be chosen between 'upper', 'lower' or 'interval'.")
           }
           if(!all(is.na(df_plot_l$l_out))){
             p = p+ geom_point(aes(x, l_out), data = df_plot_l, color = "blue")
@@ -154,6 +235,7 @@ plot_cs = function(SCB, levels, type = "upper", x, y, mu_hat, mu_true = NULL, to
         labs(x = "Coefficients", y = "Magnitude")
       return(p)
     }else{# Plotting for continuous x coordinate
+      if(!is.numeric(x)) stop("`x` should be of type numeric or character.")
       if(is.null(mu_true)){
         df_plot = data.frame(x = x, low = SCB$scb_low, up = SCB$scb_up, est_mean = mu_hat)
         p = df_plot %>% ggplot(aes(x = x, y = est_mean)) +
@@ -220,10 +302,6 @@ plot_cs = function(SCB, levels, type = "upper", x, y, mu_hat, mu_true = NULL, to
                                            l_est = ifelse(true_mean >= l$low & true_mean <= l$up, l$low, NA),
                                            l_out = ifelse(up >= l$low & low <= l$up , l$low, NA))
             i = i + 1
-          }else if(type == "two-sided"){
-            stop("'two-sided' is not avaliable for plotting, please choose between 'upper', 'lower' or 'interval'.")
-          }else{
-            stop("Type must be chosen between 'upper', 'lower' or 'interval'.")
           }
           if(!all(is.na(df_plot_l$l_out))){
             p = p + geom_line(data = df_plot_l,aes(x = x, y = l_out),color = "blue",lwd=1.5)
@@ -251,7 +329,7 @@ plot_cs = function(SCB, levels, type = "upper", x, y, mu_hat, mu_true = NULL, to
   }else if(dim == 2){# 2 dimension case
     # remember to explain why 2D don't need to specify the type of set fitted
     # normalized quantity dataframe
-    if(is.null(x)){
+    if(is.null(x)||is.null(y)){
       x = seq(0,1,dim(SCB$scb_up)[1])
       y = seq(0,1,dim(SCB$scb_up)[2])
     }
@@ -462,7 +540,10 @@ plot_cs = function(SCB, levels, type = "upper", x, y, mu_hat, mu_true = NULL, to
       })
       return(wrap_plots(p)+ plot_layout(guides = "collect"))
     }
+  }else{
+    stop("The dimension of `SCB$scb_up` and `SCB$scb_low` exceed 2.")
   }
 }
 # library(forcats)
 # library(dplyr)
+# Check whether the input should be 2 dimen

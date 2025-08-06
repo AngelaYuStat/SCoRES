@@ -2,7 +2,7 @@
 #'
 #' This function builds simultaneous confidence bands through two distinct approaches..
 #'
-#' @param data A functional data frame, matrix or tibble.
+#' @param data_df A functional data frame.
 #' The input data must have column names, and should contain the functional outcome, time, subject
 #' @param object A fitted Function-on-Scalar Regression (FoSR) object (e.g., from mgcv::bam()/mgcv::gam()). Default is \code{NULL}
 #' @param method A character string specifying the approach:
@@ -47,7 +47,7 @@
 #'   Character/factor is not allowed.
 #'   Default is \code{NULL}, representing the reference group if \code{"cma"}.
 #'   For \code{method = "multiplier"}, \code{NuULL} is not allowed.
-#' @param subject A character string specifying the name of the subject-level random effect variable.
+#' @param subject A character string specifying the name of the subject variable.
 #' @param nboot An integer specifying the number of bootstrap samples used to construct the confidence bands. Default is 10,000 for cma, 5000 for Multiplier Bootstrap.
 #' @param method_SD Method for SD estimation: "t" or "regular". Default is "t".
 #' @param weights Multiplier type: "rademacher", "gaussian", or "mammen". Default is "rademacher"."
@@ -82,59 +82,71 @@
 #'   method = "fREML", data = ccds_fpca, discrete = TRUE)
 #'
 #' # CMA approach
-#' results <- SCB_functional_outcome(data = ccds, object = fosr_mod, method = "cma", fitted = TRUE,
+#' results <- SCB_functional_outcome(data_df = ccds, object = fosr_mod, method = "cma", fitted = TRUE,
 #'                                   est_mean = TRUE, outcome = "percent_change", time = "seconds",
 #'                                   group_name = "use", group_value = 1, subject = "subject")
 #'
 #'
 #' # multiplier bootstrap
-#' results <- SCB_functional_outcome(data = ccds, object = fosr_mod, method = "multiplier", fitted = TRUE,
+#' results <- SCB_functional_outcome(data_df = ccds, object = fosr_mod, method = "multiplier", fitted = TRUE,
 #'                        est_mean = TRUE, outcome = "percent_change",
 #'                        time = "seconds", group_name = "use", group_value = 1, subject = "subject")
-#' results <- SCB_functional_outcome(data = ccds, object = fosr_mod, method = "multiplier", fitted = TRUE,
+#' results <- SCB_functional_outcome(data_df = ccds, object = fosr_mod, method = "multiplier", fitted = TRUE,
 #'                        est_mean = FALSE, outcome = "percent_change",
 #'                        time = "seconds", group_name = "use", group_value = 1, subject = "subject")
 #'
 #'
 #' @export
-SCB_functional_outcome = function(data, object = NULL, method, fitted = TRUE, est_mean = TRUE, alpha = 0.05,
+SCB_functional_outcome = function(data_df, object = NULL, method, fitted = TRUE, est_mean = TRUE, alpha = 0.05,
                                   outcome, time, range = NULL, group_name = NULL, group_value = NULL,
                                   subject, nboot = NULL, method_SD = "t", weights = "rademacher") {
-  if (is.null(data)) {
-    stop("Must provide the origin data!")
+  if (is.null(data_df)) {
+    stop("`data_df` must be provided.")
   }
 
-  # ---- Ensure 'data' is a named data frame ----
-  if (!is.data.frame(data)) {
-    if (is.matrix(data)) {
-      data <- as.data.frame(data)
-    } else {
-      stop("Input must be a named data frame or matrix.")
+  if (!is.null(nboot)){
+    if (!is.numeric(nboot) || nboot <= 0 || nboot %% 1 != 0){
+      stop("`nboot` must be a positive integer.")
     }
   }
 
+  if (!is.numeric(alpha) || alpha <= 0 || alpha >= 1){
+    stop("`alpha` must be in (0, 1).")
+  }
+
+  # ---- Ensure 'data' is a named data frame ----
+  if(!is.data.frame(data_df)){
+    data_df <- tryCatch(
+      as.data.frame(data_df),
+      error = function(e) stop("`data_df` must be a data.frame or coercible to a data.frame.")
+    )
+  }
+
   # Check the existance of column names
-  if (is.null(colnames(data))) {
-    stop("Input data must have column names.")
+  if (is.null(colnames(data_df))) {
+    stop("`data_df` must have column names.")
   }
 
   if (method == "cma") {
     if (is.null(object)) {
-      stop("Must provide a functional regression model object!")
+      stop("`object` must be provided when `method = 'cma'`.")
     }
-    return(cma(data = data, object = object, fitted = fitted, alpha = alpha, time = time, range = range, group_name = group_name, group_value = group_value, subject = subject, nboot = nboot))
+    return(cma(data_df = data_df, object = object, fitted = fitted, alpha = alpha, time = time, range = range, group_name = group_name, group_value = group_value, subject = subject, nboot = nboot))
   }
 
   if (method != "multiplier") {
-    stop("Must choose between 'cma' and 'multiplier' as the method.")
+    stop("`method` must be either 'cma' or 'multiplier'.")
   }
 
   # method == "multiplier"
   if (is.null(outcome)) {
-    stop("Must provide the outcome variable name.")
+    stop("`outcome` must be provided.")
   }
   if (is.null(time)) {
-    stop("Must provide the time variable name.")
+    stop("`time` must be provided.")
+  }
+  if (is.null(subject)) {
+    stop("`subject` must be provided.")
   }
 
   # Identify covariates
@@ -145,11 +157,11 @@ SCB_functional_outcome = function(data, object = NULL, method, fitted = TRUE, es
 
   if (!is.null(group_name) && !is.null(group_value)){
     if (length(group_name) != length(group_value)) {
-      stop("The length of 'group_name' and 'group_value' must be the same.")
+      stop("The length of `group_name` and `group_value` must be the same.")
     }
   }else{
     if(!is.null(group_name) && is.null(group_value)|is.null(group_name) && !is.null(group_value)){
-      stop("Must provide both group variable name and value.")
+      stop("`group_name` and `group_value` must be provided.")
     }
   }
 
@@ -191,12 +203,12 @@ SCB_functional_outcome = function(data, object = NULL, method, fitted = TRUE, es
   # Compute SCB
   if (!is.null(object)) {
 
-    df <- mean_response_predict(data, object, fitted = fitted, time, range, group_name = group_name, group_value = group_value, subject)
+    df <- mean_response_predict(data_df, object, fitted = fitted, time, range, group_name = group_name, group_value = group_value, subject)
     pred_df <- df$pred_df
 
     # impute NA if necessary
-    if (anyNA(data)){
-      data_wide <- data %>%
+    if (anyNA(data_df)){
+      data_wide <- data_df %>%
         select(all_of(c(subject, time, outcome))) %>%
         pivot_wider(
           names_from = !!sym(time),
@@ -207,7 +219,7 @@ SCB_functional_outcome = function(data, object = NULL, method, fitted = TRUE, es
 
       fpc_obj <- fpca.face(as.matrix(data_wide))
 
-      data <- data %>%
+      data_df <- data_df %>%
         mutate(Yhat = as.vector(t(fpc_obj$Yhat)),
                !!sym(outcome) := ifelse(is.na(.data[[outcome]]), Yhat, .data[[outcome]])
         ) %>%
@@ -218,8 +230,8 @@ SCB_functional_outcome = function(data, object = NULL, method, fitted = TRUE, es
     # Subset outcome values
     # if (is.null(range)) {
     # Y_samples <- data[[outcome]][keep_rows]
-    Y_samples <- data[[outcome]]
-    s_pred <- unique(data[[time]])
+    Y_samples <- data_df[[outcome]][order(data_df[[subject]], data_df[[time]])]
+    s_pred <- unique(data_df[[time]])
     n_time <- length(s_pred)
     # } else {
     # df <- data[data[[time]] %in% sort(unique(range)), ]
@@ -261,7 +273,7 @@ SCB_functional_outcome = function(data, object = NULL, method, fitted = TRUE, es
       # Y_mat <- Y_mat[!zero_rows, ]
       zero_rows <- rowSums(Y_mat == 0) == ncol(Y_mat)
       if(any(zero_rows)){
-        stop(paste0("Expected no zero in data for 'est_mean = FALSE'!"))
+        stop(paste0("Expected no rows where all entries are zero in `data_df` for `est_mean = 'FALSE'`."))
       }
       thres <- SCB_dense(A = Y_mat, alpha = alpha,
                             Mboots = nboot, method = method_SD, weights = weights, SCB = FALSE)
@@ -280,8 +292,8 @@ SCB_functional_outcome = function(data, object = NULL, method, fitted = TRUE, es
     print("No Functional Regression Object provided, will only compute an overall SCB for the outcome regardless of the group specified.")
 
     # impute NA if necessary
-    if (anyNA(data)){
-      data_wide <- data %>%
+    if (anyNA(data_df)){
+      data_wide <- data_df %>%
         select(all_of(c(subject, time, outcome))) %>%
         pivot_wider(
           names_from = !!sym(time),
@@ -292,7 +304,7 @@ SCB_functional_outcome = function(data, object = NULL, method, fitted = TRUE, es
 
       fpc_obj <- fpca.face(as.matrix(data_wide))
 
-      data <- data %>%
+      data_df <- data_df %>%
         mutate(Yhat = as.vector(t(fpc_obj$Yhat)),
                !!sym(outcome) := ifelse(is.na(.data[[outcome]]), Yhat, .data[[outcome]])
         ) %>%
@@ -302,14 +314,14 @@ SCB_functional_outcome = function(data, object = NULL, method, fitted = TRUE, es
 
     if (is.null(range)) {
       # Y_samples <- data[[outcome]][keep_rows]
-      Y_samples <- data[[outcome]]
-      s_pred <- unique(data[[time]])
+      Y_samples <- data_df[[outcome]][order(data_df[[subject]], data_df[[time]])]
+      s_pred <- unique(data_df[[time]])
       n_time <- length(s_pred)
     } else {
-      df <- data[data[[time]] %in% sort(unique(range)), ]
+      df <- data_df[data_df[[time]] %in% sort(unique(range)), ]
       # keep_rows_sub <- keep_rows[data[[time]] %in% sort(unique(range))]
       # Y_samples <- df[[outcome]][keep_rows_sub]
-      Y_samples <- df[[outcome]]
+      Y_samples <- df[[outcome]][order(data_df[[subject]], data_df[[time]])]
       s_pred <- unique(range)
       n_time <- length(s_pred)
     }
@@ -329,7 +341,7 @@ SCB_functional_outcome = function(data, object = NULL, method, fitted = TRUE, es
     # Y_mat <- Y_mat[!zero_rows, ]
     zero_rows <- rowSums(Y_mat == 0) == ncol(Y_mat)
     if(any(zero_rows)){
-      stop(paste0("Expected no zero in data!"))
+      stop(paste0("Expected no rows where all entries are zero in `data_df`."))
     }
     results <- SCB_dense(A = Y_mat, mean_A = NULL, alpha = alpha,
                          Mboots = nboot, method = method_SD, weights = weights)

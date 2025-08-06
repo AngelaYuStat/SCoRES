@@ -5,7 +5,7 @@
 \title{Construct CMA Confidence Intervals via Parametric Method}
 \usage{
 cma(
-  data,
+  data_df,
   object,
   fitted = TRUE,
   alpha = 0.05,
@@ -18,7 +18,7 @@ cma(
 )
 }
 \arguments{
-\item{data}{A functional data frame, matrix or tibble.
+\item{data_df}{A functional data frame.
 The input data must have column names, and should contain the functional outcome, time and subject}
 
 \item{object}{A fitted Function-on-Scalar Regression (FoSR) object (e.g., from mgcv::bam()/mgcv::gam()).}

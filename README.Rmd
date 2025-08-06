@@ -98,7 +98,8 @@ where:
 
 ```{r ccds SCB, echo = TRUE}
 # CMA approach
-results_ccds_cma <- SCoRES::SCB_functional_outcome(data = ccds,
+results_ccds_cma <- SCoRES::SCB_functional_outcome(
+                                          data_df = ccds,
                                           object = fosr_mod, 
                                           method = "cma",
                                           fitted = TRUE,

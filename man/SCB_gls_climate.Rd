@@ -6,7 +6,7 @@
 \usage{
 SCB_gls_climate(
   Z,
-  level,
+  level = NULL,
   X = NULL,
   w = NULL,
   correlation = NULL,
@@ -27,11 +27,12 @@ Should include the following components:
 \item \code{z}: A 3D array of observations with dimensions \code{length(x)} × \code{length(y)} × \code{n}.
 }}
 
-\item{level}{A numeric threshold value used to test whether the estimated mean surface significantly deviates from it.}
+\item{level}{A optional numeric threshold value used to test whether the estimated mean surface significantly deviates from it. Default is NULL.}
 
-\item{X}{A design matrix used in the generalized least squares (GLS) model. Each row corresponds to an observation, and each column to a covariate.}
+\item{X}{A design matrix used in the generalized least squares (GLS) model. Each row corresponds to an observation, and each column to a covariate.
+Default is \code{matrix(1, n, 1)} (only keep the intercept term)}
 
-\item{w}{A numeric vector specifying a linear combination of the regression coefficients.}
+\item{w}{A numeric vector specifying a linear combination of the regression coefficients. Default is \code{matrix(1, 1, 1)}.}
 
 \item{correlation}{A character string specifying the name of the correlation structure (e.g., \code{"corAR1"}, \code{"corCompSymm"})
 to be used in the GLS model. If \code{NULL}, no correlation structure is assumed.}
@@ -45,12 +46,12 @@ If not specified, defaults to \code{rep(1, n)}, assuming all observations belong
 where each \code{V[i,j,,]} corresponds to the covariance matrix for the observations at spatial location \code{(x[i], y[j])}.
 If V is given, then the GLS model will be fitted based on V. Otherwise, the GLS model will be fitted based on correlation structure.}
 
-\item{alpha}{A numerical value specifying the confidence level for the Simultaneous Confidence Bands.}
+\item{alpha}{A numerical value specifying the confidence level for the Simultaneous Confidence Bands. Defalut is \code{0.1}.}
 
-\item{N}{An integer specifying the number of bootstrap samples to construct the Simultaneous Confidence Bands.}
+\item{N}{An integer specifying the number of bootstrap samples to construct the Simultaneous Confidence Bands. Default is \code{1000}.}
 
-\item{mask}{An optional logical matrix same dimensions as \code{mu_hat}, indicating spatial locations to include in the SCB computation.
-Non-included locations (e.g., water areas) should be set to 0 or \code{NA}.}
+\item{mask}{An optional logical matrix same dimensions as \code{c(length(Z$x), length(Z$y))}, indicating spatial locations to include in the SCB computation.
+Non-included locations (e.g., water areas) should be set to 0 or \code{NA}. Default is \code{array(1, dim = c(length(Z$x), length(Z$y)))}}
 }
 \value{
 A list containing the following components:

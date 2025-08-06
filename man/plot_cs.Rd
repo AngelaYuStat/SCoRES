@@ -9,46 +9,53 @@ plot_cs(
   levels,
   type = "upper",
   x,
-  y,
-  mu_hat,
+  y = NULL,
+  mu_hat = NULL,
   mu_true = NULL,
-  together = T,
+  together = TRUE,
   xlab = "X1",
   ylab = "X2",
-  level_label = T,
+  level_label = TRUE,
   min.size = 5,
   palette = "gray",
   color_level_label = "black"
 )
 }
 \arguments{
-\item{SCB}{A list returned by \code{SCB_dense()} or a custom list with two arrays: \code{scb_up} and \code{scb_low}, representing the upper and lower confidence bounds respectively.}
+\item{SCB}{A numeric list returned by \code{regression_outcome_scb()}, \code{functional_outcome_scb()} or a custom list with two arrays of the same dimension: \code{scb_up} and \code{scb_low},
+representing the upper and lower confidence bounds respectively.
+\verb{SCB$scb_up} and \verb{SCB$scb_low} should be numeric vectors (1D) or matrices (2D) containing the upper simultaneous confidence interval.
+Dimensions of \code{SCB$scb_up} and \code{SCB$scb_low} must match.}
 
-\item{levels}{A numeric vector of scalers specifying the levels to plot the cs.}
+\item{levels}{A numeric vector or list of scalers for different levels or matrix containing interval sets to construct the confidence sets.
+If \code{type} = "upper" or "lower", \code{levels} should be a vector.
+If \code{type} = "interval", then \code{levels} should be a \code{list} containing two elements: \code{$low} and \code{$up},
+corresponding to the interval defined by \link{\verb{levels$low}, \verb{levels$up}}.}
 
 \item{type}{A character specifying the type of inverse sets to fit. Choices are \code{"upper"}, \code{"lower"} or \code{"interval"}. Default is \code{"upper"}.}
 
-\item{x}{A vector of x-axis coordinates. For discrete coordinates, use a character vector.}
+\item{x}{A numerical vector of x-axis coordinates for 1D and 2D cases. For discrete coordinates, use a character vector.}
 
-\item{y}{Optional vector of y-axis coordinates, required when the SCB array is 2D.}
+\item{y}{Optional vector of y-axis coordinates for 2D data.}
 
-\item{mu_hat}{A matrix or vector of estimated means. If \code{mu_true} is provided, this will be overwritten by the true mean.}
+\item{mu_hat}{A numeric array (1D) or matrix (2D) of estimated means. If \code{mu_true} is provided, this will be overwritten by the true mean. Default is NULL.
+An input must be provided for either \code{mu_hat} or \code{mu_true}.}
 
-\item{mu_true}{Optional matrix or vector of true means, which overrides \code{mu_hat} if provided.}
+\item{mu_true}{Optional numeric array (1D) or matrix (2D) of true means, which overrides \code{mu_hat} if provided. Default is NULL.}
 
-\item{together}{Logical. If \code{TRUE}, plots all confidence levels on the same figure; otherwise, generates one plot per level.}
+\item{together}{Optional logical value for plotting option. If \code{TRUE}, plots all confidence levels on the same figure; otherwise, generates one plot per level. Default is \code{TRUE}.}
 
-\item{xlab}{Character. Label for the x-axis.}
+\item{xlab}{Optional character for the label of the x-axis. Default is \code{"x1"}.}
 
-\item{ylab}{Character. Label for the y-axis.}
+\item{ylab}{Optional character for the label of the y-axis. Default is \code{"x2"}.}
 
-\item{level_label}{Logical. If \code{TRUE}, displays numeric level labels on contour lines for 2D confidence sets.}
+\item{level_label}{Optional logical value for level displaying option. If \code{TRUE}, displays numeric level labels on contour lines for 2D confidence sets. Default is \code{TRUE}.}
 
-\item{min.size}{Integer. Minimum number of points required for a contour to be labeled.}
+\item{min.size}{Optional logical value for minimum number of points required for a contour to be labeled. Default is \code{5}.}
 
-\item{palette}{Character. Name of the HCL color palette to use when plotting multiple levels together (e.g., "Dynamic").}
+\item{palette}{Optional character value for the name of the HCL color palette to use when plotting multiple levels together. Default is \code{"gray"}.}
 
-\item{color_level_label}{Character. Color used for contour level labels (e.g., "black").}
+\item{color_level_label}{Optional character value for the color used for contour level labels. Default is \code{"black"}.}
 }
 \value{
 A \code{ggplot2} object representing the inversion of simultaneous confidence intervals.

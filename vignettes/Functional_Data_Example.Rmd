@@ -80,7 +80,8 @@ where:
 
 ```{r ccds SCB, echo = TRUE}
 # CMA approach
-results_ccds_cma <- SCoRES::SCB_functional_outcome(data = ccds,
+results_ccds_cma <- SCoRES::SCB_functional_outcome(
+                                          data_df = ccds,
                                           object = fosr_mod, 
                                           method = "cma",
                                           fitted = TRUE,
@@ -93,7 +94,8 @@ results_ccds_cma <- SCoRES::SCB_functional_outcome(data = ccds,
                                           subject = "subject")
 
 #CMA approach for parameter function
-results_ccds_cma_para <- SCoRES::SCB_functional_outcome(data = ccds,
+results_ccds_cma_para <- SCoRES::SCB_functional_outcome(
+                                          data_df = ccds,
                                           object = fosr_mod, 
                                           method = "cma",
                                           fitted = FALSE,
@@ -106,7 +108,8 @@ results_ccds_cma_para <- SCoRES::SCB_functional_outcome(data = ccds,
                                           subject = "subject")
 
 # Multiplier-t Bootstrap
-results_ccds_multiplier <- SCoRES::SCB_functional_outcome(data = ccds,
+results_ccds_multiplier <- SCoRES::SCB_functional_outcome(
+                                          data_df = ccds,
                                           object = fosr_mod, 
                                           method = "multiplier",
                                           fitted = TRUE,
@@ -119,7 +122,7 @@ results_ccds_multiplier <- SCoRES::SCB_functional_outcome(data = ccds,
                                           subject = "subject")
 
 results_ccds_multiplier_para <- SCoRES::SCB_functional_outcome(
-                                          data = ccds,
+                                          data_df = ccds,
                                           object = fosr_mod, 
                                           method = "multiplier",
                                           fitted = FALSE,
@@ -133,7 +136,7 @@ results_ccds_multiplier_para <- SCoRES::SCB_functional_outcome(
 
 # Multiplier-t Bootstrap (use sample mean)
 results_ccds_multiplier_sample <- SCoRES::SCB_functional_outcome(
-                                          data = ccds, 
+                                          data_df = ccds,
                                           object = fosr_mod, 
                                           method = "multiplier",
                                           fitted = TRUE,
@@ -146,7 +149,7 @@ results_ccds_multiplier_sample <- SCoRES::SCB_functional_outcome(
                                           subject = "subject")
 
 results_ccds_multiplier_overall <- SCoRES::SCB_functional_outcome(
-                                          data = ccds,  
+                                          data_df = ccds,
                                           method = "multiplier",
                                           fitted = TRUE,
                                           est_mean = FALSE, 
@@ -305,7 +308,8 @@ where:
 
 ```{r pupil SCB, echo = TRUE}
 # CMA approach
-results_pupil_cma <- SCoRES::SCB_functional_outcome(data = pupil,
+results_pupil_cma <- SCoRES::SCB_functional_outcome(
+                                          data_df = pupil,
                                           object = fosr_mod, 
                                           method = "cma", 
                                           fitted = TRUE,
@@ -319,7 +323,7 @@ results_pupil_cma <- SCoRES::SCB_functional_outcome(data = pupil,
 
 # Multiplier-t Bootstrap
 results_pupil_multiplier <- SCoRES::SCB_functional_outcome(
-                                          data = pupil, 
+                                          data_df = pupil,
                                           object = fosr_mod,
                                           fitted = TRUE,
                                           method = "multiplier", 

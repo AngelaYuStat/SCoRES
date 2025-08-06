@@ -2,7 +2,7 @@
 #'
 #' This function is an internal function for constructing SCBs for functional data.
 #'
-#' @param data A functional data frame, matrix or tibble.
+#' @param data_df A functional data frame.
 #' The input data must have column names, and should contain the functional outcome, time and subject
 #' @param object A fitted Function-on-Scalar Regression (FoSR) model object (e.g., from mgcv::bam()/mgcv::gam()).
 #' @param fitted Logical. Whether to estimate the simultaneous confidence bands for fitted mean function or fitted parameter function
@@ -56,7 +56,7 @@
 #' group_name = "use", group_value = 1, subject = "subject")
 #'
 #' @export
-mean_response_predict = function(data, object, fitted = TRUE, time, range = NULL, group_name, group_value, subject = NULL){
+mean_response_predict = function(data_df, object, fitted = TRUE, time, range = NULL, group_name, group_value, subject = NULL){
 
   mod_coef <- object$coefficients
   mod_cov <- vcov(object) # containing all variance-covariance info for object
@@ -83,17 +83,17 @@ mean_response_predict = function(data, object, fitted = TRUE, time, range = NULL
       var <- group_name[i]
       val <- group_value[i]
 
-      if (!(var %in% names(data))) {
-        stop(paste0("Variable '", var, "' not found in data."))
+      if (!(var %in% names(data_df))) {
+        stop(paste0("Variable '", var, "' not found in `data_df`."))
       }
 
-      if (is.character(data[[var]])) {
-        stop(paste0("The variable '", var, "' is of type character. ",
+      if (is.character(data_df[[var]])) {
+        stop(paste0("The variable '", var, "' in `data_df` is of type character. ",
                     "Please convert it to a numeric and consider refit your functional object."))
       }
 
       if (is.factor(data[[var]])) {
-        stop(paste0("The variable '", var, "' is of type factor. ",
+        stop(paste0("The variable '", var, "' in `data_df` is of type factor. ",
                     "Please convert it to a numeric and consider refit your functional object."))
       } else {  # numeric
         unique_vals <- unique(data[[var]])
@@ -151,7 +151,7 @@ mean_response_predict = function(data, object, fitted = TRUE, time, range = NULL
 #' This function computes Correlation and Multiplicity Adjusted (CMA) confidence bands for a specified group in a functional outcome regression model
 #' using parameter simulations approach with Gaussian multiplier bootstrap.
 #'
-#' @param data A functional data frame, matrix or tibble.
+#' @param data_df A functional data frame.
 #' The input data must have column names, and should contain the functional outcome, time and subject
 #' @param object A fitted Function-on-Scalar Regression (FoSR) object (e.g., from mgcv::bam()/mgcv::gam()).
 #' @param fitted Logical. Whether to estimate the simultaneous confidence bands for fitted mean function or fitted parameter function
@@ -204,46 +204,54 @@ mean_response_predict = function(data, object, fitted = TRUE, time, range = NULL
 #' results <- cma(ccds_fpca, fosr_mod, fitted = FALSE, time = "seconds",
 #' group_name = "use", group_value = 1, subject = "subject")
 #'
-cma = function(data, object, fitted = TRUE, alpha = 0.05, time, range = NULL, group_name = NULL, group_value = NULL, subject = NULL, nboot = NULL){
+cma = function(data_df, object, fitted = TRUE, alpha = 0.05, time, range = NULL, group_name = NULL, group_value = NULL, subject = NULL, nboot = NULL){
 
-  if (is.null(data)) {
-    stop("Must provide the origin data!")
+  if (is.null(data_df)) {
+    stop("`data_df` must be provided.")
+  }
+
+  if (!is.numeric(alpha) || alpha <= 0 || alpha >= 1){
+    stop("`alpha` must be in (0, 1).")
   }
 
   # ---- Ensure 'data' is a named data frame ----
-  if (!is.data.frame(data)) {
-    if (is.matrix(data)) {
-      data <- as.data.frame(data)
-    } else {
-      stop("Input must be a named data frame or matrix.")
-    }
+  if(!is.data.frame(data_df)){
+    data_df <- tryCatch(
+      as.data.frame(data_df),
+      error = function(e) stop("`data_df` must be a data.frame or coercible to a data.frame.")
+    )
   }
 
   # Check the existance of column names
-  if (is.null(colnames(data))) {
-    stop("Input data must have column names.")
+  if (is.null(colnames(data_df))) {
+    stop("`data_df` must have column names.")
   }
 
   if (is.null(object)) {
-    stop("Must provide a fitted functional regression model object.")
+    stop("`object` must be provided.")
   }
+
   if (is.null(time)) {
-    stop("Must provide the time variable name.")
+    stop("`time` must be provided.")
   }
   if (!is.null(group_name) && !is.null(group_value)){
     if (length(group_name) != length(group_value)) {
-      stop("The length of 'group_name' and 'group_value' must be the same.")
+      stop("The length of `group_name` and `group_value` must be the same.")
     }
   }else{
     if(!is.null(group_name) && is.null(group_value)|is.null(group_name) && !is.null(group_value)){
-      stop("Must provide both group variable name and value.")
+      stop("`group_name` and `group_value` must be provided.")
     }
   }
-  results <- mean_response_predict(data, object, fitted, time, range, group_name, group_value, subject)
+  results <- mean_response_predict(data_df, object, fitted, time, range, group_name, group_value, subject)
 
   # Number of bootstrap samples (B)
   if(is.null(nboot)){
     nboot <- 1e4
+  }else{
+    if (!is.numeric(nboot) || nboot <= 0 || nboot %% 1 != 0){
+      stop("`nboot` must be a positive integer.")
+    }
   }
 
   # Set up container for bootstrap
@@ -273,79 +281,6 @@ cma = function(data, object, fitted = TRUE, alpha = 0.05, time, range = NULL, gr
   )
 
   return(global_df)
-}
-
-#' Plot Simultaneous Confidence Bands from CMA Output
-#'
-#' This function visualizes the estimated mean function and simultaneous confidence bands
-#' (SCB) from a CMA result object. It supports customization of colors, line types, axis labels,
-#' and legend display.
-#'
-#' @param data A data frame or tibble containing the results of the \code{cma()} function.
-#'             Must include columns: \code{time}, \code{yhat}, \code{scb_low}, and \code{scb_up}.
-#' @param xlab A character string for the x-axis label. Default is \code{"Time"}.
-#' @param ylab A character string for the y-axis label. Default is \code{"Estimated Mean"}.
-#' @param line_color Color for the main estimated curve (\code{yhat}). Default is \code{"black"}.
-#' @param ci_color Color for the confidence bands (\code{scb_low} and \code{scb_up}). Default is \code{"gray50"}.
-#' @param ci_linetype Line type for the confidence bands. Default is \code{"dashed"}.
-#' @param group_label A character label for the color legend. Default is \code{"Group"}.
-#' @param title A character string for the plot title. Default is \code{"Simultaneous Confidence Band"}.
-#' @param show_legend Logical. Whether to display the legend. Default is \code{FALSE}.
-#'
-#' @returns A \code{ggplot2} object representing the confidence band plot.
-#'
-#' @import ggplot2
-#' @export
-#'
-#' @examples
-#'
-#' # example using ccds data
-#' data(ccds)
-#' ccds_fpca <- prepare_ccds_fpca(ccds)
-#'
-#' fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
-#'   s(seconds, by = use, k=30, bs = "cr") +
-#'   s(subject, by = Phi1, bs="re") +
-#'   s(subject, by = Phi2, bs="re")+
-#'   s(subject, by = Phi3, bs="re") +
-#'   s(subject, by = Phi4, bs="re"),
-#'   method = "fREML", data = ccds_fpca, discrete = TRUE)
-#'
-#' ccds_cma <- cma(ccds_fpca, fosr_mod, time = "seconds", group_name = "use", group_value = 1,
-#'                 subject = "subject")
-#' ccds_cma <- tibble::as_tibble(ccds_cma)
-#' plot_cma(ccds_cma, xlab = "Time (s)", ylab = "Mean",
-#'          line_color = "blue", ci_color = "gray", ci_linetype = "dotted",
-#'          title = "Global SCB for Treatment Group")
-#'
-plot_cma <- function(data,
-                     xlab = "Time",
-                     ylab = "Estimated Mean",
-                     line_color = "black",
-                     ci_color = "gray50",
-                     ci_linetype = "dashed",
-                     group_label = "Group",
-                     title = "Simultaneous Confidence Band",
-                     show_legend = FALSE) {
-
-  p <- ggplot(data, aes(x = time, color = type)) +
-    geom_line(aes(y = yhat), size = 1) +
-    geom_line(aes(y = scb_low), linetype = ci_linetype) +
-    geom_line(aes(y = scb_up), linetype = ci_linetype) +
-    geom_hline(yintercept = 0, linetype = "dotted", color = "red") +
-    theme_minimal() +
-    labs(
-      title = title,
-      x = xlab,
-      y = ylab,
-      color = group_label
-    )
-
-  if (!show_legend) {
-    p <- p + theme(legend.position = "none")
-  }
-
-  return(p)
 }
 
 #' Prepare ccds FPCA Dataset

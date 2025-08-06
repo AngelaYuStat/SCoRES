@@ -35,25 +35,63 @@
 #' results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
 #'
 SCB_linear_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0.05, grid_df_boot = NULL){
-  formula_ = as.formula(model)
-  fit = lm(model, df_fit)
-  y_hat = predict(fit, grid_df, se.fit = TRUE, level = 1 - alpha) # for constructing the whole
-  res_max_v = rep(0,n_boot)
+
+  if(is.null(df_fit)) stop("`df_fit` must be provided.")
+  if(is.null(model)) stop("`model` must be provided.")
+  if(is.null(grid_df)) stop("`grid_df` must be provided.")
+
+  if(!is.data.frame(df_fit)){
+    df_fit <- tryCatch(
+      as.data.frame(df_fit),
+      error = function(e) stop("`df_fit` must be a data.frame or coercible to a data.frame.")
+    )
+  }
+  if(!is.data.frame(grid_df)){
+    grid_df <- tryCatch(
+      as.data.frame(grid_df),
+      error = function(e) stop("`grid_df` must be a data.frame or coercible to a data.frame.")
+    )
+  }
+
+  if(!inherits(model, "formula") && !is.character(model)) stop("`model` must be a formula or string.")
+  if(!is.numeric(n_boot) || n_boot <= 0 || n_boot %% 1 != 0) stop("`n_boot` must be a positive integer.")
+  if(!is.numeric(alpha) || alpha <= 0 || alpha >= 1) stop("`alpha` must be in (0, 1).")
+
+  formula_ <- as.formula(model)
+  model_vars <- all.vars(formula_)[-1]
+  if(length(setdiff(model_vars, names(grid_df))) > 0) {
+    stop(paste("`grid_df` is missing variables:", paste(setdiff(model_vars, names(grid_df)), collapse = ", ")))
+  }
+  if(!is.null(grid_df_boot)){
+    if(!is.data.frame(grid_df_boot)){
+      grid_df_boot <- tryCatch(
+        as.data.frame(grid_df_boot),
+        error = function(e) stop("`grid_df_boot` must be a data.frame or coercible to a data.frame.")
+      )
+    }
+    if(length(setdiff(model_vars, names(grid_df_boot))) > 0) {
+      stop(paste("`grid_df_boot` is missing variables:", paste(setdiff(model_vars, names(grid_df_boot)), collapse = ", ")))
+    }
+  }
+
+  fit <- lm(model, df_fit)
+  y_hat <- predict(fit, grid_df, se.fit = TRUE, level = 1 - alpha) # for constructing the whole
+  res_max_v <- rep(0,n_boot)
   if(is.null(grid_df_boot)){
-    grid_df_boot = grid_df
-    y_hat_level_grid = y_hat
+    grid_df_boot <- grid_df
+    y_hat_level_grid <- y_hat
   }else{
-    y_hat_level_grid = predict(fit, grid_df_boot, se.fit = TRUE, level = 1 - alpha)# bootstrap true mean
+    y_hat_level_grid <- predict(fit, grid_df_boot, se.fit = TRUE, level = 1 - alpha)# bootstrap true mean
   }
   for(i in 1:n_boot){
-    df_boot = df_fit[sample(1:dim(df_fit)[1], replace = T),]
-    fit_boot = lm(model, df_boot)
-    y_hat_boot = predict(fit_boot, grid_df_boot, level = 1 - alpha, se.fit = TRUE	)
-    residual = abs(y_hat_boot$fit - y_hat_level_grid$fit)/y_hat_boot$se.fit
-    res_max_v[i] = max(residual)
+    df_boot <- df_fit[sample(1:dim(df_fit)[1], replace = T),]
+    fit_boot <- lm(model, df_boot)
+    y_hat_boot <- predict(fit_boot, grid_df_boot, level = 1 - alpha, se.fit = TRUE	)
+    residual <- abs(y_hat_boot$fit - y_hat_level_grid$fit)/y_hat_boot$se.fit
+    res_max_v[i] <- max(residual)
   }
-  thres = quantile(res_max_v, probs = 1 - alpha)
-  sim_CB = data.frame(scb_low = y_hat$fit - thres*y_hat$se.fit, Mean = y_hat$fit, scb_up = y_hat$fit + thres*y_hat$se.fit, grid_df)
+  thres <- quantile(res_max_v, probs = 1 - alpha)
+  sim_CB <- data.frame(scb_low = y_hat$fit - thres*y_hat$se.fit, Mean = y_hat$fit, scb_up = y_hat$fit + thres*y_hat$se.fit, grid_df)
   return(sim_CB)
 }
 
@@ -108,19 +146,45 @@ expit = function(x){
 #' results <- SCB_logistic_outcome(df_fit = df, model = model, grid_df = grid)
 #'
 SCB_logistic_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0.05){
-  formula_ = as.formula(model)
-  fit =  suppressWarnings(glm(model, family = binomial(), data = df_fit)) # Suppress warning forfitted probabilities numerically 0 or 1
-  y_hat = predict(fit, grid_df, se.fit = TRUE, level = 1 - alpha) # bootstrap true mean
-  res_max_v = rep(0,n_boot)
-  for(i in 1:n_boot){
-    df_boot = df_fit[sample(1:dim(df_fit)[1], replace = T),]
-    fit_boot = suppressWarnings(glm(model, family = binomial(), data = df_boot))
-    y_hat_boot = predict(fit_boot, grid_df, level = 1 - alpha, se.fit = TRUE	)
-    residual = abs(y_hat_boot$fit - y_hat$fit)/y_hat_boot$se.fit
-    res_max_v[i] = max(residual)
+
+  if(is.null(df_fit)) stop("`df_fit` must be provided.")
+  if(is.null(model)) stop("`model` must be provided.")
+  if(is.null(grid_df)) stop("`grid_df` must be provided.")
+
+  if(!is.data.frame(df_fit)){
+    df_fit <- tryCatch(
+      as.data.frame(df_fit),
+      error = function(e) stop("`df_fit` must be a data.frame or coercible to a data.frame.")
+    )
   }
-  thres = quantile(res_max_v, probs = 1 - alpha)
-  sim_CB = data.frame(scb_low = expit(y_hat$fit - thres*y_hat$se.fit), Mean = expit(y_hat$fit),
+  if(!is.data.frame(grid_df)){
+    grid_df <- tryCatch(
+      as.data.frame(grid_df),
+      error = function(e) stop("`grid_df` must be a data.frame or coercible to a data.frame.")
+    )
+  }
+  if(!inherits(model, "formula") && !is.character(model)) stop("`model` must be a formula or string.")
+  if(!is.numeric(n_boot) || n_boot <= 0 || n_boot %% 1 != 0) stop("`n_boot` must be a positive integer.")
+  if(!is.numeric(alpha) || alpha <= 0 || alpha >= 1) stop("`alpha` must be in (0, 1).")
+
+  formula_ <- as.formula(model)
+  model_vars <- all.vars(formula_)[-1]
+  if (length(setdiff(model_vars, names(grid_df))) > 0) {
+    stop(paste("`grid_df` is missing variables:", paste(setdiff(model_vars, names(grid_df)), collapse = ", ")))
+  }
+
+  fit <- suppressWarnings(glm(model, family = binomial(), data = df_fit)) # Suppress warning forfitted probabilities numerically 0 or 1
+  y_hat <- predict(fit, grid_df, se.fit = TRUE, level = 1 - alpha) # bootstrap true mean
+  res_max_v <- rep(0,n_boot)
+  for(i in 1:n_boot){
+    df_boot <- df_fit[sample(1:dim(df_fit)[1], replace = T),]
+    fit_boot <- suppressWarnings(glm(model, family = binomial(), data = df_boot))
+    y_hat_boot <- predict(fit_boot, grid_df, level = 1 - alpha, se.fit = TRUE	)
+    residual <- abs(y_hat_boot$fit - y_hat$fit)/y_hat_boot$se.fit
+    res_max_v[i] <- max(residual)
+  }
+  thres <- quantile(res_max_v, probs = 1 - alpha)
+  sim_CB <- data.frame(scb_low = expit(y_hat$fit - thres*y_hat$se.fit), Mean = expit(y_hat$fit),
                       scb_up = expit(y_hat$fit + thres*y_hat$se.fit), grid_df)
 
   return(sim_CB)
@@ -164,31 +228,53 @@ SCB_logistic_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0
 #' reults <- SCB_regression_coef(df, model)
 #'
 SCB_regression_coef = function(df_fit, model, n_boot = 5000, alpha = 0.05, type = "linear"){
+
+  if(is.null(df_fit)) stop("`df_fit` must be provided.")
+  if(is.null(model)) stop("`model` must be provided.")
+
+  if(!is.data.frame(df_fit)){
+    df_fit <- tryCatch(
+      as.data.frame(df_fit),
+      error = function(e) stop("`df_fit` must be a data.frame or coercible to a data.frame.")
+    )
+  }
+  if(!inherits(model, "formula") && !is.character(model)) stop("`model` must be a formula or string.")
+  if(!is.numeric(n_boot) || n_boot <= 0 || n_boot %% 1 != 0) stop("`n_boot` must be a positive integer.")
+  if(!is.numeric(alpha) || alpha <= 0 || alpha >= 1) stop("`alpha` must be in (0, 1).")
+
+  formula_ <- as.formula(model)
+  model_vars <- all.vars(formula_)[-1]
+  if(length(setdiff(model_vars, names(grid_df))) > 0) {
+    stop(paste("`grid_df` is missing variables:", paste(setdiff(model_vars, names(grid_df)), collapse = ", ")))
+  }
+
   # type: "linear" or "logistic"
-  formula_ = as.formula(model)
   if(type == "linear"){
-    fit = lm(model, df_fit)
+    fit <- lm(model, df_fit)
   }else if(type == "logistic"){
-    fit = suppressWarnings(glm(model, family = binomial(), data = df_fit)) # Suppress warning for 0 or 1 probability for simulation
+    fit <- suppressWarnings(glm(model, family = binomial(), data = df_fit)) # Suppress warning for 0 or 1 probability for simulation
+  }else{
+    stop("`type` must be either 'linear' or 'logistic'.")
   }
-  sum_out = summary(fit)
-  coef_hat = fit$coefficients # bootstrap true mean
-  coef_sd = sum_out$coefficients[,2]
-  res_max_v = rep(0,n_boot)
+
+  sum_out <- summary(fit)
+  coef_hat <- fit$coefficients # bootstrap true mean
+  coef_sd <- sum_out$coefficients[,2]
+  res_max_v <- rep(0,n_boot)
   for(i in 1:n_boot){
-    df_boot = df_fit[sample(1:dim(df_fit)[1], replace = T),]
+    df_boot <- df_fit[sample(1:dim(df_fit)[1], replace = T),]
     if(type == "linear"){
-      fit_boot = lm(model, df_boot)
+      fit_boot <- lm(model, df_boot)
     }else if(type == "logistic"){
-      fit_boot = suppressWarnings(glm(model, family = binomial(), data = df_boot))
+      fit_boot <- suppressWarnings(glm(model, family = binomial(), data = df_boot))
     }
-    sum_out_boot = summary(fit_boot)
-    coef_hat_boot =fit_boot$coefficients
-    coef_sd_boot = sum_out_boot$coefficients[,2]
-    residual = abs(coef_hat_boot - coef_hat)/coef_sd_boot
-    res_max_v[i] = max(residual)
+    sum_out_boot <- summary(fit_boot)
+    coef_hat_boot <- fit_boot$coefficients
+    coef_sd_boot <- sum_out_boot$coefficients[,2]
+    residual <- abs(coef_hat_boot - coef_hat)/coef_sd_boot
+    res_max_v[i] <- max(residual)
   }
-  thres = quantile(res_max_v, probs = 1 - alpha)
-  sim_CB = data.frame(scb_low = coef_hat - thres*coef_sd, Mean = coef_hat, scb_up = coef_hat + thres*coef_sd)
+  thres <- quantile(res_max_v, probs = 1 - alpha)
+  sim_CB <- data.frame(scb_low = coef_hat - thres*coef_sd, Mean = coef_hat, scb_up = coef_hat + thres*coef_sd)
   return(sim_CB)
 }

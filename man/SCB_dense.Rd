@@ -58,3 +58,9 @@ Y_mat_use[is.na(Y_mat_use)] <- 0
 SCB_dense(A = Y_mat_use[-1,])
 
 }
+\keyword{#}
+\keyword{SCB_functional_outcome}
+\keyword{Used}
+\keyword{by}
+\keyword{internal}
+\keyword{internally}

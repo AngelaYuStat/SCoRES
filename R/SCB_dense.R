@@ -20,8 +20,8 @@
 #'
 #' @importFrom stats var
 #'
-#' @export
-#'
+#' @keywords internal
+#' # Used internally by SCB_functional_outcome
 #' @examples
 #'
 #' data(ccds)

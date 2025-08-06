@@ -5,7 +5,7 @@
 \title{Functional Outcome Regression Prediction with Group-Specific Inference}
 \usage{
 mean_response_predict(
-  data,
+  data_df,
   object,
   fitted = TRUE,
   time,
@@ -16,7 +16,7 @@ mean_response_predict(
 )
 }
 \arguments{
-\item{data}{A functional data frame, matrix or tibble.
+\item{data_df}{A functional data frame.
 The input data must have column names, and should contain the functional outcome, time and subject}
 
 \item{object}{A fitted Function-on-Scalar Regression (FoSR) model object (e.g., from mgcv::bam()/mgcv::gam()).}

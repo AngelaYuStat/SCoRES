@@ -7,9 +7,10 @@
 #'     \item \code{y}: A numeric vector of y-coordinates (e.g., latitude).
 #'     \item \code{z}: A 3D array of observations with dimensions \code{length(x)} × \code{length(y)} × \code{n}.
 #'   }
-#' @param level A numeric threshold value used to test whether the estimated mean surface significantly deviates from it.
+#' @param level A optional numeric threshold value used to test whether the estimated mean surface significantly deviates from it. Default is NULL.
 #' @param X A design matrix used in the generalized least squares (GLS) model. Each row corresponds to an observation, and each column to a covariate.
-#' @param w A numeric vector specifying a linear combination of the regression coefficients.
+#'          Default is `matrix(1, n, 1)` (only keep the intercept term)
+#' @param w A numeric vector specifying a linear combination of the regression coefficients. Default is `matrix(1, 1, 1)`.
 #' @param correlation A character string specifying the name of the correlation structure (e.g., \code{"corAR1"}, \code{"corCompSymm"})
 #'   to be used in the GLS model. If \code{NULL}, no correlation structure is assumed.
 #' @param corpar A list of parameters to be passed to the correlation structure function specified in \code{correlation}.
@@ -18,10 +19,10 @@
 #' @param V An optional array of known covariance matrices of shape \code{[length(x), length(y), n, n]},
 #'   where each \code{V[i,j,,]} corresponds to the covariance matrix for the observations at spatial location \code{(x[i], y[j])}.
 #'   If V is given, then the GLS model will be fitted based on V. Otherwise, the GLS model will be fitted based on correlation structure.
-#' @param alpha A numerical value specifying the confidence level for the Simultaneous Confidence Bands.
-#' @param N An integer specifying the number of bootstrap samples to construct the Simultaneous Confidence Bands.
-#' @param mask An optional logical matrix same dimensions as \code{mu_hat}, indicating spatial locations to include in the SCB computation.
-#'   Non-included locations (e.g., water areas) should be set to 0 or \code{NA}.
+#' @param alpha A numerical value specifying the confidence level for the Simultaneous Confidence Bands. Defalut is `0.1`.
+#' @param N An integer specifying the number of bootstrap samples to construct the Simultaneous Confidence Bands. Default is `1000`.
+#' @param mask An optional logical matrix same dimensions as \code{c(length(Z$x), length(Z$y))}, indicating spatial locations to include in the SCB computation.
+#'   Non-included locations (e.g., water areas) should be set to 0 or \code{NA}. Default is `array(1, dim = c(length(Z$x), length(Z$y)))`
 #'
 #' @return A list containing the following components:
 #' \describe{
@@ -55,24 +56,85 @@
 #'                        w = c(1,0,0,0), correlation = climate_data$correlation,
 #'                        mask = climate_data$mask, alpha = 0.1)
 SCB_gls_climate =
-  function (Z, level, X = NULL, w = NULL, correlation = NULL, corpar = NULL,
+  function (Z, level = NULL, X = NULL, w = NULL, correlation = NULL, corpar = NULL,
             groups = NULL, V = NULL, alpha = 0.1, N = 1000,
             mask = NULL)
   {
     # require(nlme)
+    if(!is.list(Z)|| !is.numeric(Z)) stop("`Z` should be a numeric list.")
+    if(!all(c("x", "y", "z") %in% names(Z))) {
+      stop("`Z` must have elements named 'x', 'y' and 'z'.")
+    }
+
+    if(!is.null(level)) {
+      if(!(is.numeric(level) && length(level) == 1)) stop("`level` must be a single numeric value.")
+    }
+
+    if (!is.numeric(N) || N <= 0 || N %% 1 != 0){
+        stop("`nboot` must be a positive integer.")
+    }
+
+    if (!is.numeric(alpha) || alpha <= 0 || alpha >= 1){
+      stop("`alpha` must be in (0, 1).")
+    }
+
     x = Z$x
     y = Z$y
     Y = Z$z # observations
     n = dim(Y)[3]
     nloc <- length(x) * length(y)
-    if (is.null(X)) {
+    if (is.null(X) || is.null(w)) {
       X <- matrix(1, n, 1) # design matrix
       w <- matrix(1, 1, 1) # covariate (linear combination)
+    }else{
+      if (nrow(X) != n) {
+        stop("The number of rows in `X` must be equal to the third dimension of `Z$z`.")
+      }
     }
+
     p <- ncol(X)
+    if (nrow(w) != p) {
+      stop("The number of rows in `w` must be equal to the number of rows of `X`.")
+    }
+
+    M <- c(length(x), length(y))
+    if (!is.null(mask)) {
+      if(!identical(dim(mask), M)) stop("`mask` must have dimensions ", paste(M, collapse = " x "), ".")
+      if (!(is.matrix(mask) || is.array(mask))) {
+        stop("`mask` must be a matrix or array.")
+      }
+    }
+
+    if (!is.null(V)) {
+      if (!is.matrix(V) || !is.array(V) || !is.numeric(V) || length(dim(V)) != 4) {
+        stop("`V` must be a numeric 4-dimensional matrix or array.")
+      }
+
+      dims <- dim(V)
+      if (dims[3] != dims[4] || dims[3] != n) {
+        stop("The last two dimensions of `V` must be equal (square matrices),
+              and also be equal to the third dimension of `Z$z`.")
+      }
+    }
+
+    if (!is.list(corpar)) {
+      stop("`corpar` must be a list of parameters for the correlation structure function.")
+    }
+
+    if (is.null(names(corpar)) || any(names(corpar) == "")) {
+      warning("Some elements in `corpar` are not named; this may cause errors in `do.call`.")
+    }
+
     if (is.null(groups)) {
       groups <- rep(1, n)
     }
+    if (!is.vector(groups) && !is.factor(groups)) {
+      stop("`groups` must be a vector or factor.")
+    }
+    if (length(groups) != n) {
+      stop("`groups` must have length equal to the number of observations (", n, ")/ the third dimension of `Z$z`.")
+    }
+
     invsqrtm <- function(A) {
       E <- eigen(A)
       U <- E$vectors
@@ -183,5 +245,4 @@ MB_ = function (x, y, R, N = 1000)
                                                                   2)
 }
 
-# Delete other functions
 # Make Data Object
