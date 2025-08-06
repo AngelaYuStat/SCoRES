@@ -17,11 +17,13 @@ on specific areas that are at higher risk for effects of climate change.
 Therefore, a statistical framework is needed for estimating the set in
 the domain of a function whose image equals a predefined subset, which
 can be defined as $\mu^{-1}(U) = \{s \in S: \mu(s) \in U\}$, with $U$ a
-pre-specified subset of a real line $\mathbb{R}$ (e.g., $[c, \infty)$).
+pre-specified subset of a real line $\mathbb{R}$ (e.g., \[*c*, ∞)).
 Proposed by Sommerfeld et al. (2018), Coverage Probability Excursion
-(CoPE) sets, defined as: $$
+(CoPE) sets, defined as: 
+$$
 \text{CS}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CS}_{\text{out}}(U)
-$$ are used to assess the spatial uncertainty of the inverse set
+$$
+are used to assess the spatial uncertainty of the inverse set
 estimation
 
 Ren et al. (2023) generalized the estimation to dense and non-dense
@@ -116,9 +118,11 @@ function. If `est_mean = FALSE`, `SCoRES::SCB_functional_outcome` will
 estimate the simultaneous confidence bands for sample mean.
 
 Here, we estimated SCBs using both options seperately for the mean
-outcome Y(t) of user’s group: $$
+outcome Y(t) of user’s group: 
+$$
 \hat{f}(t) = E[Y(t) | X_{1} = 1]= \beta_0(t) + \beta_1(t),
-$$ where:
+$$ 
+where:
 
 - $Y_i(t)$ is a functional outcome (percent_change)
 - $X_{i1}$ is a scalar covariate (use)
