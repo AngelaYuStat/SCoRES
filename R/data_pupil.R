@@ -1,27 +1,24 @@
-#' Cleaned Pupil Response Data from Cannabis Use Study
+#' Trajectories of pupil response to light after cannabis use
 #'
-#' This dataset contains repeated measures of pupil percent change over time for multiple subjects
-#' across different cannabis use categories. It includes both user and non-user groups, time points,
-#' and metadata related to demographics and usage frequency.
+#' Dataset contains functional observation of pupil size percent change after a light stimulus.
+#' Participants in the cannabis use group smoked cannabis flower or concentrate 40 minutes prior to the pupillometry measurement.
+#' Goal of this data is to understand differences in pupil response to light driven by acute cannabis users.
+#' Measurements were collected on the right eye.
 #'
-#' @format A tibble with 16764 rows and 12 variables:
+#' @format A tibble with 15000 rows and 10 variables:
 #' \describe{
 #'   \item{id}{Factor. Subject identifier (127 unique levels).}
 #'   \item{use_group}{Character. Original usage group classification (e.g., "Daily - Flower", "No Use").}
-#'   \item{use}{Numeric. Binary indicator of use status: 1 = user, 0 = non-user.}
-#'   \item{age}{Integer. Subject age.}
-#'   \item{gender}{Numeric. Binary gender: 1 = Female, 0 = Male.}
+#'   \item{use}{Numeric. Binary indicator of cannabis use 40 minute prior to the light stimulus. (1 = user, 0 = non-user)}
+#'   \item{age}{Integer. Subject's age.}
+#'   \item{gender}{Numeric. Binary indicator of subject's gender: 1 = Female, 0 = Male.}
 #'   \item{bmi}{Numeric. Body Mass Index.}
 #'   \item{alcohol}{Numeric. Alcohol use score.}
-#'   \item{seconds}{Numeric. Time in seconds since stimulus onset.}
+#'   \item{seconds}{Numeric. Time in seconds since light stimulus.}
 #'   \item{percent_change_baseline}{Numeric. Percent change relative to baseline.}
-#'   \item{percent_change}{Numeric. Outcome: pupil percent change at each time point.}
+#'   \item{percent_change}{Numeric. Percent change in the outcome of interest.}
 #' }
 #'
-#' @details
-#' The dataset was processed to derive binary indicators for gender and usage patterns.
-#' Daily users include those in the "Daily - Concentrates" and "Daily - Flower" groups.
-#' Smoker includes both daily and occasional users.
 #' @source Processed from \code{data-raw/pupil_load.R} using the \code{readr} and \code{dplyr} packages.
 #' @usage data(pupil)
 #' @keywords dataset

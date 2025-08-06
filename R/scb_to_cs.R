@@ -59,13 +59,13 @@ scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL, est_mean = NULL,
     stop("Dimensions of `scb_up`, `scb_low` and `true_mean` must match.")
   }
 
-  if(!is.numeric(scb_up) && !is.numeric(scb_low) && !is.numeric(true_mean)) {
+  if(!is.numeric(scb_up) || !is.numeric(scb_low) || !is.numeric(true_mean)) {
     stop("Values of `scb_up` and `scb_low` must be numeric.")
   }
 
   if (!all(sapply(list(scb_up, scb_low, true_mean),
                   function(x) is.vector(x) || is.matrix(x) || is.array(x)))) {
-    stop("`scb_up`, `scb_low`, and `true_mean` must each be a vector or matrix.")
+    stop("`scb_up`, `scb_low`, and `true_mean` must each be a vector, array or matrix.")
   }
 
   if(is.null(levels)) {

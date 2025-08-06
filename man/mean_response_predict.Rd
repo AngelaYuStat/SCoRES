@@ -61,21 +61,21 @@ A list containing the following elements:
 This function is an internal function for constructing SCBs for functional data.
 }
 \examples{
-data(ccds)
-ccds_fpca <- prepare_ccds_fpca(ccds)
+data(pupil)
+pupil_fpca <- prepare_pupil_fpca(pupil)
 
 fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
   s(seconds, by = use, k=30, bs = "cr") +
-  s(subject, by = Phi1, bs="re") +
-  s(subject, by = Phi2, bs="re")+
-  s(subject, by = Phi3, bs="re") +
-  s(subject, by = Phi4, bs="re"),
-  method = "fREML", data = ccds_fpca, discrete = TRUE)
+  s(id, by = Phi1, bs="re") +
+  s(id, by = Phi2, bs="re")+
+  s(id, by = Phi3, bs="re") +
+  s(id, by = Phi4, bs="re"),
+  method = "fREML", data = pupil_fpca, discrete = TRUE)
 
-results <- mean_response_predict(ccds_fpca, fosr_mod, fitted = TRUE, time = "seconds",
-group_name = "use", group_value = 1, subject = "subject")
+results <- mean_response_predict(pupil_fpca, fosr_mod, fitted = TRUE, time = "seconds",
+group_name = "use", group_value = 1, subject = "id")
 
-results <- mean_response_predict(ccds_fpca, fosr_mod, fitted = FALSE, time = "seconds",
-group_name = "use", group_value = 1, subject = "subject")
+results <- mean_response_predict(pupil_fpca, fosr_mod, fitted = FALSE, time = "seconds",
+group_name = "use", group_value = 1, subject = "id")
 
 }

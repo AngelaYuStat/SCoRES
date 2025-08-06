@@ -38,22 +38,22 @@
 #' @importFrom stats formula model.frame vcov
 #'
 #' @examples
-#' data(ccds)
-#' ccds_fpca <- prepare_ccds_fpca(ccds)
+#' data(pupil)
+#' pupil_fpca <- prepare_pupil_fpca(pupil)
 #'
 #' fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
 #'   s(seconds, by = use, k=30, bs = "cr") +
-#'   s(subject, by = Phi1, bs="re") +
-#'   s(subject, by = Phi2, bs="re")+
-#'   s(subject, by = Phi3, bs="re") +
-#'   s(subject, by = Phi4, bs="re"),
-#'   method = "fREML", data = ccds_fpca, discrete = TRUE)
+#'   s(id, by = Phi1, bs="re") +
+#'   s(id, by = Phi2, bs="re")+
+#'   s(id, by = Phi3, bs="re") +
+#'   s(id, by = Phi4, bs="re"),
+#'   method = "fREML", data = pupil_fpca, discrete = TRUE)
 #'
-#' results <- mean_response_predict(ccds_fpca, fosr_mod, fitted = TRUE, time = "seconds",
-#' group_name = "use", group_value = 1, subject = "subject")
+#' results <- mean_response_predict(pupil_fpca, fosr_mod, fitted = TRUE, time = "seconds",
+#' group_name = "use", group_value = 1, subject = "id")
 #'
-#' results <- mean_response_predict(ccds_fpca, fosr_mod, fitted = FALSE, time = "seconds",
-#' group_name = "use", group_value = 1, subject = "subject")
+#' results <- mean_response_predict(pupil_fpca, fosr_mod, fitted = FALSE, time = "seconds",
+#' group_name = "use", group_value = 1, subject = "id")
 #'
 #' @export
 mean_response_predict = function(data_df, object, fitted = TRUE, time, range = NULL, group_name, group_value, subject = NULL){
@@ -92,11 +92,11 @@ mean_response_predict = function(data_df, object, fitted = TRUE, time, range = N
                     "Please convert it to a numeric and consider refit your functional object."))
       }
 
-      if (is.factor(data[[var]])) {
+      if (is.factor(data_df[[var]])) {
         stop(paste0("The variable '", var, "' in `data_df` is of type factor. ",
                     "Please convert it to a numeric and consider refit your functional object."))
       } else {  # numeric
-        unique_vals <- unique(data[[var]])
+        unique_vals <- unique(data_df[[var]])
         if (!(val %in% unique_vals)) {
           stop(paste0("Value '", val, "' not found in numeric variable '", var, "'."))
         }
@@ -130,6 +130,8 @@ mean_response_predict = function(data_df, object, fitted = TRUE, time, range = N
 
   # get mean response by groups with standard errors
   if (!fitted && !is.null(groups_idx)){
+    # fitted = FALSE, fit mean outcome for linear combination
+    # of parameter corresponding to the group specified without intercept
     lpmat_no_intercept <- lpmat[, -intercept_idx, drop = FALSE]
     mod_coef_no_intercept <- mod_coef[-intercept_idx]
     mod_cov_no_intercept <- mod_cov[-intercept_idx, -intercept_idx]
@@ -137,6 +139,8 @@ mean_response_predict = function(data_df, object, fitted = TRUE, time, range = N
       mutate(mean = c(lpmat_no_intercept %*% mod_coef_no_intercept),
              se = c(sqrt(diag(lpmat_no_intercept %*% mod_cov_no_intercept %*% t(lpmat_no_intercept)))))
   }else{
+    # fitted = FALSE, fit mean outcome for the group specified
+    # fitted = TRUE with no group specified, fit intercept
     pred_df <- df_pred %>% mutate(mean = c(lpmat %*% mod_coef), se = c(sqrt(diag(lpmat %*% mod_cov %*% t(lpmat)))))
   }
   lpmat <- lpmat[, idx]
@@ -186,23 +190,23 @@ mean_response_predict = function(data_df, object, fitted = TRUE, time, range = N
 #' @export
 #'
 #' @examples
-#' # example using ccds data
-#' data(ccds)
-#' ccds_fpca <- prepare_ccds_fpca(ccds)
+#' # example using pupil data
+#' data(pupil)
+#' pupil_fpca <- prepare_pupil_fpca(pupil)
 #'
 #' fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
 #'   s(seconds, by = use, k=30, bs = "cr") +
-#'   s(subject, by = Phi1, bs="re") +
-#'   s(subject, by = Phi2, bs="re")+
-#'   s(subject, by = Phi3, bs="re") +
-#'   s(subject, by = Phi4, bs="re"),
-#'   method = "fREML", data = ccds_fpca, discrete = TRUE)
+#'   s(id, by = Phi1, bs="re") +
+#'   s(id, by = Phi2, bs="re")+
+#'   s(id, by = Phi3, bs="re") +
+#'   s(id, by = Phi4, bs="re"),
+#'   method = "fREML", data = pupil_fpca, discrete = TRUE)
 #'
-#' results <- cma(ccds_fpca, fosr_mod, fitted = TRUE, time = "seconds",
-#' group_name = "use", group_value = 1, subject = "subject")
+#' results <- cma(pupil_fpca, fosr_mod, fitted = TRUE, time = "seconds",
+#' group_name = "use", group_value = 1, subject = "id")
 #'
-#' results <- cma(ccds_fpca, fosr_mod, fitted = FALSE, time = "seconds",
-#' group_name = "use", group_value = 1, subject = "subject")
+#' results <- cma(pupil_fpca, fosr_mod, fitted = FALSE, time = "seconds",
+#' group_name = "use", group_value = 1, subject = "id")
 #'
 cma = function(data_df, object, fitted = TRUE, alpha = 0.05, time, range = NULL, group_name = NULL, group_value = NULL, subject = NULL, nboot = NULL){
 
@@ -271,92 +275,15 @@ cma = function(data_df, object, fitted = TRUE, alpha = 0.05, time, range = NULL,
   y_hat_LB_global <- pred_df$mean - Z_global * pred_df$se
   y_hat_UB_global <- pred_df$mean + Z_global * pred_df$se
 
-  global_df <- list(
+  return(list(
     yhat = pred_df$mean,
     time = results$s_pred,
     se_hat = pred_df$se,
     scb_low = y_hat_LB_global,
     scb_up = y_hat_UB_global,
     type = "Global Confidence Interval (CMA)"
-  )
+  ))
 
-  return(global_df)
-}
-
-#' Prepare ccds FPCA Dataset
-#'
-#' Processes data by fitting a mean GAM model, extracting residuals, performing FPCA,
-#' and merging the results to create an enhanced dataset for functional regression analysis.
-#'
-#' @param input_data Raw ccds data frame containing:
-#'   \itemize{
-#'     \item \code{percent_change}: Functional response variable
-#'     \item \code{seconds}: Time variable
-#'     \item \code{use}: Binary grouping variable
-#'     \item \code{subject}: Subject identifier
-#'   }
-#' @param k_mean Number of basis functions for mean model smooth terms (default: 30)
-#' @param k_fpca Number of knots for FPCA estimation (default: 15)
-#'
-#' @return A tibble containing:
-#'   \itemize{
-#'     \item Original ccds variables
-#'     \item FPCA eigenfunctions (Phi1, Phi2,...)
-#'     \item Sorted by subject and time
-#'   }
-#'
-#' @examples
-#' data(ccds)
-#' processed_data <- prepare_ccds_fpca(ccds)
-#'
-#' @importFrom dplyr mutate filter select arrange left_join
-#' @importFrom tidyr pivot_wider
-#' @importFrom refund fpca.face
-#' @importFrom tibble as_tibble
-#'
-#' @export
-prepare_ccds_fpca <- function(input_data, k_mean = 30, k_fpca = 15) {
-
-  # Fit mean model
-  mean_mod <- gam(
-    percent_change ~ s(seconds, k = k_mean, bs = "cr") +
-      s(seconds, by = use, k = k_mean, bs = "cr"),
-    data = input_data, method = "REML"
-  )
-
-  # Prepare residuals
-  resid_df <- input_data %>%
-    filter(!is.na(percent_change)) %>%
-    select(subject, seconds) %>%
-    mutate(resid = mean_mod$residuals) %>%
-    pivot_wider(
-      names_from = seconds,
-      values_from = resid,
-      names_prefix = "resid."
-    )
-
-  resid_mat <- as.matrix(resid_df[, -1])
-  rownames(resid_mat) <- resid_df$subject
-
-  # FPCA estimation
-  fpca_results <- fpca.face(
-    Y = resid_mat,
-    argvals = unique(input_data$seconds),
-    knots = k_fpca
-  )
-
-  # Create output dataset
-  eigenfunctions <- as.data.frame(fpca_results$efunctions)
-  colnames(eigenfunctions) <- paste0("Phi", seq(1, fpca_results$npc))
-  eigenfunctions$seconds <- unique(input_data$seconds)
-
-  output_data <- input_data %>%
-    left_join(eigenfunctions, by = "seconds") %>%
-    as_tibble() %>%
-    arrange(subject, seconds) %>%
-    mutate(subject = factor(subject))
-
-  return(output_data)
 }
 
 #' Prepare pupil FPCA Dataset
@@ -370,7 +297,7 @@ prepare_ccds_fpca <- function(input_data, k_mean = 30, k_fpca = 15) {
 #'
 #' @return A tibble containing:
 #'   \itemize{
-#'     \item Original ccds variables
+#'     \item Original pupil variables
 #'     \item FPCA eigenfunctions (Phi1, Phi2,...)
 #'     \item Sorted by subject and time
 #'   }
@@ -408,7 +335,7 @@ prepare_pupil_fpca <- function(input_data, k_mean = 30, k_fpca = 15) {
     )
 
   resid_mat <- as.matrix(resid_df[, -1])
-  rownames(resid_mat) <- resid_df$subject
+  rownames(resid_mat) <- resid_df$id
 
   # FPCA estimation
   fpca_results <- fpca.face(

@@ -106,7 +106,7 @@ SCB_gls_climate =
     }
 
     if (!is.null(V)) {
-      if (!is.matrix(V) || !is.array(V) || !is.numeric(V) || length(dim(V)) != 4) {
+      if (!(is.matrix(V) || is.array(V)) || (!is.numeric(V) || length(dim(V)) != 4)) {
         stop("`V` must be a numeric 4-dimensional matrix or array.")
       }
 

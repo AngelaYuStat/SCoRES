@@ -5,3 +5,5 @@ README.html
 inst/doc
 /doc/
 /Meta/
+R/data_ccds.R
+data-raw/ccds_load.R

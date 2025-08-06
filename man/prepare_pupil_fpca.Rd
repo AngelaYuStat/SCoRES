@@ -16,7 +16,7 @@ prepare_pupil_fpca(input_data, k_mean = 30, k_fpca = 15)
 \value{
 A tibble containing:
 \itemize{
-\item Original ccds variables
+\item Original pupil variables
 \item FPCA eigenfunctions (Phi1, Phi2,...)
 \item Sorted by subject and time
 }

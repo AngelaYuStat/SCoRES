@@ -69,31 +69,31 @@
 #'@importFrom refund fpca.face
 #'
 #' @examples
-#' # example using ccds data
-#' data(ccds)
-#' ccds_fpca <- prepare_ccds_fpca(ccds)
+#' # example using pupil data
+#' data(pupil)
+#' pupil_fpca <- prepare_pupil_fpca(pupil)
 #'
 #' fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
 #'   s(seconds, by = use, k=30, bs = "cr") +
-#'   s(subject, by = Phi1, bs="re") +
-#'   s(subject, by = Phi2, bs="re")+
-#'   s(subject, by = Phi3, bs="re") +
-#'   s(subject, by = Phi4, bs="re"),
-#'   method = "fREML", data = ccds_fpca, discrete = TRUE)
+#'   s(id, by = Phi1, bs="re") +
+#'   s(id, by = Phi2, bs="re")+
+#'   s(id, by = Phi3, bs="re") +
+#'   s(id, by = Phi4, bs="re"),
+#'   method = "fREML", data = pupil_fpca, discrete = TRUE)
 #'
 #' # CMA approach
-#' results <- SCB_functional_outcome(data_df = ccds, object = fosr_mod, method = "cma", fitted = TRUE,
+#' results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod, method = "cma", fitted = TRUE,
 #'                                   est_mean = TRUE, outcome = "percent_change", time = "seconds",
-#'                                   group_name = "use", group_value = 1, subject = "subject")
+#'                                   group_name = "use", group_value = 1, subject = "id")
 #'
 #'
 #' # multiplier bootstrap
-#' results <- SCB_functional_outcome(data_df = ccds, object = fosr_mod, method = "multiplier", fitted = TRUE,
+#' results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod, method = "multiplier", fitted = TRUE,
 #'                        est_mean = TRUE, outcome = "percent_change",
-#'                        time = "seconds", group_name = "use", group_value = 1, subject = "subject")
-#' results <- SCB_functional_outcome(data_df = ccds, object = fosr_mod, method = "multiplier", fitted = TRUE,
+#'                        time = "seconds", group_name = "use", group_value = 1, subject = "id")
+#' results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod, method = "multiplier", fitted = TRUE,
 #'                        est_mean = FALSE, outcome = "percent_change",
-#'                        time = "seconds", group_name = "use", group_value = 1, subject = "subject")
+#'                        time = "seconds", group_name = "use", group_value = 1, subject = "id")
 #'
 #'
 #' @export
@@ -267,6 +267,9 @@ SCB_functional_outcome = function(data_df, object = NULL, method, fitted = TRUE,
         s_pred <- s_pred[-1]
         yhat <- pred_df$mean[-1]
         se_hat <- pred_df$se[-1]
+      }else{
+        yhat <- pred_df$mean
+        se_hat <- pred_df$se
       }
       # Identify rows where all entries are zero, if exist, throw an error.
       # zero_rows <- rowSums(Y_mat == 0) == ncol(Y_mat)

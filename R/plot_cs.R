@@ -36,9 +36,9 @@
 #'
 #' @examples
 #'
-#' # example using ccds data
-#' data(ccds)
-#' ccds_fpca <- prepare_ccds_fpca(ccds)
+#' # example using pupil data
+#' data(pupil)
+#' pupil_fpca <- prepare_pupil_fpca(pupil)
 #'
 #' fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
 #'   s(seconds, by = use, k=30, bs = "cr") +
@@ -48,14 +48,14 @@
 #'   s(subject, by = Phi4, bs="re"),
 #'   method = "fREML", data = ccds_fpca, discrete = TRUE)
 #'
-#' ccds_cma <- SCB_functional_outcome(data = ccds_fpca, object = fosr_mod, method = "cma",
+#' pupil_cma <- SCB_functional_outcome(data = pupil_fpca, object = fosr_mod, method = "cma",
 #'                                    est_mean = TRUE, outcome = "percent_change",
 #'                                    time = "seconds", group_name = "use",
 #'                                    group_value = 1, subject = "subject")
-#' ccds_cma <- tibble::as_tibble(ccds_cma)
+#' pupil_cma <- tibble::as_tibble(pupil_cma)
 #'
-#' plot_cs(ccds_cma,levels = c(-7, -8, -9, -10), x = ccds_cma$time,
-#'         mu_hat = ccds_cma$yhat, xlab = "", ylab = "",
+#' plot_cs(pupil_cma,levels = c(-18, -20, -22, -24), x = pupil_cma$time,
+#'         mu_hat = pupil_cma$yhat, xlab = "", ylab = "",
 #'         level_label = T, min.size = 40, palette = "Spectral",
 #'         color_level_label = "black")
 plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_true = NULL, together = TRUE, xlab = "X1", ylab = "X2", level_label = TRUE,
@@ -68,7 +68,7 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
     if(!identical(dim(SCB$scb_up), dim(SCB$scb_low))) {
       stop("Dimensions of `SCB$scb_up` and `SCB$scb_low` must match.")
     }
-    if(!is.numeric(SCB$scb_up)||!is.numeric(SCB$scb_low)) {
+    if(!is.numeric(SCB$scb_up) || !is.numeric(SCB$scb_low)) {
       stop("Values of `SCB$scb_up` and `SCB$scb_low` must be numeric.")
     }
   }
@@ -96,11 +96,11 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
   if(is.null(x)) {
     stop("Must provide input for `x`.")
   }else{
-    if(!is.numeric(x)|| !is.vector(x) || !is.array(x)) stop("`x` should be a numeric vector.")
+    if(!is.numeric(x) && !(is.vector(x) || is.array(x))) stop("`x` must be a numeric vector or numeric array.")
   }
 
   if(!is.null(y)) {
-    if(!is.numeric(y)|| !is.vector(y) || !is.array(y)) stop("`y` should be a numeric vector.")
+    if(!is.numeric(y) && !(is.vector(y) || is.array(y))) stop("`y` should be a numeric vector or numeric array..")
   }
 
   if(!is.null(mu_hat)){
@@ -108,8 +108,8 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
     if(!identical(dim(SCB$scb_up), dim(mu_hat))) {
       stop("Dimensions of `SCB$scb_up`, `SCB$scb_low` and `mu_hat` must match.")
     }
-    if (!is.vector(mu_hat) || is.matrix(mu_hat) || !is.array(mu_hat)) {
-      stop("`mu_hat` must be a vector or matrix.")
+    if (!(is.vector(mu_hat) || is.matrix(mu_hat) || is.array(mu_hat))) {
+      stop("`mu_hat` must be a vector, array or matrix.")
     }
   }
   if(!is.null(mu_true)){
@@ -117,8 +117,8 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
     if(!identical(dim(SCB$scb_up), dim(mu_true))) {
       stop("Dimensions of `SCB$scb_up`, `SCB$scb_low` and `mu_true` must match.")
     }
-    if (!is.vector(mu_true) || is.matrix(mu_true) || !is.array(mu_true)) {
-      stop("`mu_true` must be a vector or matrix.")
+    if (!(is.vector(mu_true) || !is.matrix(mu_true) || !is.array(mu_true))) {
+      stop("`mu_true` must be a vector, array or matrix.")
     }
   }
   if(!is.null(mu_hat) && !is.null(mu_true)) stop("An input must be provided for either `mu_hat` or `mu_true`.")
