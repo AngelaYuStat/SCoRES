@@ -19,10 +19,7 @@ the domain of a function whose image equals a predefined subset, which
 can be defined as $\mu^{-1}(U) = \{s \in S: \mu(s) \in U\}$, with $U$ a
 pre-specified subset of a real line $\mathbb{R}$ (e.g., \[*c*, ∞)).
 Proposed by Sommerfeld et al. (2018), Coverage Probability Excursion
-(CoPE) sets, defined as: 
-$$
-\text{CS}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CS}_{\text{out}}(U)
-$$
+(CoPE) sets, defined as: CS<sub>in</sub>(*U*) ⊆ *μ*<sup>−1</sup>(*U*) ⊆ CS<sub>out</sub>(*U*)
 are used to assess the spatial uncertainty of the inverse set
 estimation
 
@@ -119,9 +116,7 @@ estimate the simultaneous confidence bands for sample mean.
 
 Here, we estimated SCBs using both options seperately for the mean
 outcome Y(t) of user’s group: 
-$$
-\hat{f}(t) = E[Y(t) | X_{1} = 1]= \beta_0(t) + \beta_1(t),
-$$ 
+$\hat{f}(t) = E[Y(t) | X_{1} = 1]= \beta_0(t) + \beta_1(t),$
 where:
 
 - $Y_i(t)$ is a functional outcome (percent_change)
