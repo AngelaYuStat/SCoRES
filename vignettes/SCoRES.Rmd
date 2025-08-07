@@ -9,7 +9,6 @@ output:
     number_sections: true
 vignette: >
   %\VignetteEncoding{UTF-8}
-  
   %\VignetteIndexEntry{SCoRES: a vignette}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 

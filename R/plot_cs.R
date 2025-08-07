@@ -76,15 +76,18 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
   if(is.null(levels)) {
     stop("Must provide input for `levels`.")
   }else{
-    if(!is.numeric(levels)) {
-      stop("Values of `levels` must be numeric.")
-    }
     if(type %in% c("upper", "lower", "two-sided")){
-      if(!is.vector(levels)) stop("`levels` should be a vector if `type` = upper, lower, or two-sided")
+      if(!is.vector(levels)) stop("`levels` should be a vector if `type` = upper, lower, or two-sided.")
+      if(!is.numeric(levels)) {
+        stop("Values of `levels` must be numeric.")
+      }
     }else if(type == "interval"){
       if(!is.list(levels)) stop("`levels` should be a list if `type` = interval")
       if (!all(c("low", "up") %in% names(levels))) {
         stop("`levels` must have elements named 'low' and 'up'.")
+      }
+      if(!is.numeric(levels$low)||!is.numeric(levels$up)) {
+        stop("All elements in `levels` must be numeric.")
       }
     }else if(type == "two-sided"){
       stop("'two-sided' is not avaliable for plotting, please choose between 'upper', 'lower' or 'interval'.")
@@ -126,16 +129,9 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
   if (!is.character(palette) || length(palette) != 1) {
     stop("`palette` must be a single character string.")
   }
-  if (!(palette %in% hcl.pals())) {
-    stop(paste0("`palette` must be one of the values returned by `hcl.pals()`."))
-  }
 
   if (!is.character(color_level_label) || length(color_level_label) != 1) {
     stop("`color_level_label` must be a single character string.")
-  }
-  if (!(color_level_label %in% colors() ||
-        grepl("^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$", color_level_label))) {
-    stop("`color_level_label` must be a valid R color name or HEX code.")
   }
 
   dim = length(dim(SCB$scb_up))

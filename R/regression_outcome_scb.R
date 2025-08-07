@@ -58,10 +58,28 @@ SCB_linear_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0.0
   if(!is.numeric(alpha) || alpha <= 0 || alpha >= 1) stop("`alpha` must be in (0, 1).")
 
   formula_ <- as.formula(model)
-  model_vars <- all.vars(formula_)[-1]
-  if(length(setdiff(model_vars, names(grid_df))) > 0) {
-    stop(paste("`grid_df` is missing variables:", paste(setdiff(model_vars, names(grid_df)), collapse = ", ")))
+  model_vars <- all.vars(formula_)
+  if(!("." %in% model_vars)){
+    if (length(setdiff(model_vars, names(df_fit))) > 0) {
+      stop(paste("`df_fit` is missing variables:", paste(setdiff(model_vars, names(df_fit)), collapse = ", ")))
+    }
+    if(length(model_vars) > 1){
+      if (length(setdiff(model_vars[-1], names(grid_df))) > 0) {
+        stop(paste("`grid_df` is missing variables:", paste(setdiff(model_vars, names(grid_df)), collapse = ", ")))
+      }
+    }
+  }else{
+    if (length(setdiff(model_vars[1], names(df_fit))) > 0) {
+      stop(paste("`df_fit` is missing variables:", model_vars[1]))
+    }
+    if(length(model_vars) > 1 && length(setdiff(names(df_fit), model_vars[1])) == 0){
+      stop("No covariates found in `df_fit`. Please add at least one covariate or adjust the input of `model`.")
+    }
+    if(length(model_vars) > 1 && length(setdiff(names(grid_df), model_vars[1])) == 0){
+      stop("No covariates found in `grid_df`. Please add at least one covariate or adjust the input of `model`.")
+    }
   }
+
   if(!is.null(grid_df_boot)){
     if(!is.data.frame(grid_df_boot)){
       grid_df_boot <- tryCatch(
@@ -69,8 +87,16 @@ SCB_linear_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0.0
         error = function(e) stop("`grid_df_boot` must be a data.frame or coercible to a data.frame.")
       )
     }
-    if(length(setdiff(model_vars, names(grid_df_boot))) > 0) {
-      stop(paste("`grid_df_boot` is missing variables:", paste(setdiff(model_vars, names(grid_df_boot)), collapse = ", ")))
+    if(!("." %in% model_vars)){
+      if(length(model_vars) > 1){
+        if (length(setdiff(model_vars[-1], names(grid_df_boot))) > 0) {
+          stop(paste("`grid_df_boot` is missing variables:", paste(setdiff(model_vars, names(grid_df_boot)), collapse = ", ")))
+        }
+      }
+    }else{
+      if(length(model_vars) > 1 && length(setdiff(names(grid_df_boot), model_vars[1])) == 0){
+        stop("No covariates found in `grid_df_boot`. Please add at least one covariate or adjust the input of `model`.")
+      }
     }
   }
 
@@ -168,9 +194,26 @@ SCB_logistic_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0
   if(!is.numeric(alpha) || alpha <= 0 || alpha >= 1) stop("`alpha` must be in (0, 1).")
 
   formula_ <- as.formula(model)
-  model_vars <- all.vars(formula_)[-1]
-  if (length(setdiff(model_vars, names(grid_df))) > 0) {
-    stop(paste("`grid_df` is missing variables:", paste(setdiff(model_vars, names(grid_df)), collapse = ", ")))
+  model_vars <- all.vars(formula_)
+  if(!("." %in% model_vars)){
+    if (length(setdiff(model_vars, names(df_fit))) > 0) {
+      stop(paste("`df_fit` is missing variables:", paste(setdiff(model_vars, names(df_fit)), collapse = ", ")))
+    }
+    if(length(model_vars) > 1){
+      if (length(setdiff(model_vars[-1], names(grid_df))) > 0) {
+        stop(paste("`grid_df` is missing variables:", paste(setdiff(model_vars, names(grid_df)), collapse = ", ")))
+      }
+    }
+  }else{
+    if (length(setdiff(model_vars[1], names(df_fit))) > 0) {
+      stop(paste("`df_fit` is missing variables:", model_vars[1]))
+    }
+    if(length(model_vars) > 1 && length(setdiff(names(df_fit), model_vars[1])) == 0){
+      stop("No covariates found in `df_fit`. Please add at least one covariate or adjust the input of `model`.")
+    }
+    if(length(model_vars) > 1 && length(setdiff(names(grid_df), model_vars[1])) == 0){
+      stop("No covariates found in `grid_df`. Please add at least one covariate or adjust the input of `model`.")
+    }
   }
 
   fit <- suppressWarnings(glm(model, family = binomial(), data = df_fit)) # Suppress warning forfitted probabilities numerically 0 or 1
@@ -243,9 +286,18 @@ SCB_regression_coef = function(df_fit, model, n_boot = 5000, alpha = 0.05, type 
   if(!is.numeric(alpha) || alpha <= 0 || alpha >= 1) stop("`alpha` must be in (0, 1).")
 
   formula_ <- as.formula(model)
-  model_vars <- all.vars(formula_)[-1]
-  if(length(setdiff(model_vars, names(grid_df))) > 0) {
-    stop(paste("`grid_df` is missing variables:", paste(setdiff(model_vars, names(grid_df)), collapse = ", ")))
+  model_vars <- all.vars(formula_)
+  if(!("." %in% model_vars)){
+    if (length(setdiff(model_vars, names(df_fit))) > 0) {
+      stop(paste("`df_fit` is missing variables:", paste(setdiff(model_vars, names(df_fit)), collapse = ", ")))
+    }
+  }else{
+    if (length(setdiff(model_vars[1], names(df_fit))) > 0) {
+      stop(paste("`df_fit` is missing variables:", model_vars[1]))
+    }
+    if(length(model_vars) > 0 && length(setdiff(names(df_fit), model_vars[1])) == 0){
+      stop("No covariates found in `df_fit`. Please add at least one covariate or adjust the input of `model`.")
+    }
   }
 
   # type: "linear" or "logistic"

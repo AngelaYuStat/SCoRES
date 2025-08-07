@@ -1,11 +1,17 @@
 Package: SCoRES
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Simultaneous COnfidence Region Excursion Sets
+Version: 0.1.0
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    c(
+      person("Angela", "Yu", , "angela.yu@emory.edu", role = c("aut", "cre")),
+      person("Armin", "Schwartzman", , "armins@health.ucsd.edu", role = "aut"),
+      person("Julia", "Wrobel", , "julia.wrobel@emory.edu", role = "aut"),
+      person("Junting", "Ren", , "junting.ren.stat@gmail.com", role = "ctb")
+    )
+Description: This package provides useful statistical tools for both the 
+  estimation of the inverse set and the corresponding simultaneous outer and 
+  inner confidence sets.
+License: `use_mit_license()`
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
@@ -21,7 +27,6 @@ Imports:
     maps,
     MASS,
     metR,
-    mgcv,
     nlme,
     patchwork,
     reshape,
@@ -36,6 +41,7 @@ Depends:
 LazyData: true
 Suggests: 
     knitr,
+    mgcv,
     rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

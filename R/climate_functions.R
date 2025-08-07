@@ -61,10 +61,11 @@ SCB_gls_climate =
             mask = NULL)
   {
     # require(nlme)
-    if(!is.list(Z)|| !is.numeric(Z)) stop("`Z` should be a numeric list.")
+    if(!is.list(Z)) stop("`Z` should be a list.")
     if(!all(c("x", "y", "z") %in% names(Z))) {
       stop("`Z` must have elements named 'x', 'y' and 'z'.")
     }
+    if(!is.numeric(Z$x)|| !is.numeric(Z$y)||!is.numeric(Z$z)) stop("All elements in `Z` should be numeric.")
 
     if(!is.null(level)) {
       if(!(is.numeric(level) && length(level) == 1)) stop("`level` must be a single numeric value.")
@@ -87,14 +88,27 @@ SCB_gls_climate =
       X <- matrix(1, n, 1) # design matrix
       w <- matrix(1, 1, 1) # covariate (linear combination)
     }else{
+      if(!(is.matrix(X)||is.array(X)) || !is.numeric(X)){
+        stop("`X` should be a numeric matrix or array.")
+      }
+      if(!(is.vector(w)||is.array(w)||is.matrix(w)) || !is.numeric(w)){
+        stop("`w` should be a numeric vector, matrix or array.")
+      }
       if (nrow(X) != n) {
         stop("The number of rows in `X` must be equal to the third dimension of `Z$z`.")
       }
     }
 
     p <- ncol(X)
-    if (nrow(w) != p) {
-      stop("The number of rows in `w` must be equal to the number of rows of `X`.")
+    if(is.vector(w)){
+      if (length(w) != p) {
+        stop("The length of `w` must be equal to the number of rows of `X`.")
+      }
+    }else{
+      if (nrow(w) != p && length(dim(w)) != 1) {
+        stop("Dimension of `w` should be 1, and the number of rows in `w` must
+             be equal to the number of rows of `X`.")
+      }
     }
 
     M <- c(length(x), length(y))
@@ -117,12 +131,13 @@ SCB_gls_climate =
       }
     }
 
-    if (!is.list(corpar)) {
-      stop("`corpar` must be a list of parameters for the correlation structure function.")
-    }
-
-    if (is.null(names(corpar)) || any(names(corpar) == "")) {
-      warning("Some elements in `corpar` are not named; this may cause errors in `do.call`.")
+    if(!is.null(corpar)){
+      if (!is.list(corpar)) {
+        stop("`corpar` must be a list of parameters for the correlation structure function.")
+      }
+      if (is.null(names(corpar)) || any(names(corpar) == "")) {
+        warning("Some elements in `corpar` are not named; this may cause errors in `do.call`.")
+      }
     }
 
     if (is.null(groups)) {

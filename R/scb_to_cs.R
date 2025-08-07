@@ -71,15 +71,18 @@ scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL, est_mean = NULL,
   if(is.null(levels)) {
     stop("Must provide input for `levels`.")
   }else{
-    if(!is.numeric(levels)) {
-      stop("Values of `levels` must be numeric.")
-    }
     if(type %in% c("upper", "lower", "two-sided")){
-      if(!is.vector(levels)) stop("`levels` should be a vector if `type` = upper, lower, or two-sided")
+      if(!is.vector(levels)) stop("`levels` should be a vector if `type` = upper, lower, or two-sided.")
+      if(!is.numeric(levels)) {
+        stop("Values of `levels` must be numeric.")
+      }
     }else if(type == "interval"){
       if(!is.list(levels)) stop("`levels` should be a list if `type` = interval")
       if (!all(c("low", "up") %in% names(levels))) {
         stop("`levels` must have elements named 'low' and 'up'.")
+      }
+      if(!is.numeric(levels$low)||!is.numeric(levels$up)) {
+        stop("All elements in `levels` must be numeric.")
       }
     }else{
       stop("`type` must be chosen between 'upper', 'lower', 'two-sided' or 'interval'.")

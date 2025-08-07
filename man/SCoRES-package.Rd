@@ -4,12 +4,23 @@
 \name{SCoRES-package}
 \alias{SCoRES}
 \alias{SCoRES-package}
-\title{SCoRES: What the Package Does (One Line, Title Case)}
+\title{SCoRES: Simultaneous COnfidence Region Excursion Sets}
 \description{
-What the package does (one paragraph).
+This package provides useful statistical tools for both the estimation of the inverse set and the corresponding simultaneous outer and inner confidence sets.
 }
 \author{
-\strong{Maintainer}: First Last \email{first.last@example.com}
+\strong{Maintainer}: Angela Yu \email{angela.yu@emory.edu}
+
+Authors:
+\itemize{
+  \item Armin Schwartzman \email{armins@health.ucsd.edu}
+  \item Julia Wrobel \email{julia.wrobel@emory.edu}
+}
+
+Other contributors:
+\itemize{
+  \item Junting Ren \email{junting.ren.stat@gmail.com} [contributor]
+}
 
 }
 \keyword{internal}
