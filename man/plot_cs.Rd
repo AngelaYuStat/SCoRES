@@ -61,7 +61,7 @@ An input must be provided for either \code{mu_hat} or \code{mu_true}.}
 A \code{ggplot2} object representing the inversion of simultaneous confidence intervals.
 }
 \description{
-Visualizes 1D or 2D inversion of simultaneous confidence sets using contour or band plots.
+Visualizes simultaneous confidence sets of upper and lower excursion sets for discrete, 1D or 2D data, using contour or band plots.
 Supports plotting CSs at multiple levels and labeling contours.
 }
 \examples{

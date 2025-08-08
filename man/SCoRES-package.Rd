@@ -4,7 +4,7 @@
 \name{SCoRES-package}
 \alias{SCoRES}
 \alias{SCoRES-package}
-\title{SCoRES: Simultaneous COnfidence Region Excursion Sets}
+\title{SCoRES: Simultaneous Confidence Region Excursion Sets}
 \description{
 This package provides useful statistical tools for both the estimation of the inverse set and the corresponding simultaneous outer and inner confidence sets. Acceptable forms of input includes both 1D and 2D data for linear regression, logistic regression, functional regression and spatial generalized least square regression. Useful functions are also provided for constructing simultaneous confidence bands (SCB) for these models.
 }

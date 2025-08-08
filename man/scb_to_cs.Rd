@@ -2,7 +2,7 @@
 % Please edit documentation in R/scb_to_cs.R
 \name{scb_to_cs}
 \alias{scb_to_cs}
-\title{Construct Inverse Confidence Sets from Simultaneous Confidence Bands}
+\title{Construct Simultaneous Confidence Sets for Excursion/Interval Sets from Simultaneous Confidence Bands}
 \usage{
 scb_to_cs(
   scb_up,
@@ -68,8 +68,10 @@ A list containing the following components:
 }
 }
 \description{
-This function constructs inverse confidence sets (CS) from simultaneous confidence bands (SCB),
-allowing visualization and containment check of level sets of true or estimated functions.
+This function constructs simultaneous confidence sets for upper and lower excursion sets, and interval sets
+from simultaneous confidence bands (SCB). It allows estimation of inner and outer confidence sets (CSs) under
+single or multiple thresholds. Visualization of the CS sets is also included, along with a containment check
+for the coverage of true or estimated functions.
 }
 \examples{
 set.seed(262)

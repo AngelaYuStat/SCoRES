@@ -1,6 +1,6 @@
 #' Construct Simultaneous Confidence Bands (SCB) For One Dimensional Functional Data
 #'
-#' This function builds simultaneous confidence bands through two distinct approaches..
+#' This function builds simultaneous confidence bands through parametric and bootstrap approaches.
 #'
 #' @param data_df A functional data frame.
 #' The input data must have column names, and should contain the functional outcome, time, subject

@@ -100,7 +100,7 @@ A list containing:
 \item{type}{A character description of the output type.}
 }
 \description{
-This function builds simultaneous confidence bands through two distinct approaches..
+This function builds simultaneous confidence bands through parametric and bootstrap approaches.
 }
 \examples{
 # example using pupil data

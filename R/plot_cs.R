@@ -1,6 +1,6 @@
 #' Plot Inversion of Simultaneous Confidence Intervals (SCIs) into Inner and Outer Confidence Sets (CSs)
 #'
-#' Visualizes 1D or 2D inversion of simultaneous confidence sets using contour or band plots.
+#' Visualizes simultaneous confidence sets of upper and lower excursion sets for discrete, 1D or 2D data, using contour or band plots.
 #' Supports plotting CSs at multiple levels and labeling contours.
 #'
 #' @param SCB A numeric list returned by `regression_outcome_scb()`, `functional_outcome_scb()` or a custom list with two arrays of the same dimension: `scb_up` and `scb_low`,

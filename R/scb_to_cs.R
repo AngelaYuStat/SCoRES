@@ -1,7 +1,9 @@
-#' Construct Inverse Confidence Sets from Simultaneous Confidence Bands
+#' Construct Simultaneous Confidence Sets for Excursion/Interval Sets from Simultaneous Confidence Bands
 #'
-#' This function constructs inverse confidence sets (CS) from simultaneous confidence bands (SCB),
-#' allowing visualization and containment check of level sets of true or estimated functions.
+#' This function constructs simultaneous confidence sets for upper and lower excursion sets, and interval sets
+#' from simultaneous confidence bands (SCB). It allows estimation of inner and outer confidence sets (CSs) under
+#' single or multiple thresholds. Visualization of the CS sets is also included, along with a containment check
+#' for the coverage of true or estimated functions.
 #'
 #' @param scb_up A numeric vector (1D) or matrix (2D) containing the upper simultaneous confidence interval.
 #' @param scb_low A numeric vector (1D) or matrix (2D) containing the lower bounds of the simultaneous confidence bands.
