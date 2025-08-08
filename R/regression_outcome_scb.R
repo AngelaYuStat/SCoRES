@@ -121,14 +121,13 @@ SCB_linear_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0.0
   return(sim_CB)
 }
 
-#' Expit (inverse logit) function
+#' Expit (Inverse Logit) Function
 #'
 #' Computes the inverse logit transformation.
 #'
 #' @param x A numeric input.
 #' @return Value between 0 and 1.
-#' @keywords internal
-#' # Used internally by SCB_logistic_outcome
+#' @export
 #'
 #' @examples
 #' expit(0)         # returns 0.5

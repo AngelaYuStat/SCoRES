@@ -2,7 +2,7 @@
 % Please edit documentation in R/regression_outcome_scb.R
 \name{expit}
 \alias{expit}
-\title{Expit (inverse logit) function}
+\title{Expit (Inverse Logit) Function}
 \usage{
 expit(x)
 }
@@ -19,9 +19,3 @@ Computes the inverse logit transformation.
 expit(0)         # returns 0.5
 expit(c(-2, 0, 2))
 }
-\keyword{#}
-\keyword{SCB_logistic_outcome}
-\keyword{Used}
-\keyword{by}
-\keyword{internal}
-\keyword{internally}
