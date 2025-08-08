@@ -52,7 +52,7 @@ devtools::install_github("AngelaYuStat/SCoRES")
 
 ---------------
 
-The example here is to use ccds functional data to construct the simultaneous outer and inner confidence sets (CSs) from simultaneous confidence bands (SCB) using Function-on-Scalar Regression (FoSR).
+The example here is to use pupil functional data to construct the simultaneous outer and inner confidence sets (CSs) from simultaneous confidence bands (SCB) using Function-on-Scalar Regression (FoSR).
 
 The pupil dataset contains repeated measures of percent change over time for multiple subjects under two user categories (use: 1 and no use: 0). It contains both user and non-user groups, multiple time points, and several covariates, including age, gender, BMI, and alcohol consumption.
 
@@ -62,7 +62,7 @@ library(mgcv)
 data(pupil)
 ```
 
-Before calculating the SCBs, we first process pupil data by fitting a mean GAM model, extracting residuals and performing FPCA using `SCoRES::prepare_ccds_fpca()`, the function will return an enhanced dataset includes the FPCA-derived basis scores (Phi1, Phi2, Phi3, Phi4) for Function-on-Scalar Regression (FoSR) analysis.
+Before calculating the SCBs, we first process pupil data by fitting a mean GAM model, extracting residuals and performing FPCA using `SCoRES::prepare_pupil_fpca()`, the function will return an enhanced dataset includes the FPCA-derived basis scores (Phi1, Phi2, Phi3, Phi4) for Function-on-Scalar Regression (FoSR) analysis.
 
 Following the FPCA-based data augmentation, we fit a FoSR model using `mgcv::bam()`, which allows efficient estimation of Generalized Additive Mixed Models (GAMMs). The model formula is designed to capture both population-level smooth trends and subject-specific functional variation.
 
@@ -133,5 +133,5 @@ plot_cs(results_pupil_cma,
         color_level_label = "black")
 ```
 
-The plot demonstrate how to use SCB to find regions of s where the estimated mean is greater than or equal to the four levels -18, -20, -22 and -24 for ccds data. The gray shaded area is the 95% SCB, the solid black line is the estimated mean. The red horizontal line shows the inner confidence sets (where the lower SCB is greater than the corresponding level) that are contained in the estimated inverse set represented by the union of the yellow and red horizontal line (where the estimated mean is greater than the corresponding levels); the outer confidence sets are the union of the blue, yellow and red line (where the upper SCB is greater than the corresponding levels) and contain both the estimated inverse sets and the inner confidence sets.
+The plot demonstrate how to use SCB to find regions of s where the estimated mean is greater than or equal to the four levels -18, -20, -22 and -24 for pupil data. The gray shaded area is the 95% SCB, the solid black line is the estimated mean. The red horizontal line shows the inner confidence sets (where the lower SCB is greater than the corresponding level) that are contained in the estimated inverse set represented by the union of the yellow and red horizontal line (where the estimated mean is greater than the corresponding levels); the outer confidence sets are the union of the blue, yellow and red line (where the upper SCB is greater than the corresponding levels) and contain both the estimated inverse sets and the inner confidence sets.
 

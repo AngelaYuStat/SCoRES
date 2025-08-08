@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The example here is to use pupil functional data to construct the inverse confidence sets (CS) from simultaneous confidence bands (SCB) using Function-on-Scalar Regression (FoSR).
+The example here is to use pupil functional data to construct the simultaneous outer and inner confidence sets (CSs) from simultaneous confidence bands (SCB) using Function-on-Scalar Regression (FoSR).
 
 The pupil dataset contains repeated measures of percent change over time for multiple subjects under two user categories (use: 1 and no use: 0). It contains both user and non-user groups, multiple time points, and several covariates, including age, gender, BMI, and alcohol consumption.
 
@@ -181,7 +181,8 @@ Default is `t`.
 
 For mathematical details, see vignette Methods.
   
-The code below visualizes the **inverse confidence sets (CSs)** derived from SCB results using the `SCoRES::plot_cs()` function. The `results` object is first converted to a tibble for easier manipulation.
+The code below visualizes the simultaneous outer and inner confidence
+sets (CSs) derived from SCB results using the `SCoRES::plot_cs()` function. The `results` object is first converted to a tibble for easier manipulation.
 
 The `levels = c(-18, -20, -22, -24)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse set, the inner confidence set, and the outer confidence set. 
 
@@ -201,7 +202,7 @@ plot_cs(results_pupil_cma,
 
 The plot demonstrate how to use SCB to find regions of s where the estimated mean is greater than or equal to the four levels -18, -20, -22 and -24 for ccds data. The gray shaded area is the 95% SCB, the solid black line is the estimated mean. The red horizontal line shows the inner confidence sets (where the lower SCB is greater than the corresponding level) that are contained in the estimated inverse set represented by the union of the yellow and red horizontal line (where the estimated mean is greater than the corresponding levels); the outer confidence sets are the union of the blue, yellow and red line (where the upper SCB is greater than the corresponding levels) and contain both the estimated inverse sets and the inner confidence sets.
 
-The next plot shows the SCB for the coefficient funtion for the use group.
+The next plot shows the SCB for the coefficient function for the use group.
 
 ```{r ccds_plot_cs_pupil_para, echo = TRUE}
 results_pupil_cma_para <- tibble::as_tibble(results_pupil_cma_para)

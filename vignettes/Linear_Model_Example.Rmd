@@ -16,7 +16,7 @@ editor_options:
 encoding: UTF-8
 ---
 
-The example here is to use simulated data to construct the inverse confidence sets (CS) from simultaneous confidence bands (SCB) using linear regression. 
+The example here is to use simulated data to construct the simultaneous outer and inner confidence sets (CSs) from simultaneous confidence bands (SCB) using linear regression. 
 
 `SCoRES::SCB_linear_outcome()` function use a non-parametric bootstrap algorithm to construct the SCB in linear regression. The argument `df_fit` specifies a data frame containing the training design matrix used to fit the linear model, while `grid_df` contains the test set design matrix for constructing SCB. Use argument `model` to specify the formula used for fitting the linear model.
 

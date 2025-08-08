@@ -56,7 +56,7 @@ devtools::install_github("AngelaYuStat/SCoRES")
 
 ------------------------------------------------------------------------
 
-The example here is to use ccds functional data to construct the
+The example here is to use pupil functional data to construct the
 simultaneous outer and inner confidence sets (CSs) from simultaneous
 confidence bands (SCB) using Function-on-Scalar Regression (FoSR).
 
@@ -73,7 +73,7 @@ data(pupil)
 
 Before calculating the SCBs, we first process pupil data by fitting a
 mean GAM model, extracting residuals and performing FPCA using
-`SCoRES::prepare_ccds_fpca()`, the function will return an enhanced
+`SCoRES::prepare_pupil_fpca()`, the function will return an enhanced
 dataset includes the FPCA-derived basis scores (Phi1, Phi2, Phi3, Phi4)
 for Function-on-Scalar Regression (FoSR) analysis.
 
@@ -170,7 +170,7 @@ plot_cs(results_pupil_cma,
 
 The plot demonstrate how to use SCB to find regions of s where the
 estimated mean is greater than or equal to the four levels -18, -20, -22
-and -24 for ccds data. The gray shaded area is the 95% SCB, the solid
+and -24 for pupil data. The gray shaded area is the 95% SCB, the solid
 black line is the estimated mean. The red horizontal line shows the
 inner confidence sets (where the lower SCB is greater than the
 corresponding level) that are contained in the estimated inverse set

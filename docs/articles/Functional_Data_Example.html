@@ -71,8 +71,8 @@
     
     
 <p>The example here is to use pupil functional data to construct the
-inverse confidence sets (CS) from simultaneous confidence bands (SCB)
-using Function-on-Scalar Regression (FoSR).</p>
+simultaneous outer and inner confidence sets (CSs) from simultaneous
+confidence bands (SCB) using Function-on-Scalar Regression (FoSR).</p>
 <p>The pupil dataset contains repeated measures of percent change over
 time for multiple subjects under two user categories (use: 1 and no use:
 0). It contains both user and non-user groups, multiple time points, and
@@ -254,8 +254,8 @@ which is specified by <code>method_SD</code>:</p>
 </ul>
 <p>Default is <code>t</code>.</p>
 <p>For mathematical details, see vignette Methods.</p>
-<p>The code below visualizes the <strong>inverse confidence sets
-(CSs)</strong> derived from SCB results using the
+<p>The code below visualizes the simultaneous outer and inner confidence
+sets (CSs) derived from SCB results using the
 <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code> function. The <code>results</code> object
 is first converted to a tibble for easier manipulation.</p>
 <p>The <code>levels = c(-18, -20, -22, -24)</code> argument specifies a
@@ -287,7 +287,7 @@ the estimated mean is greater than the corresponding levels); the outer
 confidence sets are the union of the blue, yellow and red line (where
 the upper SCB is greater than the corresponding levels) and contain both
 the estimated inverse sets and the inner confidence sets.</p>
-<p>The next plot shows the SCB for the coefficient funtion for the use
+<p>The next plot shows the SCB for the coefficient function for the use
 group.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_pupil_cma_para</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results_pupil_cma_para</span><span class="op">)</span></span>
