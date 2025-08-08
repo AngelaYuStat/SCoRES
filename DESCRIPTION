@@ -1,5 +1,5 @@
 Package: SCoRES
-Title: Simultaneous COnfidence Region Excursion Sets
+Title: Simultaneous Confidence Region Excursion Sets
 Version: 0.1.0
 Authors@R: 
     c(
