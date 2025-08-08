@@ -63,6 +63,7 @@ using parameter simulations approach with Gaussian multiplier bootstrap.
 }
 \examples{
 # example using pupil data
+library(mgcv)
 data(pupil)
 pupil_fpca <- prepare_pupil_fpca(pupil)
 

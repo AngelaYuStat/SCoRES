@@ -31,6 +31,7 @@ The pupil dataset contains repeated measures of percent change over time for mul
 
 ```{r load pupil data, echo = TRUE}
 library(SCoRES)
+library(mgcv)
 data(pupil)
 ```
 

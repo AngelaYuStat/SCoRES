@@ -2,7 +2,7 @@
 % Please edit documentation in R/cma.R
 \name{prepare_pupil_fpca}
 \alias{prepare_pupil_fpca}
-\title{Prepare pupil FPCA Dataset}
+\title{Prepare Pupil FPCA Dataset}
 \usage{
 prepare_pupil_fpca(input_data, k_mean = 30, k_fpca = 15)
 }
@@ -26,6 +26,7 @@ Processes data by fitting a mean GAM model, extracting residuals, performing FPC
 and merging the results to create an enhanced dataset for functional regression analysis.
 }
 \examples{
+library(mgcv)
 data(pupil)
 processed_data <- prepare_pupil_fpca(pupil)
 

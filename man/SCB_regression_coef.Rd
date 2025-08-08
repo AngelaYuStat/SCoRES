@@ -36,6 +36,7 @@ This function fits either a linear or logistic regression model and computes sim
 for the model coefficients using a non-parametric bootstrap procedure.
 }
 \examples{
+library(MASS)
 set.seed(262)
 M <- 50
 rho <- 0.4
@@ -49,6 +50,6 @@ df <- as.data.frame(X)
 names(df) <- paste0("x", 1:M)
 df$y <- as.vector(y)
 model <- "y ~ ."
-reults <- SCB_regression_coef(df, model)
+results <- SCB_regression_coef(df, model)
 
 }

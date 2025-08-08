@@ -8,6 +8,14 @@
 \description{
 This package provides useful statistical tools for both the estimation of the inverse set and the corresponding simultaneous outer and inner confidence sets.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://angelayustat.github.io/SCoRES}
+  \item Report bugs at \url{https://github.com/AngelaYuStat/SCoRES/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Angela Yu \email{angela.yu@emory.edu}
 

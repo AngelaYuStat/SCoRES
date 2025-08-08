@@ -8,8 +8,8 @@
 #'                Dimensions of `scb_up` and `scb_low` must match.
 #' @param levels A numeric vector or list of scalers for different levels or matrix containing interval sets to construct the confidence sets.
 #'               If \code{type} = "upper", "lower", or "two-sided", `levels` should be a vector.
-#'               If \code{type} = "interval", then \code{levels} should be a \code{list} containing two elements: \code{$low} and \code{$up},
-#'               corresponding to the interval defined by [\verb{levels$low}, \verb{levels$up}].
+#'               If \code{type = "interval"}, then \code{levels} should be a \code{list} with two named elements:
+#'               \code{low} and \code{up}, corresponding to the bounds of the interval \code{[low, up]}.
 #' @param true_mean Optional matrix of the true mean function.
 #'                  Should have the same dimension as `scb_up` and `scb_low`.
 #' @param est_mean Optional matrix of the estimated mean function, used for plotting if `true_mean` is not available.
@@ -49,23 +49,33 @@
 #' grid <- data.frame(x1 = seq(-1, 1, length.out = 100), x2 = seq(-1, 1, length.out = 100))
 #' model <- "y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"
 #' result <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
-#' scb_to_cs(result$UpperBound, result$LowerBound, c(-1, -0.5, 0.5, 1),
+#' scb_to_cs(result$scb_up, result$scb_low, c(-1, -0.5, 0.5, 1),
 #' x1 = grid$x1, x2 = grid$x2, est_mean = results$Mean)
 #'
 scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL, est_mean = NULL, x1 = NULL, x2 = NULL, type = "upper", return_contain_only = F, return_plot = F, xlab = NULL, ylab = NULL)
 {
-  if(!identical(dim(scb_up), dim(scb_low))||
-     !identical(dim(scb_up), dim(true_mean))) {
-    stop("Dimensions of `scb_up`, `scb_low` and `true_mean` must match.")
+  if(!identical(dim(scb_up), dim(scb_low))) {
+    stop("Dimensions of `scb_up` and `scb_low` must match.")
   }
 
-  if(!is.numeric(scb_up) || !is.numeric(scb_low) || !is.numeric(true_mean)) {
+  if(!is.numeric(scb_up) || !is.numeric(scb_low)) {
     stop("Values of `scb_up` and `scb_low` must be numeric.")
   }
 
-  if (!all(sapply(list(scb_up, scb_low, true_mean),
+  if (!all(sapply(list(scb_up, scb_low),
                   function(x) is.vector(x) || is.matrix(x) || is.array(x)))) {
-    stop("`scb_up`, `scb_low`, and `true_mean` must each be a vector, array or matrix.")
+    stop("`scb_up` and `scb_low` must each be a vector, array or matrix.")
+  }
+
+  if(!is.null(true_mean)){
+    if(!is.numeric(true_mean)) stop("Values of `true_mean` must be numeric.")
+    if(!identical(dim(scb_up), dim(true_mean))) {
+      stop("Dimensions of `scb_up`, `scb_low` and `true_mean` must match.")
+    }
+    if (!all(sapply(list(true_mean),
+                    function(x) is.vector(x) || is.matrix(x) || is.array(x)))) {
+      stop("`true_mean` must each be a vector, array or matrix.")
+    }
   }
 
   if(is.null(levels)) {

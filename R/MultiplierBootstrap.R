@@ -10,6 +10,7 @@
 #' @return A list with fields: `z` (distribution), `q` (threshold), and `samples`
 #'
 #' @importFrom stats rbinom var
+#' @importFrom matrixStats rowVars
 #'
 #' @references
 #' Telschow, F. J. E., & Schwartzman, A. (2022).
@@ -108,7 +109,7 @@ MultiplierBootstrap <- function( R,
 
       # Estimate the variance from the sample
       if( method == "regular" ){
-        data.sigma <- sqrt( matrixStats::rowVars( R ) )
+        data.sigma <- sqrt(rowVars( R ) )
       }else if( method == "t" ){
         bootSecMoments <- R^2 %*% multiplier^2 / N
         # We put an abs here to make sure that no NaNs are produced due to machine precision error.
@@ -164,8 +165,8 @@ MultiplierBootstrap <- function( R,
 
       #----- Estimate the variance from the samples
       if( method == "regular" ){
-        data.sigmaR <- matrixStats::rowVars( R )
-        data.sigmaQ <- matrixStats::rowVars( Q )
+        data.sigmaR <- rowVars( R )
+        data.sigmaQ <- rowVars( Q )
       }else if( method == "t" ){
         bootSecMoments <- R^2 %*% multiplierR^2 / N
         data.varR      <- ( N / ( N - 1 ) ) * abs( bootSecMoments - bootMeansR^2 )

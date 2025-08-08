@@ -8,5 +8,8 @@
 ^WorkingCode\.R$
 ^SCoRES\.pdf$
 ^doc$
+^docs$
 ^Meta$
 ^R/data_ccds\.R$
+^data/ccds\.rda$
+^_pkgdown\.yml$

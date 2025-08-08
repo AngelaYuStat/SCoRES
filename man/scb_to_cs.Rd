@@ -27,8 +27,8 @@ Dimensions of \code{scb_up} and \code{scb_low} must match.}
 
 \item{levels}{A numeric vector or list of scalers for different levels or matrix containing interval sets to construct the confidence sets.
 If \code{type} = "upper", "lower", or "two-sided", \code{levels} should be a vector.
-If \code{type} = "interval", then \code{levels} should be a \code{list} containing two elements: \code{$low} and \code{$up},
-corresponding to the interval defined by \link{\verb{levels$low}, \verb{levels$up}}.}
+If \code{type = "interval"}, then \code{levels} should be a \code{list} with two named elements:
+\code{low} and \code{up}, corresponding to the bounds of the interval \code{[low, up]}.}
 
 \item{true_mean}{Optional matrix of the true mean function.
 Should have the same dimension as \code{scb_up} and \code{scb_low}.}
@@ -80,7 +80,7 @@ df <- data.frame(x1 = x1, x2 = x2, y = y)
 grid <- data.frame(x1 = seq(-1, 1, length.out = 100), x2 = seq(-1, 1, length.out = 100))
 model <- "y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"
 result <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
-scb_to_cs(result$UpperBound, result$LowerBound, c(-1, -0.5, 0.5, 1),
+scb_to_cs(result$scb_up, result$scb_low, c(-1, -0.5, 0.5, 1),
 x1 = grid$x1, x2 = grid$x2, est_mean = results$Mean)
 
 }

@@ -61,6 +61,7 @@ A list containing the following elements:
 This function is an internal function for constructing SCBs for functional data.
 }
 \examples{
+library(mgcv)
 data(pupil)
 pupil_fpca <- prepare_pupil_fpca(pupil)
 

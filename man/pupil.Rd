@@ -3,7 +3,7 @@
 \docType{data}
 \name{pupil}
 \alias{pupil}
-\title{Trajectories of pupil response to light after cannabis use}
+\title{Trajectories of Pupil Response to Light after Cannabis Use}
 \format{
 A tibble with 15000 rows and 10 variables:
 \describe{

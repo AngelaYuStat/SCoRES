@@ -19,3 +19,9 @@ Computes the inverse logit transformation.
 expit(0)         # returns 0.5
 expit(c(-2, 0, 2))
 }
+\keyword{#}
+\keyword{SCB_logistic_outcome}
+\keyword{Used}
+\keyword{by}
+\keyword{internal}
+\keyword{internally}

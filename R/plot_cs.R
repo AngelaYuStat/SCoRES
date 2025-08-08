@@ -1,4 +1,4 @@
-#' Plot inversion of simultaneous confidence intervals (SCIs) into inner and outer confidence sets (CSs)
+#' Plot Inversion of Simultaneous Confidence Intervals (SCIs) into Inner and Outer Confidence Sets (CSs)
 #'
 #' Visualizes 1D or 2D inversion of simultaneous confidence sets using contour or band plots.
 #' Supports plotting CSs at multiple levels and labeling contours.
@@ -9,8 +9,8 @@
 #'            Dimensions of `SCB$scb_up` and `SCB$scb_low` must match.
 #' @param levels A numeric vector or list of scalers for different levels or matrix containing interval sets to construct the confidence sets.
 #'               If \code{type} = "upper" or "lower", `levels` should be a vector.
-#'               If \code{type} = "interval", then \code{levels} should be a \code{list} containing two elements: \code{$low} and \code{$up},
-#'               corresponding to the interval defined by [\verb{levels$low}, \verb{levels$up}].
+#'               If \code{type = "interval"}, then \code{levels} should be a \code{list} with two named elements:
+#'               \code{low} and \code{up}, corresponding to the bounds of the interval \code{[low, up]}.
 #' @param type A character specifying the type of inverse sets to fit. Choices are `"upper"`, `"lower"` or `"interval"`. Default is `"upper"`.
 #' @param x A numerical vector of x-axis coordinates for 1D and 2D cases. For discrete coordinates, use a character vector.
 #' @param y Optional vector of y-axis coordinates for 2D data.
@@ -27,31 +27,35 @@
 #'
 #' @returns A \code{ggplot2} object representing the inversion of simultaneous confidence intervals.
 #'
-#' @import metR
-#' @import ggpubr
+#' @importFrom metR geom_text_contour
 #' @import ggplot2
-#' @import patchwork
-#' @import grDevices
+#' @importFrom patchwork plot_layout wrap_plots
+#' @importFrom reshape melt
+#' @importFrom dplyr %>% mutate desc
+#' @importFrom forcats fct_reorder
+#' @importFrom grDevices hcl.colors
+#'
 #' @export
 #'
 #' @examples
 #'
 #' # example using pupil data
+#' library(mgcv)
 #' data(pupil)
 #' pupil_fpca <- prepare_pupil_fpca(pupil)
 #'
 #' fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
 #'   s(seconds, by = use, k=30, bs = "cr") +
-#'   s(subject, by = Phi1, bs="re") +
-#'   s(subject, by = Phi2, bs="re")+
-#'   s(subject, by = Phi3, bs="re") +
-#'   s(subject, by = Phi4, bs="re"),
-#'   method = "fREML", data = ccds_fpca, discrete = TRUE)
+#'   s(id, by = Phi1, bs="re") +
+#'   s(id, by = Phi2, bs="re")+
+#'   s(id, by = Phi3, bs="re") +
+#'   s(id, by = Phi4, bs="re"),
+#'   method = "fREML", data = pupil_fpca, discrete = TRUE)
 #'
 #' pupil_cma <- SCB_functional_outcome(data = pupil_fpca, object = fosr_mod, method = "cma",
 #'                                    est_mean = TRUE, outcome = "percent_change",
 #'                                    time = "seconds", group_name = "use",
-#'                                    group_value = 1, subject = "subject")
+#'                                    group_value = 1, subject = "id")
 #' pupil_cma <- tibble::as_tibble(pupil_cma)
 #'
 #' plot_cs(pupil_cma,levels = c(-18, -20, -22, -24), x = pupil_cma$time,

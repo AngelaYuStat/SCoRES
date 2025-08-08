@@ -10,32 +10,32 @@ Authors@R:
     )
 Description: This package provides useful statistical tools for both the 
   estimation of the inverse set and the corresponding simultaneous outer and 
-  inner confidence sets.
-License: `use_mit_license()`
+  inner confidence sets. Acceptable forms of input includes both 1D and 2D data 
+  for linear regression, logistic regression, functional regression and spatial 
+  generalized least square regression. Useful functions are also provided for 
+  constructing simultaneous confidence bands (SCB) for these models.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
+URL: https://angelayustat.github.io/SCoRES
+BugReports: https://github.com/AngelaYuStat/SCoRES/issues
 Imports: 
     dplyr,
-    fields,
     forcats,
     ggplot2,
-    ggpubr,
-    graphics,
     grDevices,
-    magrittr,
-    maps,
-    MASS,
-    metR,
-    nlme,
     patchwork,
-    reshape,
-    stats,
-    tibble,
+    MASS,
     Matrix,
     matrixStats,
+    metR,
+    nlme,
+    stats,
     tidyr,
     refund,
+    reshape,
+    tibble
 Depends: 
     R (>= 3.5)
 LazyData: true

@@ -2,7 +2,7 @@
 % Please edit documentation in R/SCB_functional_outcome.R
 \name{SCB_functional_outcome}
 \alias{SCB_functional_outcome}
-\title{Construct Simultaneous Confidence Bands (SCB) For One Dimensional Functional Data Using Specified Methods}
+\title{Construct Simultaneous Confidence Bands (SCB) For One Dimensional Functional Data}
 \usage{
 SCB_functional_outcome(
   data_df,
@@ -104,6 +104,7 @@ This function builds simultaneous confidence bands through two distinct approach
 }
 \examples{
 # example using pupil data
+library(mgcv)
 data(pupil)
 pupil_fpca <- prepare_pupil_fpca(pupil)
 
@@ -122,12 +123,16 @@ results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod, method = "
 
 
 # multiplier bootstrap
-results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod, method = "multiplier", fitted = TRUE,
-                       est_mean = TRUE, outcome = "percent_change",
-                       time = "seconds", group_name = "use", group_value = 1, subject = "id")
-results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod, method = "multiplier", fitted = TRUE,
-                       est_mean = FALSE, outcome = "percent_change",
-                       time = "seconds", group_name = "use", group_value = 1, subject = "id")
+results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod,
+                                  method = "multiplier", fitted = TRUE,
+                                  est_mean = TRUE, outcome = "percent_change",
+                                  time = "seconds", group_name = "use",
+                                  group_value = 1, subject = "id")
+results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod,
+                                  method = "multiplier", fitted = TRUE,
+                                  est_mean = FALSE, outcome = "percent_change",
+                                  time = "seconds", group_name = "use",
+                                  group_value = 1, subject = "id")
 
 
 }

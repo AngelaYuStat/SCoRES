@@ -21,7 +21,7 @@ pre-specified subset of a real line $\mathbb{R}$ (e.g., \[*c*, ∞)).
 Proposed by Sommerfeld et al. (2018), Coverage Probability Excursion
 (CoPE) sets, defined as: CS<sub>in</sub>(*U*) ⊆ *μ*<sup>−1</sup>(*U*) ⊆ CS<sub>out</sub>(*U*)
 are used to assess the spatial uncertainty of the inverse set
-estimation
+estimation.
 
 Ren et al. (2023) generalized the estimation to dense and non-dense
 domains, and developed a fast and reliable construction method of
@@ -31,7 +31,9 @@ statistical tools for both the estimation of the inverse set and the
 corresponding simultaneous outer and inner confidence sets (CSs).
 Acceptable forms of input includes both 1D and 2D data for linear
 regression, logistic regression, functional regression and spatial
-generalized least square regression. More details can be found below.
+generalized least square regression. Useful functions are also provided
+for constructing simultaneous confidence bands (SCB) for these models.
+More details can be found below.
 
 ### Installation
 
@@ -65,6 +67,7 @@ several covariates, including age, gender, BMI, and alcohol consumption.
 
 ``` r
 library(SCoRES)
+library(mgcv)
 data(pupil)
 ```
 

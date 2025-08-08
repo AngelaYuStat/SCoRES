@@ -7,3 +7,5 @@ inst/doc
 /Meta/
 R/data_ccds.R
 data-raw/ccds_load.R
+data/ccds.rda
+_pkgdown.yml

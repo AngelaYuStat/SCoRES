@@ -2,7 +2,7 @@
 % Please edit documentation in R/climate_functions.R
 \name{SCB_gls_climate}
 \alias{SCB_gls_climate}
-\title{Construct Simultaneous Confidence Bands for a Generalized Least Square Model}
+\title{Construct Simultaneous Confidence Bands for a Spatial Generalized Least Square Model}
 \usage{
 SCB_gls_climate(
   Z,
@@ -66,7 +66,7 @@ A list containing the following components:
 }
 }
 \description{
-Construct Simultaneous Confidence Bands for a Generalized Least Square Model
+Construct Simultaneous Confidence Bands for a Spatial Generalized Least Square Model
 }
 \examples{
 data(climate_data)

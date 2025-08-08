@@ -1,4 +1,4 @@
-#' Construct Simultaneous Confidence Bands for a Generalized Least Square Model
+#' Construct Simultaneous Confidence Bands for a Spatial Generalized Least Square Model
 #'
 #' @param Z A list containing the spatial coordinates and the observations.
 #'  Should include the following components:
@@ -44,6 +44,7 @@
 #' @importFrom MASS lm.gls
 #' @importFrom nlme gls corMatrix
 #' @importFrom stats quantile formula sd
+#' @importFrom Matrix bdiag
 #'
 #' @export
 #'

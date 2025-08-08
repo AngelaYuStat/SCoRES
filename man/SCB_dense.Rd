@@ -43,21 +43,6 @@ If \code{SCB = FALSE}, returns:
 \description{
 Construct Simultaneous Confidence Bands (SCB) for Dense Functional Data
 }
-\examples{
-
-data(ccds)
-ccds_fpca <- prepare_ccds_fpca(ccds)
-
-Y_samples_use <- ccds_fpca$percent_change[ccds_fpca$use == 1]
-n_time <- 401
-n_subject_use <- length(Y_samples_use) / n_time
-# transform to matrix (T, N)
-Y_mat_use <- matrix(Y_samples_use, nrow = n_time, ncol = n_subject_use)
-# using sample mean for bootstrap
-Y_mat_use[is.na(Y_mat_use)] <- 0
-SCB_dense(A = Y_mat_use[-1,])
-
-}
 \keyword{#}
 \keyword{SCB_functional_outcome}
 \keyword{Used}

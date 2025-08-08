@@ -1,4 +1,4 @@
-#' Construct Simultaneous Confidence Bands (SCB) For One Dimensional Functional Data Using Specified Methods
+#' Construct Simultaneous Confidence Bands (SCB) For One Dimensional Functional Data
 #'
 #' This function builds simultaneous confidence bands through two distinct approaches..
 #'
@@ -64,12 +64,12 @@
 #'   \item{type}{A character description of the output type.}
 #'
 #'@importFrom tidyr pivot_wider
-#'@importFrom dplyr select mutate all_of
-#'@importFrom magrittr %>%
+#'@importFrom dplyr select mutate all_of %>%
 #'@importFrom refund fpca.face
 #'
 #' @examples
 #' # example using pupil data
+#' library(mgcv)
 #' data(pupil)
 #' pupil_fpca <- prepare_pupil_fpca(pupil)
 #'
@@ -88,12 +88,16 @@
 #'
 #'
 #' # multiplier bootstrap
-#' results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod, method = "multiplier", fitted = TRUE,
-#'                        est_mean = TRUE, outcome = "percent_change",
-#'                        time = "seconds", group_name = "use", group_value = 1, subject = "id")
-#' results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod, method = "multiplier", fitted = TRUE,
-#'                        est_mean = FALSE, outcome = "percent_change",
-#'                        time = "seconds", group_name = "use", group_value = 1, subject = "id")
+#' results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod,
+#'                                   method = "multiplier", fitted = TRUE,
+#'                                   est_mean = TRUE, outcome = "percent_change",
+#'                                   time = "seconds", group_name = "use",
+#'                                   group_value = 1, subject = "id")
+#' results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod,
+#'                                   method = "multiplier", fitted = TRUE,
+#'                                   est_mean = FALSE, outcome = "percent_change",
+#'                                   time = "seconds", group_name = "use",
+#'                                   group_value = 1, subject = "id")
 #'
 #'
 #' @export

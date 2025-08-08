@@ -127,7 +127,8 @@ SCB_linear_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0.0
 #'
 #' @param x A numeric input.
 #' @return Value between 0 and 1.
-#' @export
+#' @keywords internal
+#' # Used internally by SCB_logistic_outcome
 #'
 #' @examples
 #' expit(0)         # returns 0.5
@@ -135,7 +136,6 @@ SCB_linear_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0.0
 expit = function(x){
   1/(1+exp(-x))
 }
-
 
 #' Construct Simultaneous Confidence Bands for a Logistic Regression Model
 #'
@@ -255,6 +255,7 @@ SCB_logistic_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0
 #' @export
 #'
 #' @examples
+#' library(MASS)
 #' set.seed(262)
 #' M <- 50
 #' rho <- 0.4
@@ -268,7 +269,7 @@ SCB_logistic_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0
 #' names(df) <- paste0("x", 1:M)
 #' df$y <- as.vector(y)
 #' model <- "y ~ ."
-#' reults <- SCB_regression_coef(df, model)
+#' results <- SCB_regression_coef(df, model)
 #'
 SCB_regression_coef = function(df_fit, model, n_boot = 5000, alpha = 0.05, type = "linear"){
 

@@ -36,8 +36,12 @@
 #' }
 #'
 #' @importFrom stats formula model.frame vcov
+#' @importFrom dplyr %>% mutate
+#' @importFrom tibble as_tibble
+#' @importFrom stats predict
 #'
 #' @examples
+#' library(mgcv)
 #' data(pupil)
 #' pupil_fpca <- prepare_pupil_fpca(pupil)
 #'
@@ -191,6 +195,7 @@ mean_response_predict = function(data_df, object, fitted = TRUE, time, range = N
 #'
 #' @examples
 #' # example using pupil data
+#' library(mgcv)
 #' data(pupil)
 #' pupil_fpca <- prepare_pupil_fpca(pupil)
 #'
@@ -286,7 +291,7 @@ cma = function(data_df, object, fitted = TRUE, alpha = 0.05, time, range = NULL,
 
 }
 
-#' Prepare pupil FPCA Dataset
+#' Prepare Pupil FPCA Dataset
 #'
 #' Processes data by fitting a mean GAM model, extracting residuals, performing FPCA,
 #' and merging the results to create an enhanced dataset for functional regression analysis.
@@ -303,10 +308,11 @@ cma = function(data_df, object, fitted = TRUE, alpha = 0.05, time, range = NULL,
 #'   }
 #'
 #' @examples
+#' library(mgcv)
 #' data(pupil)
 #' processed_data <- prepare_pupil_fpca(pupil)
 #'
-#' @importFrom dplyr mutate filter select arrange left_join
+#' @importFrom dplyr mutate filter select arrange left_join %>%
 #' @importFrom tidyr pivot_wider
 #' @importFrom refund fpca.face
 #' @importFrom tibble as_tibble
@@ -315,7 +321,7 @@ cma = function(data_df, object, fitted = TRUE, alpha = 0.05, time, range = NULL,
 prepare_pupil_fpca <- function(input_data, k_mean = 30, k_fpca = 15) {
 
   # Fit mean model
-  mean_mod <- gam(
+  mean_mod <- mgcv::gam(
     percent_change ~ s(seconds, k = k_mean, bs = "cr") +
       s(seconds, by = use, k = k_mean, bs = "cr") +
       s(seconds, by = age, k = k_mean, bs = "cr") +

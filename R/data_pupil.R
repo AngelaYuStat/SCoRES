@@ -1,4 +1,4 @@
-#' Trajectories of pupil response to light after cannabis use
+#' Trajectories of Pupil Response to Light after Cannabis Use
 #'
 #' Dataset contains functional observation of pupil size percent change after a light stimulus.
 #' Participants in the cannabis use group smoked cannabis flower or concentrate 40 minutes prior to the pupillometry measurement.
