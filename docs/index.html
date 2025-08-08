@@ -84,7 +84,7 @@
 <h3 id="how-to-use-it">How to use it<a class="anchor" aria-label="anchor" href="#how-to-use-it"></a>
 </h3>
 <hr>
-<p>The example here is to use ccds functional data to construct the inverse confidence sets (CS) from simultaneous confidence bands (SCB) using Function-on-Scalar Regression (FoSR).</p>
+<p>The example here is to use ccds functional data to construct the simultaneous outer and inner confidence sets (CSs) from simultaneous confidence bands (SCB) using Function-on-Scalar Regression (FoSR).</p>
 <p>The pupil dataset contains repeated measures of percent change over time for multiple subjects under two user categories (use: 1 and no use: 0). It contains both user and non-user groups, multiple time points, and several covariates, including age, gender, BMI, and alcohol consumption.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://angelayustat.github.io/SCoRES">SCoRES</a></span><span class="op">)</span></span>
@@ -129,7 +129,7 @@ Y_i(t) = \beta_0(t) + \beta_1(t) X_{i1} + b_i(t) + \epsilon_i(t),
 <span>                                          group_name <span class="op">=</span> <span class="st">"use"</span>, </span>
 <span>                                          group_value <span class="op">=</span> <span class="fl">1</span>, </span>
 <span>                                          subject <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span></code></pre></div>
-<p>The code below visualizes the <strong>inverse confidence sets (CSs)</strong> derived from SCB results using the <code><a href="reference/plot_cs.html">SCoRES::plot_cs()</a></code> function. The <code>results</code> object is first converted to a tibble for easier manipulation.</p>
+<p>The code below visualizes the <strong>simultaneous outer and inner confidence sets (CSs)</strong> derived from SCB results using the <code><a href="reference/plot_cs.html">SCoRES::plot_cs()</a></code> function. The <code>results</code> object is first converted to a tibble for easier manipulation.</p>
 <p>The <code>levels = c(-18, -20, -22, -24)</code> argument specifies a set of thresholds, and <code><a href="reference/plot_cs.html">SCoRES::plot_cs()</a></code> function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse set, the inner confidence set, and the outer confidence set.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_pupil_cma</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results_pupil_cma</span><span class="op">)</span></span>

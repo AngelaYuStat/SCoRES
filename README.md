@@ -56,9 +56,9 @@ devtools::install_github("AngelaYuStat/SCoRES")
 
 ------------------------------------------------------------------------
 
-The example here is to use ccds functional data to construct the inverse
-confidence sets (CS) from simultaneous confidence bands (SCB) using
-Function-on-Scalar Regression (FoSR).
+The example here is to use ccds functional data to construct the
+simultaneous outer and inner confidence sets (CSs) from simultaneous
+confidence bands (SCB) using Function-on-Scalar Regression (FoSR).
 
 The pupil dataset contains repeated measures of percent change over time
 for multiple subjects under two user categories (use: 1 and no use: 0).
@@ -141,9 +141,10 @@ results_pupil_cma <- SCoRES::SCB_functional_outcome(
                                           subject = "id")
 ```
 
-The code below visualizes the **inverse confidence sets (CSs)** derived
-from SCB results using the `SCoRES::plot_cs()` function. The `results`
-object is first converted to a tibble for easier manipulation.
+The code below visualizes the **simultaneous outer and inner confidence
+sets (CSs)** derived from SCB results using the `SCoRES::plot_cs()`
+function. The `results` object is first converted to a tibble for easier
+manipulation.
 
 The `levels = c(-18, -20, -22, -24)` argument specifies a set of
 thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse
@@ -164,6 +165,7 @@ plot_cs(results_pupil_cma,
         palette = "Spectral", 
         color_level_label = "black")
 ```
+
 ![](man/figures/pupil_plot_cs_cma-1.png)<!-- -->
 
 The plot demonstrate how to use SCB to find regions of s where the
