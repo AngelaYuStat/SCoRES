@@ -87,6 +87,8 @@ Dimensions of <code>scb_up</code> and <code>scb_low</code> must match.</p></dd>
 <dt id="arg-levels">levels<a class="anchor" aria-label="anchor" href="#arg-levels"></a></dt>
 <dd><p>A numeric vector or list of scalers for different levels or matrix containing interval sets to construct the confidence sets.
 If <code>type</code> = "upper", "lower", or "two-sided", <code>levels</code> should be a vector.
+"upper" represents upper excursion sets, and "lower" represents lower excursion sets.
+If "two-sided" option is chosen, will estimate only outer CSs for both upper and lower excursion sets.
 If <code>type = "interval"</code>, then <code>levels</code> should be a <code>list</code> with two named elements:
 <code>low</code> and <code>up</code>, corresponding to the bounds of the interval <code>[low, up]</code>.</p></dd>
 
@@ -118,7 +120,7 @@ Notice that <code>"two-sided"</code> type is not available for plotting (<code>r
 
 
 <dt id="arg-return-contain-only">return_contain_only<a class="anchor" aria-label="anchor" href="#arg-return-contain-only"></a></dt>
-<dd><p>Logical. If <code>TRUE</code>, only return a matrix/logical map indicating whether the level set is contained.</p></dd>
+<dd><p>Logical. If <code>TRUE</code>, only return a matrix/logical map indicating which point is contained within two types of CSs across all levels.</p></dd>
 
 
 <dt id="arg-return-plot">return_plot<a class="anchor" aria-label="anchor" href="#arg-return-plot"></a></dt>
@@ -139,10 +141,10 @@ Notice that <code>"two-sided"</code> type is not available for plotting (<code>r
 <dd><p>A vector (or list) of threshold levels used to define the confidence sets. Same as the input <code>levels</code>.</p></dd>
 
 <dt>U_in</dt>
-<dd><p>(Optional) A list of logical matrices indicating whether each point is within the conservative inner confidence set for each level. Returned only when <code>return_contain_only = FALSE</code> and <code>type != "two-sided"</code>.</p></dd>
+<dd><p>(Optional) A list of logical matrices indicating whether each point is within the simultaneous inner confidence set for each level. Returned only when <code>return_contain_only = FALSE</code> and <code>type != "two-sided"</code>.</p></dd>
 
 <dt>U_out</dt>
-<dd><p>(Optional) A list of logical matrices indicating whether each point is within the liberal outer confidence set for each level. Returned only when <code>return_contain_only = FALSE</code> and <code>type != "two-sided"</code>.</p></dd>
+<dd><p>(Optional) A list of logical matrices indicating whether each point is within the simultaneous outer confidence set for each level. Returned only when <code>return_contain_only = FALSE</code> and <code>type != "two-sided"</code>.</p></dd>
 
 <dt>L_out</dt>
 <dd><p>(Two-sided only) A list of logical matrices indicating lower bound containment (for <code>type = "two-sided"</code>).</p></dd>
@@ -151,13 +153,13 @@ Notice that <code>"two-sided"</code> type is not available for plotting (<code>r
 <dd><p>(Two-sided only) A list of logical matrices indicating upper bound containment (for <code>type = "two-sided"</code>).</p></dd>
 
 <dt>contain_individual</dt>
-<dd><p>A logical vector indicating whether the true mean is fully contained within each level's confidence set. Returned only if <code>true_mean</code> is provided.</p></dd>
+<dd><p>A logical vector indicating whether the true mean is fully contained within each level's simultaneous inner and outer CSs. Returned only if <code>true_mean</code> is provided.</p></dd>
 
 <dt>contain_all</dt>
-<dd><p>A single logical value indicating whether the true mean is contained in all levels' confidence sets.</p></dd>
+<dd><p>A single logical value indicating whether the true mean is contained in all levels' simultaneous inner and outer CSs. Returned only if <code>true_mean</code> is provided.</p></dd>
 
 <dt>plot_cs</dt>
-<dd><p>(Optional) A list of ggplot2 objects for visualizing the confidence sets, returned when <code>return_plot = TRUE</code>. Includes both a combined plot and individual plots per level.</p></dd>
+<dd><p>(Optional) A list of ggplot2 objects for visualizing the SCBs and simultaneous CSs across all levels, returned when <code>return_plot = TRUE</code>. Includes both a combined plot and individual plots per level.</p></dd>
 
 
 </dl></div>

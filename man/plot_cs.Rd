@@ -29,6 +29,7 @@ Dimensions of \code{SCB$scb_up} and \code{SCB$scb_low} must match.}
 
 \item{levels}{A numeric vector or list of scalers for different levels or matrix containing interval sets to construct the confidence sets.
 If \code{type} = "upper" or "lower", \code{levels} should be a vector.
+"upper" represents upper excursion sets, and "lower" represents lower excursion sets.
 If \code{type = "interval"}, then \code{levels} should be a \code{list} with two named elements:
 \code{low} and \code{up}, corresponding to the bounds of the interval \code{[low, up]}.}
 
@@ -58,7 +59,8 @@ An input must be provided for either \code{mu_hat} or \code{mu_true}.}
 \item{color_level_label}{Optional character value for the color used for contour level labels. Default is \code{"black"}.}
 }
 \value{
-A \code{ggplot2} object representing the inversion of simultaneous confidence intervals.
+A \code{ggplot2} object that includes both simultaneous confidence intervals
+and simultaneous confidence sets of excursion sets corresponding to levels assigned.
 }
 \description{
 Visualizes simultaneous confidence sets of upper and lower excursion sets for discrete, 1D or 2D data, using contour or band plots.

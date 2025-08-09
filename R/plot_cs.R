@@ -9,6 +9,7 @@
 #'            Dimensions of `SCB$scb_up` and `SCB$scb_low` must match.
 #' @param levels A numeric vector or list of scalers for different levels or matrix containing interval sets to construct the confidence sets.
 #'               If \code{type} = "upper" or "lower", `levels` should be a vector.
+#'               "upper" represents upper excursion sets, and "lower" represents lower excursion sets.
 #'               If \code{type = "interval"}, then \code{levels} should be a \code{list} with two named elements:
 #'               \code{low} and \code{up}, corresponding to the bounds of the interval \code{[low, up]}.
 #' @param type A character specifying the type of inverse sets to fit. Choices are `"upper"`, `"lower"` or `"interval"`. Default is `"upper"`.
@@ -25,7 +26,8 @@
 #' @param palette Optional character value for the name of the HCL color palette to use when plotting multiple levels together. Default is `"gray"`.
 #' @param color_level_label Optional character value for the color used for contour level labels. Default is `"black"`.
 #'
-#' @returns A \code{ggplot2} object representing the inversion of simultaneous confidence intervals.
+#' @returns A \code{ggplot2} object that includes both simultaneous confidence intervals
+#' and simultaneous confidence sets of excursion sets corresponding to levels assigned.
 #'
 #' @importFrom metR geom_text_contour
 #' @import ggplot2

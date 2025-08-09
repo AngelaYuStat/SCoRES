@@ -10,6 +10,8 @@
 #'                Dimensions of `scb_up` and `scb_low` must match.
 #' @param levels A numeric vector or list of scalers for different levels or matrix containing interval sets to construct the confidence sets.
 #'               If \code{type} = "upper", "lower", or "two-sided", `levels` should be a vector.
+#'               "upper" represents upper excursion sets, and "lower" represents lower excursion sets.
+#'               If "two-sided" option is chosen, will estimate only outer CSs for both upper and lower excursion sets.
 #'               If \code{type = "interval"}, then \code{levels} should be a \code{list} with two named elements:
 #'               \code{low} and \code{up}, corresponding to the bounds of the interval \code{[low, up]}.
 #' @param true_mean Optional matrix of the true mean function.
@@ -23,7 +25,7 @@
 #' @param type A character string specifying the type of inverse set to construct if levels are not a matrix.
 #'             Choices are `"upper"`, `"lower"`, `"two-sided"` or `"interval"`.
 #'             Notice that `"two-sided"` type is not available for plotting (\code{return_plot = TRUE}).
-#' @param return_contain_only Logical. If `TRUE`, only return a matrix/logical map indicating whether the level set is contained.
+#' @param return_contain_only Logical. If `TRUE`, only return a matrix/logical map indicating which point is contained within two types of CSs across all levels.
 #' @param return_plot Logical. If `TRUE`, return a ggplot object for visualizing the inner and outer confidence sets (CSs).
 #' @param xlab A character for the name of the x axis used for plotting the inner and outer confidence sets (CSs). Default is NULL.
 #' @param ylab A character for the name of the y axis used for plotting the inner and outer confidence sets (CSs). Default is NULL.
@@ -31,13 +33,13 @@
 #' @return A list containing the following components:
 #' \describe{
 #'   \item{levels}{A vector (or list) of threshold levels used to define the confidence sets. Same as the input `levels`.}
-#'   \item{U_in}{(Optional) A list of logical matrices indicating whether each point is within the conservative inner confidence set for each level. Returned only when \code{return_contain_only = FALSE} and \code{type != "two-sided"}.}
-#'   \item{U_out}{(Optional) A list of logical matrices indicating whether each point is within the liberal outer confidence set for each level. Returned only when \code{return_contain_only = FALSE} and \code{type != "two-sided"}.}
+#'   \item{U_in}{(Optional) A list of logical matrices indicating whether each point is within the simultaneous inner confidence set for each level. Returned only when \code{return_contain_only = FALSE} and \code{type != "two-sided"}.}
+#'   \item{U_out}{(Optional) A list of logical matrices indicating whether each point is within the simultaneous outer confidence set for each level. Returned only when \code{return_contain_only = FALSE} and \code{type != "two-sided"}.}
 #'   \item{L_out}{(Two-sided only) A list of logical matrices indicating lower bound containment (for \code{type = "two-sided"}).}
 #'   \item{U_out}{(Two-sided only) A list of logical matrices indicating upper bound containment (for \code{type = "two-sided"}).}
-#'   \item{contain_individual}{A logical vector indicating whether the true mean is fully contained within each level's confidence set. Returned only if \code{true_mean} is provided.}
-#'   \item{contain_all}{A single logical value indicating whether the true mean is contained in all levels' confidence sets.}
-#'   \item{plot_cs}{(Optional) A list of ggplot2 objects for visualizing the confidence sets, returned when \code{return_plot = TRUE}. Includes both a combined plot and individual plots per level.}
+#'   \item{contain_individual}{A logical vector indicating whether the true mean is fully contained within each level's simultaneous inner and outer CSs. Returned only if \code{true_mean} is provided.}
+#'   \item{contain_all}{A single logical value indicating whether the true mean is contained in all levels' simultaneous inner and outer CSs. Returned only if \code{true_mean} is provided.}
+#'   \item{plot_cs}{(Optional) A list of ggplot2 objects for visualizing the SCBs and simultaneous CSs across all levels, returned when \code{return_plot = TRUE}. Includes both a combined plot and individual plots per level.}
 #' }
 #'
 #' @export
@@ -103,8 +105,9 @@ scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL, est_mean = NULL,
 
   if(!is.logical(return_contain_only)) stop("`return_contain_only` must be logical.")
   if(!is.logical(return_plot)) stop("`return_plot` must be logical.")
+  if(return_plot && type == "two-sided") stop("Current function doesn't support plotting for `two-sided`.")
 
-  if(return_plot){
+  if(return_plot && type != "two-sided"){
     p_para <- list(xlab = xlab, ylab = ylab)
     if(is.null(true_mean)){
       pl_together = plot_cs(SCB = list(scb_up = scb_up, scb_low = scb_low),
