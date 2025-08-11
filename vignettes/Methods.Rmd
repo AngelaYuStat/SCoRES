@@ -71,6 +71,7 @@ $$
 $$
 \text{CS}_{\text{out}}[a, b] := \hat{B}_u^{-1}[a, \infty) \cap \hat{B}_\ell^{-1}(-\infty, b]
 $$
+
 ## Linear Function-on-Scalar Regression (FoSR)
 
 A simple example for function-on-scalar regression model is

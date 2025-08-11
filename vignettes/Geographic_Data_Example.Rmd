@@ -1,5 +1,5 @@
 ---
-title: "Geographic_Data_Examples"
+title: "Geographic_Data_Example"
 author: "Angela Yu"
 date: "`r Sys.Date()`"
 output: 
@@ -8,7 +8,7 @@ output:
     toc_depth: 2
     number_sections: true
 vignette: >
-  %\VignetteIndexEntry{Geographic_Data_Examples}
+  %\VignetteIndexEntry{Geographic_Data_Example}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 

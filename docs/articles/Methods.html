@@ -35,7 +35,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/Functional_Data_Example.html">Functional_Data_Example</a></li>
-    <li><a class="dropdown-item" href="../articles/Geographic_Data_Examples.html">Geographic_Data_Examples</a></li>
+    <li><a class="dropdown-item" href="../articles/Geographic_Data_Example.html">Geographic_Data_Example</a></li>
     <li><a class="dropdown-item" href="../articles/Linear_Model_Example.html">Linear_Model_Example</a></li>
     <li><a class="dropdown-item" href="../articles/Methods.html">Methods</a></li>
   </ul>
@@ -62,7 +62,7 @@
       <h1>Methods</h1>
                         <h4 data-toc-skip class="author">Angela Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-08-08</h4>
+            <h4 data-toc-skip class="date">2025-08-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Methods.Rmd" class="external-link"><code>vignettes/Methods.Rmd</code></a></small>
       <div class="d-none name"><code>Methods.Rmd</code></div>
@@ -174,8 +174,11 @@ are defined as:</p>
 </annotation></semantics></math></p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CS</mtext><mtext mathvariant="normal">out</mtext></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">[</mo><mi>a</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo><mo>∩</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mo>ℓ</mo><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
 \text{CS}_{\text{out}}[a, b] := \hat{B}_u^{-1}[a, \infty) \cap \hat{B}_\ell^{-1}(-\infty, b]
-</annotation></semantics></math> ## Linear Function-on-Scalar Regression
-(FoSR)</p>
+</annotation></semantics></math></p>
+</div>
+<div class="section level2">
+<h2 id="linear-function-on-scalar-regression-fosr">Linear Function-on-Scalar Regression (FoSR)<a class="anchor" aria-label="anchor" href="#linear-function-on-scalar-regression-fosr"></a>
+</h2>
 <p>A simple example for function-on-scalar regression model is</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><msub><mi>X</mi><mrow><mi>i</mi><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>b</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>ϵ</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
 Y_i(t) = \beta_0(t) + \beta_1(t) X_{i1} + b_i(t) + \epsilon_i(t),
