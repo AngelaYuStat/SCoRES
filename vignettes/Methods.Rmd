@@ -15,7 +15,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-## Definition of Inverse Set and Introduction of the Estimating Method
+## Definition of Inverse Set and Introduction of the Estimation Method
 The identification of domain sets whose outcomes belong to predefined subsets can address fundamental risk assessment challenges in climatology and medicine. A  motivating example involves estimating geographical regions where average  difference between summer and winter temperatures exceed a certain benchmark,  which help policymakers focus on specific areas that are at higher risk for  effects of climate change.  
 
 Mathematically, the target region correspond to the inverse image of $U \subset  \mathbb{R}$ under an unknown function $\mu: \mathcal{S} \to \mathbb{R}$, can be defined as 
