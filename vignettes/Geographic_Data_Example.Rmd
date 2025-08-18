@@ -39,10 +39,10 @@ data(climate_data)
 start_time <- Sys.time()
 
 # construct confidence sets for the increase of the mean temperature (June-August) in North America between the 20th and 21st centuries
-temp = SCB_gls_climate(Z = climate_data$Z, 
+temp = SCB_gls_climate(sp_list = climate_data$Z, 
                        level = 2, 
-                       X = climate_data$X,
-                       w = c(1,0,0,0), 
+                       data_fit = climate_data$X,
+                       subset = c("X1 = 1"),
                        correlation = climate_data$correlation,
                        mask = climate_data$mask, 
                        alpha = 0.1)
@@ -52,9 +52,8 @@ time_taken <- end_time - start_time
 print(time_taken)
 ```
 
-Heat maps show the estimate of the mean temperature difference. The first row displays the contours of the outer confidence sets, estimated inverse set, and the inner confidence sets, for various levels. The three plots in the second row display the confidence sets for the inverse sets, where the estimated mean difference is greater or equal to the individual level 1.5, 2.0, or 2.5 respectively. In the second
- row, the blue line is the contour of the outer confidence set, the green line is the contour of the estimated inverse set and
- the red line is the contour of the inner confidence set.
+Heat maps show the estimate of the mean temperature difference. The first row displays the contours of the outer confidence region, estimated inverse region, and the inner confidence region, for various levels. The three plots in the second row display the confidence region for the inverse sets, where the estimated mean difference is greater or equal to the individual level 1.5, 2.0, or 2.5 respectively. In the second
+ row, the blue line is the contour of the outer confidence region, the green line is the contour of the estimated inverse region and the red line is the contour of the inner confidence region.
  
 ```{r climate_data-plot_cs}
 par(mfrow = c(2, 3), mar = c(3, 3, 2, 1)) 

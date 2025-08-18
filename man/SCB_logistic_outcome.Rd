@@ -4,14 +4,37 @@
 \alias{SCB_logistic_outcome}
 \title{Construct Simultaneous Confidence Bands for a Logistic Regression Model}
 \usage{
-SCB_logistic_outcome(df_fit, model, grid_df, n_boot = 1000, alpha = 0.05)
+SCB_logistic_outcome(
+  df_fit,
+  model,
+  grid_df,
+  fitted = TRUE,
+  n_boot = 1000,
+  alpha = 0.05
+)
 }
 \arguments{
 \item{df_fit}{A data frame containing the training design matrix used to fit the logistic model.}
 
 \item{model}{A character string representing the formula for the logistic model (e.g., \code{"y ~ x1 + x2"}).}
 
-\item{grid_df}{A data frame containing the test set design matrix at which to evaluate the predictions and construct confidence bands.}
+\item{grid_df}{A data frame specifying the covariate settings that define the
+mean outcome for which simultaneous confidence bands (SCB) are constructed.
+Each row represents one covariate combination at which predictions and
+SCBs are evaluated. Column names should match variables in the fitted model,
+but \code{grid_df} may include only the subset of covariates of interest for the SCB
+(it is not required to cover all model variables). Default is \code{NULL}, which
+constructs the SCB only for the intercept term.}
+
+\item{fitted}{Logical. Whether to estimate the simultaneous confidence bands
+for fitted mean outcome or linear combination of fitted regression coefficients.
+\itemize{
+\item \code{TRUE} - Estimate the simultaneous confidence bands
+for fitted mean outcome.
+\item \code{FALSE} - estimate the simultaneous confidence bands
+for fitted regression coefficient.
+}
+Default is \code{TRUE}.}
 
 \item{n_boot}{Number of bootstrap samples used in the non-parametric bootstrap procedure to generate the empirical distribution. Default is 1000.}
 

@@ -9,56 +9,66 @@ cma(
   object,
   fitted = TRUE,
   alpha = 0.05,
-  time,
-  range = NULL,
-  group_name = NULL,
-  group_value = NULL,
-  subject = NULL,
+  outcome,
+  domain,
+  subset = NULL,
+  id,
   nboot = NULL
 )
 }
 \arguments{
-\item{data_df}{A functional data frame.
-The input data must have column names, and should contain the functional outcome, time and subject}
+\item{data_df}{A functional data frame that contain both name and values for
+variables including functional outcome, domain (e.g. time) and ID (e.g. subject names).}
 
-\item{object}{A fitted Function-on-Scalar Regression (FoSR) object (e.g., from mgcv::bam()/mgcv::gam()).}
+\item{object}{A fitted Function-on-Scalar Regression (FoSR) object
+(e.g., from mgcv::bam()/mgcv::gam()).}
 
-\item{fitted}{Logical. Whether to estimate the simultaneous confidence bands for fitted mean function or fitted parameter function
+\item{fitted}{Logical. Whether to estimate the simultaneous confidence bands
+for fitted mean function or fitted parameter function
 \itemize{
-\item \code{TRUE} - Estimate the simultaneous confidence bands for fitted mean outcome function.
-\item \code{FALSE} - estimate the simultaneous confidence bands for fitted parameter function.
+\item \code{TRUE} - Estimate the simultaneous confidence bands
+for fitted mean outcome function.
+\item \code{FALSE} - estimate the simultaneous confidence bands
+for fitted parameter function.
 }
 Default is \code{TRUE}.}
 
 \item{alpha}{Significance level for SCB. Default is 0.05.}
 
-\item{time}{A character string specifying the name of the time variable used in the model.}
+\item{outcome}{A character string specifying the name of the outcome variable
+used in the model.}
 
-\item{range}{A numeric vector specifying the range or grid of time points interested. Defaut is the whole time points from the fitted model.}
+\item{domain}{A character string specifying the name of the domain variable
+(e.g. time) used in the model.}
 
-\item{group_name}{A character vector that specifies the names of grouping scalar variables to analyze.
+\item{subset}{An atomic character vector (e.g., c("user = 1", "age = 30"))
+specified the target function for constructing the SCB.
+Each element must be of the form \if{html}{\out{<name>}} = \if{html}{\out{<value>}}, where \if{html}{\out{<name>}} is the name
+of a scalar grouping variable and \if{html}{\out{<value>}} is the desired value.
+Whitespace is ignored. Binary or categorical character variable should be
+transformed into numeric. Factor is not allowed here because if the input
+data contains factor variables, they will be automatically expanded into
+dummy (indicator) variables when constructing the design matrix, and
+the resulting variable names may differ from the original factor names.
 Default is \code{NULL}, representing the reference group.}
 
-\item{group_value}{A numeric vector that specifies the corresponding values of the variables listed in \code{group_name}.
-Each entry in \code{group_value} should match the respective variable in \code{group_name}.
-Character/factor is not allowed.
-Default is \code{NULL}, representing the reference group.}
+\item{id}{A character string specifying the name of the ID variable.}
 
-\item{subject}{A optional character string specifying the name of the subject-level random effect variable, if included in model fitting.}
-
-\item{nboot}{An integer specifying the number of bootstrap samples used to construct the confidence bands. Default is 10,000.}
+\item{nboot}{An integer specifying the number of bootstrap samples used to
+construct the confidence bands. Default is 10,000.}
 }
 \value{
 A list containing:
-\item{yhat}{Estimated mean function for the group of interest.}
-\item{time}{The time points used.}
+\item{mu_hat}{Estimated mean function for the group of interest.}
+\item{domain}{The domain used.}
 \item{se_hat}{Standard errors of the estimated means.}
 \item{scb_low}{Lower bound of the simultaneous confidence band.}
 \item{scb_up}{Upper bound of the simultaneous confidence band.}
 \item{type}{A character description of the output type.}
 }
 \description{
-This function computes Correlation and Multiplicity Adjusted (CMA) confidence bands for a specified group in a functional outcome regression model
+This function computes Correlation and Multiplicity Adjusted (CMA) confidence bands
+for a specified group in a functional outcome regression model
 using parameter simulations approach with Gaussian multiplier bootstrap.
 }
 \examples{
@@ -75,10 +85,10 @@ fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
   s(id, by = Phi4, bs="re"),
   method = "fREML", data = pupil_fpca, discrete = TRUE)
 
-results <- cma(pupil_fpca, fosr_mod, fitted = TRUE, time = "seconds",
-group_name = "use", group_value = 1, subject = "id")
+results <- cma(pupil_fpca, fosr_mod, fitted = TRUE, outcome = "percent_change",
+               domain = "seconds", subset = c("use = 1"), id = "id")
 
-results <- cma(pupil_fpca, fosr_mod, fitted = FALSE, time = "seconds",
-group_name = "use", group_value = 1, subject = "id")
+results <- cma(pupil_fpca, fosr_mod, fitted = FALSE, outcome = "percent_change",
+               domain = "seconds", subset = c("use = 1"), id = "id")
 
 }

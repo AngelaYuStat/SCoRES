@@ -18,10 +18,10 @@
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/SCoRES.html">Get started</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Functional_Data_Example.html">Functional_Data_Example</a></li>
-    <li><a class="dropdown-item" href="../articles/Geographic_Data_Examples.html">Geographic_Data_Examples</a></li>
-    <li><a class="dropdown-item" href="../articles/Linear_Model_Example.html">Linear_Model_Example</a></li>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-vignettes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Vignettes</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes"><li><a class="dropdown-item" href="../articles/Functional_Data_Example.html">Functional Data Example</a></li>
+    <li><a class="dropdown-item" href="../articles/Geographic_Data_Example.html">Geographic Data Example</a></li>
+    <li><a class="dropdown-item" href="../articles/Linear_Model_Example.html">Linear Model Example</a></li>
     <li><a class="dropdown-item" href="../articles/Methods.html">Methods</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -50,11 +50,10 @@
 <span>  <span class="va">data_df</span>,</span>
 <span>  <span class="va">object</span>,</span>
 <span>  fitted <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  <span class="va">time</span>,</span>
-<span>  range <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">group_name</span>,</span>
-<span>  <span class="va">group_value</span>,</span>
-<span>  subject <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  <span class="va">outcome</span>,</span>
+<span>  <span class="va">domain</span>,</span>
+<span>  subset <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">id</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -63,48 +62,55 @@
 
 
 <dl><dt id="arg-data-df">data_df<a class="anchor" aria-label="anchor" href="#arg-data-df"></a></dt>
-<dd><p>A functional data frame.
-The input data must have column names, and should contain the functional outcome, time and subject</p></dd>
+<dd><p>A functional data frame that contain both name and values for
+variables including functional outcome, domain (e.g. time) and ID (e.g. subject names).</p></dd>
 
 
 <dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
-<dd><p>A fitted Function-on-Scalar Regression (FoSR) model object (e.g., from mgcv::bam()/mgcv::gam()).</p></dd>
+<dd><p>A fitted Function-on-Scalar Regression (FoSR) model object
+(e.g., from mgcv::bam()/mgcv::gam()).</p></dd>
 
 
 <dt id="arg-fitted">fitted<a class="anchor" aria-label="anchor" href="#arg-fitted"></a></dt>
-<dd><p>Logical. Whether to estimate the simultaneous confidence bands for fitted mean function or fitted parameter function</p><ul><li><p><code>TRUE</code> - Estimate the simultaneous confidence bands for fitted mean outcome function.</p></li>
-<li><p><code>FALSE</code> - estimate the simultaneous confidence bands for fitted parameter function.</p></li>
+<dd><p>Logical. Whether to estimate the simultaneous confidence bands
+for fitted mean function or fitted parameter function</p><ul><li><p><code>TRUE</code> - Estimate the simultaneous confidence bands
+for fitted mean outcome function.</p></li>
+<li><p><code>FALSE</code> - estimate the simultaneous confidence bands
+for fitted parameter function.</p></li>
 </ul><p>Default is <code>TRUE</code>.</p></dd>
 
 
-<dt id="arg-time">time<a class="anchor" aria-label="anchor" href="#arg-time"></a></dt>
-<dd><p>A character string specifying the name of the time variable used in the model.</p></dd>
+<dt id="arg-outcome">outcome<a class="anchor" aria-label="anchor" href="#arg-outcome"></a></dt>
+<dd><p>A character string specifying the name of the outcome variable
+used in the model.</p></dd>
 
 
-<dt id="arg-range">range<a class="anchor" aria-label="anchor" href="#arg-range"></a></dt>
-<dd><p>A numeric vector specifying the range or grid of time points interested. Defaut is the whole time points from the fitted model.</p></dd>
+<dt id="arg-domain">domain<a class="anchor" aria-label="anchor" href="#arg-domain"></a></dt>
+<dd><p>A character string specifying the name of the domain variable
+(e.g. time) used in the model.</p></dd>
 
 
-<dt id="arg-group-name">group_name<a class="anchor" aria-label="anchor" href="#arg-group-name"></a></dt>
-<dd><p>A character vector that specifies the names of grouping scalar variables to analyze.
-Default is <code>NULL</code>, representing the reference group.</p></dd>
+<dt id="arg-subset">subset<a class="anchor" aria-label="anchor" href="#arg-subset"></a></dt>
+<dd><p>An atomic character vector (e.g., c("user = 1", "age = 30"))
+specified the target function for constructing the SCB.
+Each element must be of the form <name> = <value>, where <name> is the name
+of a scalar grouping variable and <value> is the desired value.
+Whitespace is ignored. Binary or categorical character variable should be
+transformed into numeric. Factor is not allowed here because if the input
+data contains factor variables, they will be automatically expanded into
+dummy (indicator) variables when constructing the design matrix, and
+the resulting variable names may differ from the original factor names.
+Default is <code>NULL</code>, representing the reference group.</value></name></value></name></p></dd>
 
 
-<dt id="arg-group-value">group_value<a class="anchor" aria-label="anchor" href="#arg-group-value"></a></dt>
-<dd><p>A numeric vector that specifies the corresponding values of the variables listed in <code>group_name</code>.
-Each entry in <code>group_value</code> should match the respective variable in <code>group_name</code>.
-Character/factor is not allowed.
-Default is <code>NULL</code>, representing the reference group.</p></dd>
-
-
-<dt id="arg-subject">subject<a class="anchor" aria-label="anchor" href="#arg-subject"></a></dt>
-<dd><p>A optional character string specifying the name of the subject-level random effect variable, if included in model fitting.</p></dd>
+<dt id="arg-id">id<a class="anchor" aria-label="anchor" href="#arg-id"></a></dt>
+<dd><p>A character string specifying the name of the ID variable.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list containing the following elements:</p><dl><dt>s_pred</dt>
-<dd><p>Numeric vector of sorted unique time points used for prediction</p></dd>
+<dd><p>Numeric vector of sorted unique domain used for prediction</p></dd>
 
 <dt>pred_df</dt>
 <dd><p>Data frame with prediction results, containing:</p><ul><li><p><code>mean</code>: Predicted mean values</p></li>
@@ -112,13 +118,15 @@ Default is <code>NULL</code>, representing the reference group.</p></dd>
 </ul></dd>
 
 <dt>lpmat</dt>
-<dd><p>Linear predictor matrix (design matrix) used for confidence interval calculations</p></dd>
+<dd><p>Linear predictor matrix (design matrix)
+used for confidence interval calculations</p></dd>
 
 <dt>mod_coef</dt>
 <dd><p>Vector of model coefficients for selected group</p></dd>
 
 <dt>mod_cov</dt>
-<dd><p>Variance-covariance matrix corresponding to the selected group coefficients</p></dd>
+<dd><p>Variance-covariance matrix corresponding to
+the selected group coefficients</p></dd>
 
 
 </dl></div>
@@ -137,11 +145,11 @@ Default is <code>NULL</code>, representing the reference group.</p></dd>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi4</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  method <span class="op">=</span> <span class="st">"fREML"</span>, data <span class="op">=</span> <span class="va">pupil_fpca</span>, discrete <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">mean_response_predict</span><span class="op">(</span><span class="va">pupil_fpca</span>, <span class="va">fosr_mod</span>, fitted <span class="op">=</span> <span class="cn">TRUE</span>, time <span class="op">=</span> <span class="st">"seconds"</span>,</span></span>
-<span class="r-in"><span>group_name <span class="op">=</span> <span class="st">"use"</span>, group_value <span class="op">=</span> <span class="fl">1</span>, subject <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">mean_response_predict</span><span class="op">(</span><span class="va">pupil_fpca</span>, <span class="va">fosr_mod</span>, fitted <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>outcome <span class="op">=</span> <span class="st">"percent_change"</span>, domain <span class="op">=</span> <span class="st">"seconds"</span>, subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"use = 1"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">mean_response_predict</span><span class="op">(</span><span class="va">pupil_fpca</span>, <span class="va">fosr_mod</span>, fitted <span class="op">=</span> <span class="cn">FALSE</span>, time <span class="op">=</span> <span class="st">"seconds"</span>,</span></span>
-<span class="r-in"><span>group_name <span class="op">=</span> <span class="st">"use"</span>, group_value <span class="op">=</span> <span class="fl">1</span>, subject <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">mean_response_predict</span><span class="op">(</span><span class="va">pupil_fpca</span>, <span class="va">fosr_mod</span>, fitted <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>outcome <span class="op">=</span> <span class="st">"percent_change"</span>, domain <span class="op">=</span> <span class="st">"seconds"</span>, subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"use = 1"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -150,7 +158,7 @@ Default is <code>NULL</code>, representing the reference group.</p></dd>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Angela Yu, Armin Schwartzman, Julia Wrobel.</p>
+  <p>Developed by Angela Yu, Armin Schwartzman, Junting Ren, Julia Wrobel.</p>
 </div>
 
 <div class="pkgdown-footer-right">

@@ -1,15 +1,37 @@
 #' Construct Simultaneous Confidence Bands for a Linear Regression Model
 #'
 #' This function fits a linear model and constructs simultaneous confidence bands (SCB)
-#' using a non-parametric bootstrap method for the mean outcome of regression on a fixed test set design matrix
+#' using a non-parametric bootstrap method for the mean outcome of regression
+#' on a fixed test set design matrix
 #'
-#' @param df_fit A data frame containing the training design matrix used to fit the linear model.
-#' @param model A character string representing the formula for the linear model (e.g., \code{"y ~ x1 + x2"}).
-#' @param grid_df A data frame containing the test set design matrix at which to evaluate the predictions and construct confidence bands.
-#' @param n_boot Number of bootstrap samples used in the non-parametric bootstrap procedure to generate the empirical distribution. Default is 1000.
-#' @param alpha Significance level for the confidence band (e.g., 0.05 for 95% confidence). Default is 0.05.
-#' @param grid_df_boot An optional data frame specifying the input grid at which predictions are evaluated during bootstrap resampling.
-#'                     This allows SCBs to be constructed on a denser or alternative set of covariate values if desired.. If NULL, uses \code{grid_df}.
+#' @param df_fit A data frame containing the training design matrix used
+#' to fit the linear model. Acceptable input format includes numeric and factor.
+#' @param model A character string representing the formula for the linear model
+#' (e.g., \code{"y ~ x1 + x2"}).
+#' @param grid_df A data frame specifying the covariate settings that define the
+#' mean outcome for which simultaneous confidence bands (SCB) are constructed.
+#' Each row represents one covariate combination at which predictions and
+#' SCBs are evaluated. Column names should match variables in the fitted model,
+#' but `grid_df` may include only the subset of covariates of interest for the SCB
+#' (it is not required to cover all model variables). Default is `NULL`, which
+#' constructs the SCB only for the intercept term.
+#' @param fitted Logical. Whether to estimate the simultaneous confidence bands
+#' for fitted mean outcome or linear combination of fitted regression coefficients.
+#'   \itemize{
+#'     \item \code{TRUE} - Estimate the simultaneous confidence bands
+#'     for fitted mean outcome.
+#'     \item \code{FALSE} - estimate the simultaneous confidence bands
+#'     for fitted regression coefficient.
+#'     }
+#'   Default is \code{TRUE}.
+#' @param n_boot Number of bootstrap samples used in the non-parametric bootstrap
+#' procedure to generate the empirical distribution. Default is 1000.
+#' @param alpha Significance level for the confidence band
+#' (e.g., 0.05 for 95% confidence). Default is 0.05.
+#' @param grid_df_boot An optional data frame specifying the input grid at which
+#' predictions are evaluated during bootstrap resampling.
+#' This allows SCBs to be constructed on a denser set of covariate values
+#' if desired. If NULL, uses \code{grid_df}.
 #'
 #' @return A data frame with the following columns:
 #' \describe{
@@ -30,15 +52,16 @@
 #' epsilon <- rnorm(100,0,sqrt(2))
 #' y <- -1 + x1 + 0.5 * x1^2 - 1.1 * x1^3 - 0.5 * x2 + 0.8 * x2^2 - 1.1 * x2^3 + epsilon
 #' df <- data.frame(x1 = x1, x2 = x2, y = y)
-#' grid <- data.frame(x1 = seq(-1, 1, length.out = 100), x2 = seq(-1, 1, length.out = 100))
+#' grid <- data.frame(x1 = seq(-1, 1, length.out = 100),
+#'                    x2 = seq(-1, 1, length.out = 100))
 #' model <- "y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"
 #' results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
 #'
-SCB_linear_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0.05, grid_df_boot = NULL){
+SCB_linear_outcome = function(df_fit, model, grid_df = NULL, fitted = TRUE, n_boot = 1000, alpha = 0.05, grid_df_boot = NULL){
 
   if(is.null(df_fit)) stop("`df_fit` must be provided.")
   if(is.null(model)) stop("`model` must be provided.")
-  if(is.null(grid_df)) stop("`grid_df` must be provided.")
+  #if(is.null(grid_df)) stop("`grid_df` must be provided.")
 
   if(!is.data.frame(df_fit)){
     df_fit <- tryCatch(
@@ -46,11 +69,20 @@ SCB_linear_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0.0
       error = function(e) stop("`df_fit` must be a data.frame or coercible to a data.frame.")
     )
   }
-  if(!is.data.frame(grid_df)){
-    grid_df <- tryCatch(
-      as.data.frame(grid_df),
-      error = function(e) stop("`grid_df` must be a data.frame or coercible to a data.frame.")
-    )
+
+  # transform character variable to factor
+  char_vars <- names(df_fit)[sapply(df_fit, is.character)]
+  for (v in char_vars) {
+    df_fit[[v]] <- factor(df_fit[[v]])
+  }
+
+  if(!is.null(grid_df)){
+    if(!is.data.frame(grid_df)){
+      grid_df <- tryCatch(
+        as.data.frame(grid_df),
+        error = function(e) stop("`grid_df` must be a data.frame or coercible to a data.frame.")
+      )
+    }
   }
 
   if(!inherits(model, "formula") && !is.character(model)) stop("`model` must be a formula or string.")
@@ -60,24 +92,36 @@ SCB_linear_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0.0
   formula_ <- as.formula(model)
   model_vars <- all.vars(formula_)
   if(!("." %in% model_vars)){
+    # make sure that no vars in model_vars are missing in df_fit
     if (length(setdiff(model_vars, names(df_fit))) > 0) {
       stop(paste("`df_fit` is missing variables:", paste(setdiff(model_vars, names(df_fit)), collapse = ", ")))
     }
     if(length(model_vars) > 1){
-      if (length(setdiff(model_vars[-1], names(grid_df))) > 0) {
-        stop(paste("`grid_df` is missing variables:", paste(setdiff(model_vars, names(grid_df)), collapse = ", ")))
+    # for all model_vars, check if they're included in grid_df
+    # make sure that the included vars match the format in df_fit
+      if(!is.null(grid_df)){
+        grid_df <- check_and_align_vars(df_fit, grid_df, model_vars[-1])
       }
-    }
+    # fill missing variables in grid_df that are included in model_vars
+    # if input of grid_df is NULL, fill in all missing values and set them as 0/reference
+      grid_df <- fill_missing_with_reference(df_fit, grid_df, model_vars[-1])
+    }else{
+      fitted <- TRUE
+    } #else: y~1, no need to check grid_df, but intercept must be included
   }else{
+    # y~.: check if y exists in df_fit
     if (length(setdiff(model_vars[1], names(df_fit))) > 0) {
       stop(paste("`df_fit` is missing variables:", model_vars[1]))
     }
-    if(length(model_vars) > 1 && length(setdiff(names(df_fit), model_vars[1])) == 0){
-      stop("No covariates found in `df_fit`. Please add at least one covariate or adjust the input of `model`.")
+    # for all vars in df_fit, check if they're included in grid_df
+    # make sure that the included vars match the format in df_fit
+    df_fit_no_outcome <- subset(df_fit, select = -model_vars[1]) # remove outcome
+    if(!is.null(grid_df)){
+      grid_df <- check_and_align_vars(df_fit_no_outcome, grid_df)
     }
-    if(length(model_vars) > 1 && length(setdiff(names(grid_df), model_vars[1])) == 0){
-      stop("No covariates found in `grid_df`. Please add at least one covariate or adjust the input of `model`.")
-    }
+    # fill missing variables in grid_df that are included in df_fit
+    # if input of grid_df is NULL, fill in all missing values and set them as 0/reference
+    grid_df <- fill_missing_with_reference(df_fit_no_outcome, grid_df)
   }
 
   if(!is.null(grid_df_boot)){
@@ -87,21 +131,43 @@ SCB_linear_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0.0
         error = function(e) stop("`grid_df_boot` must be a data.frame or coercible to a data.frame.")
       )
     }
+
     if(!("." %in% model_vars)){
       if(length(model_vars) > 1){
-        if (length(setdiff(model_vars[-1], names(grid_df_boot))) > 0) {
-          stop(paste("`grid_df_boot` is missing variables:", paste(setdiff(model_vars, names(grid_df_boot)), collapse = ", ")))
-        }
-      }
+      # for all model_vars, check if they're included in grid_df_boot
+      # make sure that the included vars match the format in grid_df
+      # grid_df_boot is only for calculate the thres
+      # for muneric variable, can be denser
+      # for factor/character variable, must be included in grid_df
+        grid_df_boot <- check_and_align_vars(grid_df, grid_df_boot, model_vars[-1])
+
+      # fill missing variables in grid_df_boot that are included in model_vars
+        grid_df_boot <- fill_missing_with_reference(grid_df, grid_df_boot, model_vars[-1])
+      }else{
+        fitted <- TRUE
+      }#else: y~1, no need to check grid_df_boot, but intercept must be included
     }else{
-      if(length(model_vars) > 1 && length(setdiff(names(grid_df_boot), model_vars[1])) == 0){
-        stop("No covariates found in `grid_df_boot`. Please add at least one covariate or adjust the input of `model`.")
-      }
+      # y~.
+      # for all vars in grid_df, check if they're included in grid_df_boot
+      # make sure that the included vars match the format in grid_df
+      grid_df_boot <- check_and_align_vars(grid_df, grid_df_boot)
+
+      # fill missing variables in grid_df_boot that are included in grid_df
+      grid_df_boot <- fill_missing_with_reference(grid_df, grid_df_boot)
     }
   }
 
   fit <- lm(model, df_fit)
-  y_hat <- predict(fit, grid_df, se.fit = TRUE, level = 1 - alpha) # for constructing the whole
+  if(fitted == TRUE){
+    y_hat <- predict(fit, grid_df, se.fit = TRUE, level = 1 - alpha) # for constructing the whole
+  }else if(fitted == FALSE){
+    X <- model.matrix(fit, data=grid_df)[, -1]  #remove intercept
+    coef_no_intercept <- coef(fit)[-1]
+    fit_mat <- X %*% coef_no_intercept
+    V <- vcov(fit)[-1, -1]
+    se_fit <- sqrt(rowSums((X %*% V) * X))
+    y_hat <- data.frame(fit = fit_mat, se.fit = se_fit)
+  }
   res_max_v <- rep(0,n_boot)
   if(is.null(grid_df_boot)){
     grid_df_boot <- grid_df
@@ -112,7 +178,16 @@ SCB_linear_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0.0
   for(i in 1:n_boot){
     df_boot <- df_fit[sample(1:dim(df_fit)[1], replace = T),]
     fit_boot <- lm(model, df_boot)
-    y_hat_boot <- predict(fit_boot, grid_df_boot, level = 1 - alpha, se.fit = TRUE	)
+    if(fitted == TRUE){
+      y_hat_boot <- predict(fit_boot, grid_df_boot, level = 1 - alpha, se.fit = TRUE	)
+    }else if(fitted == FALSE){
+      X_boot <- model.matrix(fit_boot, data=grid_df_boot)[, -1]  #remove intercept
+      coef_no_intercept_boot <- coef(fit_boot)[-1]
+      boot_fit <- X_boot %*% coef_no_intercept_boot
+      V_boot <- vcov(fit_boot)[-1, -1]
+      boot_se_fit <- sqrt(rowSums((X_boot %*% V_boot) * X_boot))
+      y_hat_boot <- data.frame(fit = boot_fit, se.fit = boot_se_fit)
+    }
     residual <- abs(y_hat_boot$fit - y_hat_level_grid$fit)/y_hat_boot$se.fit
     res_max_v[i] <- max(residual)
   }
@@ -143,7 +218,22 @@ expit = function(x){
 #'
 #' @param df_fit A data frame containing the training design matrix used to fit the logistic model.
 #' @param model A character string representing the formula for the logistic model (e.g., \code{"y ~ x1 + x2"}).
-#' @param grid_df A data frame containing the test set design matrix at which to evaluate the predictions and construct confidence bands.
+#' @param grid_df A data frame specifying the covariate settings that define the
+#' mean outcome for which simultaneous confidence bands (SCB) are constructed.
+#' Each row represents one covariate combination at which predictions and
+#' SCBs are evaluated. Column names should match variables in the fitted model,
+#' but `grid_df` may include only the subset of covariates of interest for the SCB
+#' (it is not required to cover all model variables). Default is `NULL`, which
+#' constructs the SCB only for the intercept term.
+#' @param fitted Logical. Whether to estimate the simultaneous confidence bands
+#' for fitted mean outcome or linear combination of fitted regression coefficients.
+#'   \itemize{
+#'     \item \code{TRUE} - Estimate the simultaneous confidence bands
+#'     for fitted mean outcome.
+#'     \item \code{FALSE} - estimate the simultaneous confidence bands
+#'     for fitted regression coefficient.
+#'     }
+#'   Default is \code{TRUE}.
 #' @param n_boot Number of bootstrap samples used in the non-parametric bootstrap procedure to generate the empirical distribution. Default is 1000.
 #' @param alpha Significance level for the confidence band (e.g., 0.05 for 95% confidence). Default is 0.05.
 #'
@@ -170,7 +260,7 @@ expit = function(x){
 #' model <- "y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"
 #' results <- SCB_logistic_outcome(df_fit = df, model = model, grid_df = grid)
 #'
-SCB_logistic_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0.05){
+SCB_logistic_outcome = function(df_fit, model, grid_df, fitted = TRUE, n_boot = 1000, alpha = 0.05){
 
   if(is.null(df_fit)) stop("`df_fit` must be provided.")
   if(is.null(model)) stop("`model` must be provided.")
@@ -182,6 +272,13 @@ SCB_logistic_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0
       error = function(e) stop("`df_fit` must be a data.frame or coercible to a data.frame.")
     )
   }
+
+  # transform character variable to factor
+  char_vars <- names(df_fit)[sapply(df_fit, is.character)]
+  for (v in char_vars) {
+    df_fit[[v]] <- factor(df_fit[[v]])
+  }
+
   if(!is.data.frame(grid_df)){
     grid_df <- tryCatch(
       as.data.frame(grid_df),
@@ -195,33 +292,63 @@ SCB_logistic_outcome = function(df_fit, model, grid_df, n_boot = 1000, alpha = 0
   formula_ <- as.formula(model)
   model_vars <- all.vars(formula_)
   if(!("." %in% model_vars)){
+    # make sure that no vars in model_vars are missing in df_fit
     if (length(setdiff(model_vars, names(df_fit))) > 0) {
       stop(paste("`df_fit` is missing variables:", paste(setdiff(model_vars, names(df_fit)), collapse = ", ")))
     }
     if(length(model_vars) > 1){
-      if (length(setdiff(model_vars[-1], names(grid_df))) > 0) {
-        stop(paste("`grid_df` is missing variables:", paste(setdiff(model_vars, names(grid_df)), collapse = ", ")))
+      # for all model_vars, check if they're included in grid_df
+      # make sure that the included vars match the format in df_fit
+      if(!is.null(grid_df)){
+        grid_df <- check_and_align_vars(df_fit, grid_df, model_vars[-1])
       }
-    }
+      # fill missing variables in grid_df that are included in model_vars
+      # if input of grid_df is NULL, fill in all missing values and set them as 0/reference
+      grid_df <- fill_missing_with_reference(df_fit, grid_df, model_vars[-1])
+    }else{
+      fitted <- TRUE
+    } #else: y~1, no need to check grid_df, but intercept must be included
   }else{
+    # y~.: check if y exists in df_fit
     if (length(setdiff(model_vars[1], names(df_fit))) > 0) {
       stop(paste("`df_fit` is missing variables:", model_vars[1]))
     }
-    if(length(model_vars) > 1 && length(setdiff(names(df_fit), model_vars[1])) == 0){
-      stop("No covariates found in `df_fit`. Please add at least one covariate or adjust the input of `model`.")
+    # for all vars in df_fit, check if they're included in grid_df
+    # make sure that the included vars match the format in df_fit
+    df_fit_no_outcome <- subset(df_fit, select = -model_vars[1]) # remove outcome
+    if(!is.null(grid_df)){
+      grid_df <- check_and_align_vars(df_fit_no_outcome, grid_df)
     }
-    if(length(model_vars) > 1 && length(setdiff(names(grid_df), model_vars[1])) == 0){
-      stop("No covariates found in `grid_df`. Please add at least one covariate or adjust the input of `model`.")
-    }
+    # fill missing variables in grid_df that are included in df_fit
+    # if input of grid_df is NULL, fill in all missing values and set them as 0/reference
+    grid_df <- fill_missing_with_reference(df_fit_no_outcome, grid_df)
   }
 
   fit <- suppressWarnings(glm(model, family = binomial(), data = df_fit)) # Suppress warning forfitted probabilities numerically 0 or 1
-  y_hat <- predict(fit, grid_df, se.fit = TRUE, level = 1 - alpha) # bootstrap true mean
+  if(fitted == TRUE){
+    y_hat <- predict(fit, grid_df, se.fit = TRUE, level = 1 - alpha) # bootstrap true mean
+  }else if(fitted == FALSE){
+    X <- model.matrix(fit, data=grid_df)[, -1]  #remove intercept
+    coef_no_intercept <- coef(fit)[-1]
+    fit_mat <- X %*% coef_no_intercept
+    V <- vcov(fit)[-1, -1]
+    se_fit <- sqrt(rowSums((X %*% V) * X))
+    y_hat <- data.frame(fit = fit_mat, se.fit = se_fit)
+  }
   res_max_v <- rep(0,n_boot)
   for(i in 1:n_boot){
     df_boot <- df_fit[sample(1:dim(df_fit)[1], replace = T),]
     fit_boot <- suppressWarnings(glm(model, family = binomial(), data = df_boot))
-    y_hat_boot <- predict(fit_boot, grid_df, level = 1 - alpha, se.fit = TRUE	)
+    if(fitted == TRUE){
+      y_hat_boot <- predict(fit_boot, grid_df, level = 1 - alpha, se.fit = TRUE	)
+    }else if(fitted == FALSE){
+      X_boot <- model.matrix(fit_boot, data=grid_df_boot)[, -1]  #remove intercept
+      coef_no_intercept_boot <- coef(fit_boot)[-1]
+      boot_fit <- X_boot %*% coef_no_intercept_boot
+      V_boot <- vcov(fit_boot)[-1, -1]
+      boot_se_fit <- sqrt(rowSums((X_boot %*% V_boot) * X_boot))
+      y_hat_boot <- data.frame(fit = boot_fit, se.fit = boot_se_fit)
+    }
     residual <- abs(y_hat_boot$fit - y_hat$fit)/y_hat_boot$se.fit
     res_max_v[i] <- max(residual)
   }
@@ -295,9 +422,9 @@ SCB_regression_coef = function(df_fit, model, n_boot = 5000, alpha = 0.05, type 
     if (length(setdiff(model_vars[1], names(df_fit))) > 0) {
       stop(paste("`df_fit` is missing variables:", model_vars[1]))
     }
-    if(length(model_vars) > 0 && length(setdiff(names(df_fit), model_vars[1])) == 0){
-      stop("No covariates found in `df_fit`. Please add at least one covariate or adjust the input of `model`.")
-    }
+    #if(length(model_vars) > 0 && length(setdiff(names(df_fit), model_vars[1])) == 0){
+      #stop("No covariates found in `df_fit`. Please add at least one covariate or adjust the input of `model`.")
+    #}
   }
 
   # type: "linear" or "logistic"
@@ -329,4 +456,229 @@ SCB_regression_coef = function(df_fit, model, n_boot = 5000, alpha = 0.05, type 
   thres <- quantile(res_max_v, probs = 1 - alpha)
   sim_CB <- data.frame(scb_low = coef_hat - thres*coef_sd, Mean = coef_hat, scb_up = coef_hat + thres*coef_sd)
   return(sim_CB)
+}
+
+#' Check validity of subset specification against a data set
+#'
+#' This function verifies that the user-supplied \code{subset} is valid.
+#' \code{subset} must be either a \code{data.frame} or a named \code{list}.
+#' Each element (or column) corresponds to a variable in \code{data_fit},
+#' and its values must exist among the observed values or levels of the
+#' corresponding variable in \code{data_fit}.
+#'
+#' @param subset A \code{data.frame} or a named \code{list} specifying filtering conditions.
+#'   - If \code{data.frame}, column names are treated as variable names, and column values are the allowed values.
+#'   - If \code{list}, names are variable names, and elements are the allowed values.
+#'   Each variable name must exist in \code{data_fit}.
+#' @param data_fit A \code{data.frame} containing the data to be checked against.
+#'   All variable names and values specified in \code{subset} must appear in this dataset.
+#'
+#' @returns Invisibly returns \code{TRUE} if all checks pass; otherwise stops with an error message.
+#'
+#' @keywords internal
+#'
+#' @examples
+#' # Used internally by SCB_gls_climate
+#'
+check_subset <- function(subset, data_fit) {
+
+  if (!(is.data.frame(subset) || is.list(subset)))
+    stop("`subset` must be a data.frame or a named list.")
+  if (length(subset) == 0L)
+    stop("`subset` is empty.")
+
+  if (is.data.frame(subset)) {
+    if (is.null(names(subset)) || any(!nzchar(names(subset))))
+      stop("`subset` data.frame must have non-empty column names.")
+    subset_list <- as.list(subset)
+  } else {
+    subset_list <- subset
+    if (is.null(names(subset_list)) || any(!nzchar(names(subset_list))))
+      stop("`subset` list must be named; each element name is a variable in `data_fit`.")
+  }
+
+  for (var in names(subset_list)) {
+    if (!var %in% names(data_fit)) {
+      stop(sprintf("Variable `%s` in `subset` is not found in `data_fit`.", var))
+    }
+
+    vals <- subset_list[[var]]
+    if (!is.atomic(vals))
+      stop(sprintf("Values for `%s` must be an atomic vector.", var))
+
+    vals_no_na <- unique(vals[!is.na(vals)])
+
+    target <- data_fit[[var]]
+    if (is.factor(target)) {
+      allowed <- levels(target)
+      ok <- all(as.character(vals_no_na) %in% allowed)
+      if (!ok) {
+        missing_levels <- setdiff(as.character(vals_no_na), allowed)
+        stop(sprintf("`%s` has values not present in `data_fit` levels: %s",
+                     var, paste(missing_levels, collapse = ", ")))
+      }
+    } else if (is.character(target)) {
+      allowed <- unique(target[!is.na(target)])
+      ok <- all(as.character(vals_no_na) %in% allowed)
+      if (!ok) {
+        missing_vals <- setdiff(as.character(vals_no_na), allowed)
+        stop(sprintf("`%s` has values not present in `data_fit`: %s",
+                     var, paste(missing_vals, collapse = ", ")))
+      }
+    } else if (is.numeric(target)) {
+      vals_num <- suppressWarnings(as.numeric(vals_no_na))
+      if (any(is.na(vals_num) & !is.na(vals_no_na))) {
+        stop(sprintf("`%s` contains non-numeric values but `data_fit[[%s]]` is numeric.",
+                     var, var))
+      }
+      allowed <- unique(target[!is.na(target)])
+      ok <- all(vals_num %in% allowed)
+      if (!ok) {
+        missing_vals <- setdiff(vals_num, allowed)
+        stop(sprintf("`%s` has numeric values not present in `data_fit`: %s",
+                     var, paste(missing_vals, collapse = ", ")))
+      }
+    } else {
+      stop(sprintf("`data_fit[[%s]]` has unsupported type: %s",
+                   var, class(target)[1]))
+    }
+  }
+
+  invisible(TRUE)
+}
+
+#' Validate and align types/levels between training data and prediction grid
+#'
+#' Ensures that variables in `grid_df` are type-compatible with `df_fit` and that
+#' factor (including ordered factor) levels are aligned to those used during model
+#' fitting. Character columns in `df_fit` are first coerced to factors. For any
+#' factor/ordered variable, `grid_df` is coerced to the same type and levels; any
+#' unseen levels in `grid_df` will trigger an error.
+#'
+#' @param df_fit A data frame used for model fitting. Character columns will be
+#'   coerced to factors before alignment.
+#' @param grid_df A data frame of covariate settings (newdata) at which
+#'   predictions/SCBs are to be evaluated.
+#' @param model_vars A vector contained all the interested columns that appear
+#' in `df_fit`. Only those variables are aligned in `grid_df`;
+#' other columns are left unchanged. Default is NULL.
+#' @return \item{grid_df}{The prediction grid with variables aligned to `df_fit`.}
+#'
+#' @keywords internal
+#'
+#' @examples
+#' # Used internally by SCB_linear_outcome, SCB_logistic_outcome
+#'
+check_and_align_vars <- function(df_fit, grid_df, model_vars = NULL) {
+
+  # find common vars
+  if(is.null(model_vars)){
+    common_vars <- intersect(names(grid_df), names(df_fit))
+  }else{
+    common_vars <- intersect(names(grid_df), model_vars)
+  }
+
+  for (nm in common_vars) {
+    x_fit  <- df_fit[[nm]]
+    x_new  <- grid_df[[nm]]
+
+    # ——(A) factor/ordered factor, check levels
+    if (is.factor(x_fit)) {
+      lv <- levels(x_fit)
+      is_ord <- is.ordered(x_fit)
+
+      # if character var, transform it to factor, same levels  as df_fit
+      if (is.character(x_new)) {
+        unseen <- setdiff(unique(x_new), lv)
+        if (length(unseen) > 0) {
+          stop(sprintf("Column `%s` in grid_df has unseen level(s): %s",
+                       nm, paste(unseen, collapse = ", ")))
+        }
+        grid_df[[nm]] <- factor(x_new, levels = lv, ordered = is_ord)
+      } else if (is.factor(x_new)) {
+        # if factor var, all levels should be included in df_fit
+        unseen <- setdiff(unique(as.character(x_new)), lv)
+        if (length(unseen) > 0) {
+          stop(sprintf("Column `%s` in grid_df has unseen level(s): %s",
+                       nm, paste(unseen, collapse = ", ")))
+        }
+        # keep levels the same
+        grid_df[[nm]] <- factor(as.character(x_new), levels = lv, ordered = is_ord)
+      } else {
+        stop(sprintf("Column `%s` must be factor%sin grid_df (got %s).",
+                     nm, if (is_ord) " (ordered) " else " ",
+                     paste(class(x_new), collapse = "/")))
+      }
+      next
+    }
+
+    # ——(B) non-factor var
+    cls_fit <- class(x_fit)
+    cls_new <- class(x_new)
+
+    same_main_class <- identical(cls_fit, cls_new) ||
+      (is.numeric(x_fit) && (is.numeric(x_new) || is.integer(x_new))) ||
+      (is.integer(x_fit) && is.numeric(x_new))
+
+    if (!same_main_class) {
+      stop(sprintf("Column `%s` in grid_df must have the same (or compatible) type as in df_fit. df_fit: %s, grid_df: %s",
+                   nm, paste(cls_fit, collapse = "/"), paste(cls_new, collapse = "/")))
+    }
+
+    #if (is.numeric(x_fit) && is.integer(x_new)) {
+      #grid_df[[nm]] <- as.numeric(x_new)
+    #}
+  }
+
+  return(grid_df)
+}
+
+#' Fill missing variables in grid_df with reference values from df_fit
+#'
+#' @param df_fit A data frame used for model fitting. Character columns will be
+#'   coerced to factors before alignment.
+#' @param grid_df A data frame of covariate settings (newdata) at which
+#'   predictions/SCBs are to be evaluated.
+#' @param model_vars A vector contained all the interested columns that appear
+#' in `df_fit`. Only those variables are aligned in `grid_df`;
+#' other columns are left unchanged. Default is NULL.
+#'
+#' @return grid_df with missing columns filled:
+#'   - factor/ordered: reference = first level in df_fit
+#'   - character: coerced to factor, reference = first unique value
+#'   - numeric/integer: reference = numeric_ref (default 0)
+#'
+#' @keywords internal
+#'
+#' @examples
+#' # Used internally by SCB_linear_outcome, SCB_logistic_outcome
+#'
+fill_missing_with_reference <- function(df_fit, grid_df, model_vars = NULL) {
+  if(is.null(model_vars)){
+    missing_vars <- setdiff(names(df_fit), names(grid_df)) # in df_fit but not in grid_df
+  }else{
+    missing_vars <- setdiff(model_vars, names(grid_df))
+  }
+
+  if (length(missing_vars)) {
+    nr <- nrow(grid_df)
+    for (var in missing_vars) {
+      x_fit <- df_fit[[var]]
+      if (is.factor(x_fit)) {
+        lv <- levels(x_fit)
+        ref <- lv[1]
+        grid_df[[var]] <- factor(rep(ref, nr),
+                                 levels = lv,
+                                 ordered = is.ordered(x_fit))
+      } else if (is.integer(x_fit)) {
+        grid_df[[var]] <- rep(as.integer(0), nr)
+      } else if (is.numeric(x_fit)) {
+        grid_df[[var]] <- rep(as.numeric(0), nr)
+      } else {
+        stop(sprintf("Variable `%s`: unsupported type %s",
+                     var, paste(class(x_fit), collapse = "/")))
+      }
+    }
+  }
+  grid_df
 }

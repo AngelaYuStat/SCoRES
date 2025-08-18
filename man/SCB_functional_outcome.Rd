@@ -12,95 +12,108 @@ SCB_functional_outcome(
   est_mean = TRUE,
   alpha = 0.05,
   outcome,
-  time,
-  range = NULL,
-  group_name = NULL,
-  group_value = NULL,
-  subject,
+  domain,
+  subset = NULL,
+  id,
   nboot = NULL,
   method_SD = "t",
   weights = "rademacher"
 )
 }
 \arguments{
-\item{data_df}{A functional data frame.
-The input data must have column names, and should contain the functional outcome, time, subject}
+\item{data_df}{A functional data frame that contain both name and values for
+variables including functional outcome, domain (e.g. time) and ID (e.g. subject names).}
 
-\item{object}{A fitted Function-on-Scalar Regression (FoSR) object (e.g., from mgcv::bam()/mgcv::gam()). Default is \code{NULL}}
+\item{object}{A fitted Function-on-Scalar Regression (FoSR) object
+(e.g., from mgcv::bam()/mgcv::gam()). Default is \code{NULL}}
 
 \item{method}{A character string specifying the approach:
 \itemize{
 \item \code{"cma"} - Correlation and Multiplicity Adjusted (CMA) confidence bands
 via parametric approach (requires a fitted functional regression model)
 \item \code{"multiplier"} - Dense confidence bands via Multiplier-t Bootstrap method
-For \code{method = "multiplier"} option, the user should check whether their input data (\code{data}) has zero entries on every subject for a specific time point.
-The function only allow all zero entries for time point zero. Otherwise, the function will return an error.
-Besides, for Multiplier Bootstrap, if there exist NA in data, the function will impute these NA's via fpca.face.
+For \code{method = "multiplier"}, the outcome variable in \code{data_df}
+should not have all-zero entries within any specified domain
+(except for domain index zero, where this is allowed).
+Otherwise, the function will return an error.
+If missing values (NA) exist in the outcome variable in \code{data_df},
+the function will impute them using \code{fpca.face} before
+performing the Multiplier Bootstrap.
 }}
 
-\item{fitted}{Logical. Whether to estimate the simultaneous confidence bands for fitted mean function or fitted parameter function
+\item{fitted}{Logical. Whether to estimate the simultaneous confidence bands
+for fitted mean function or fitted parameter function
 \itemize{
-\item \code{TRUE} - Estimate the simultaneous confidence bands for fitted mean outcome function.
-\item \code{FALSE} - estimate the simultaneous confidence bands for fitted parameter function.
+\item \code{TRUE} - Estimate the simultaneous confidence bands
+for fitted mean outcome function.
+\item \code{FALSE} - estimate the simultaneous confidence bands
+for fitted parameter function.
 }
 Default is \code{TRUE}.}
 
-\item{est_mean}{Logical. Whether to use the fitted mean from a functional regression model in Multiplier Bootstrap (\code{method = "multiplier"}) for estimating the quantile.
+\item{est_mean}{Logical. Whether to use the fitted mean from a functional
+regression model in Multiplier Bootstrap (\code{method = "multiplier"}) for
+estimating the quantile.
 This argument can be ignored if choose \code{method = "cma"}.
 If \code{TRUE}, the function will use:
 \itemize{
-\item \strong{Fitted mean:} The estimated mean function from a fitted model (e.g., \code{mgcv::bam}).
-Need to provide a fitted functional outcome regression model object. Otherwise, the sample mean will be calculated.
+\item \strong{Fitted mean:} The estimated mean function from a fitted model
+(e.g., \code{mgcv::bam}).
+Need to provide a fitted functional outcome regression model object.
+Otherwise, the sample mean will be calculated.
 }
 If \code{FALSE}, the function will instead use:
 \itemize{
-\item \strong{Sample mean:}
-\deqn{\hat{\beta}(s) = \frac{1}{n} \sum_{i=1}^n \tilde{Y}_i(s)}
-where \eqn{\tilde{Y}_i(s)} is a smoothed version of the observed functional response.
-For this sample mean option, if there exists NA in \code{data}, will perform imputation to fill in those values.
-}
+\item \strong{Sample mean:} The estimated mean function will be calculated
+as the average of the functional outcome across all IDs.
+For the sample mean option, if missing values (NA) exist in the outcome variable
+in \code{data_df}, the function will perform imputation to fill in those
+values before computing the mean.}
 Default is \code{FALSE}.}
 
 \item{alpha}{Significance level for SCB. Default is 0.05.}
 
-\item{outcome}{A character string specifying the name of the outcome variable used in the model. Must be provided if choose \code{method = "multiplier"}.}
+\item{outcome}{A character string specifying the name of the outcome variable
+used in the model.}
 
-\item{time}{A character string specifying the name of the time variable used in the model.}
+\item{domain}{A character string specifying the name of the domain variable
+(e.g. time) used in the model.}
 
-\item{range}{A numeric vector specifying the range or grid of time points interested. Defaut is the whole time points from the fitted model.}
+\item{subset}{An atomic character vector (e.g., c("user = 1", "age = 30"))
+specified the target function for constructing the SCB.
+Each element must be of the form \if{html}{\out{<name>}} = \if{html}{\out{<value>}}, where \if{html}{\out{<name>}} is the name
+of a scalar grouping variable and \if{html}{\out{<value>}} is the desired value.
+Whitespace is ignored. Binary or categorical character variable should be
+transformed into numeric. Factor is not allowed here because if the input
+data contains factor variables, they will be automatically expanded into
+dummy (indicator) variables when constructing the design matrix, and
+the resulting variable names may differ from the original factor names.
+Default is \code{NULL}, representing the reference group.}
 
-\item{group_name}{A character vector that specifies the names of grouping scalar variables to analyze.
-Default is \code{NULL}, representing the reference group if \code{method = "cma"}.
-For \code{method = "multiplier"}, \code{NuULL} is not allowed.}
+\item{id}{A character string specifying the name of the ID variable.}
 
-\item{group_value}{A numeric vector that specifies the corresponding values of the variables listed in \code{group_name}.
-Each entry in \code{group_value} should match the respective variable in \code{group_name}.
-Character/factor is not allowed.
-Default is \code{NULL}, representing the reference group if \code{"cma"}.
-For \code{method = "multiplier"}, \code{NuULL} is not allowed.}
-
-\item{subject}{A character string specifying the name of the subject variable.}
-
-\item{nboot}{An integer specifying the number of bootstrap samples used to construct the confidence bands. Default is 10,000 for cma, 5000 for Multiplier Bootstrap.}
+\item{nboot}{An integer specifying the number of bootstrap samples used to
+construct the confidence bands. Default is 10,000 for cma, 5000 for Multiplier Bootstrap.}
 
 \item{method_SD}{Method for SD estimation: "t" or "regular". Default is "t".}
 
-\item{weights}{Multiplier type: "rademacher", "gaussian", or "mammen". Default is "rademacher"."
-
-For CMA bands (\code{method = "cma"}), please provide a pre-fitted functional regression model
-For Multiplier Bootstrap bands (\code{method = "multiplier"}), the original input data is required.}
+\item{weights}{Multiplier type: "rademacher", "gaussian", or "mammen".
+Default is "rademacher".}
 }
 \value{
 A list containing:
-\item{yhat}{Estimated mean function for the group of interest.}
-\item{time}{The time points used.}
+\describe{
+\item{mu_hat}{Estimated mean function for the group of interest.}
+\item{domain}{The domain used.}
 \item{se_hat}{Standard errors of the estimated means.}
 \item{scb_low}{Lower bound of the simultaneous confidence band.}
 \item{scb_up}{Upper bound of the simultaneous confidence band.}
 \item{type}{A character description of the output type.}
 }
+}
 \description{
-This function builds simultaneous confidence bands through parametric and bootstrap approaches.
+This function builds simultaneous confidence bands through parametric and
+bootstrap approaches.
 }
 \examples{
 # example using pupil data
@@ -117,22 +130,22 @@ fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
   method = "fREML", data = pupil_fpca, discrete = TRUE)
 
 # CMA approach
-results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod, method = "cma", fitted = TRUE,
-                                  est_mean = TRUE, outcome = "percent_change", time = "seconds",
-                                  group_name = "use", group_value = 1, subject = "id")
+results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod,
+                                  method = "cma", fitted = TRUE, est_mean = TRUE,
+                                  outcome = "percent_change", domain = "seconds",
+                                  subset = c("use = 1"), id = "id")
 
 
 # multiplier bootstrap
 results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod,
                                   method = "multiplier", fitted = TRUE,
                                   est_mean = TRUE, outcome = "percent_change",
-                                  time = "seconds", group_name = "use",
-                                  group_value = 1, subject = "id")
+                                  domain = "seconds", subset = c("use = 1"), id = "id")
+
 results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod,
                                   method = "multiplier", fitted = TRUE,
                                   est_mean = FALSE, outcome = "percent_change",
-                                  time = "seconds", group_name = "use",
-                                  group_value = 1, subject = "id")
+                                  domain = "seconds", subset = c("use = 1"), id = "id")
 
 
 }

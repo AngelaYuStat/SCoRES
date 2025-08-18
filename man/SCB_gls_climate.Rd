@@ -5,10 +5,10 @@
 \title{Construct Simultaneous Confidence Bands for a Spatial Generalized Least Square Model}
 \usage{
 SCB_gls_climate(
-  Z,
+  sp_list,
   level = NULL,
-  X = NULL,
-  w = NULL,
+  data_fit = NULL,
+  subset = NULL,
   correlation = NULL,
   corpar = NULL,
   groups = NULL,
@@ -19,46 +19,73 @@ SCB_gls_climate(
 )
 }
 \arguments{
-\item{Z}{A list containing the spatial coordinates and the observations.
+\item{sp_list}{A list containing the spatial coordinates and the observations.
 Should include the following components:
 \itemize{
 \item \code{x}: A numeric vector of x-coordinates (e.g., longitude).
 \item \code{y}: A numeric vector of y-coordinates (e.g., latitude).
-\item \code{z}: A 3D array of observations with dimensions \code{length(x)} × \code{length(y)} × \code{n}.
+\item \code{obs}: A 3D array of observations with dimensions
+\code{length(x)} × \code{length(y)} × \code{n}.
 }}
 
-\item{level}{A optional numeric threshold value used to test whether the estimated mean surface significantly deviates from it. Default is NULL.}
+\item{level}{A optional numeric threshold value used to test whether the
+estimated mean surface significantly deviates from it. Default is NULL.}
 
-\item{X}{A design matrix used in the generalized least squares (GLS) model. Each row corresponds to an observation, and each column to a covariate.
+\item{data_fit}{A named matrix or data frame used to fit the generalized least squares
+(GLS) model. Each row corresponds to an observation, and each column to a covariate
+to be included in the model. Outcome/boservation should not be included.
+The first column is typically an intercept column,
+which will contain only 1s, if an intercept is included in the model.
 Default is \code{matrix(1, n, 1)} (only keep the intercept term)}
 
-\item{w}{A numeric vector specifying a linear combination of the regression coefficients. Default is \code{matrix(1, 1, 1)}.}
+\item{subset}{An atomic character vector (e.g., c("X1 = 1"))
+specified the target function for constructing the SCB.
+Each element must be of the form \if{html}{\out{<name>}} = \if{html}{\out{<value>}}, where \if{html}{\out{<name>}} is the name
+of a covariate in data_fit and \if{html}{\out{<value>}} is the desired value.
+Whitespace is ignored. Default is NULL, will only construct the SCB for the
+first covariate in \code{data_fit}.}
 
-\item{correlation}{A character string specifying the name of the correlation structure (e.g., \code{"corAR1"}, \code{"corCompSymm"})
+\item{correlation}{A character string specifying the name of
+the correlation structure (e.g., \code{"corAR1"}, \code{"corCompSymm"})
 to be used in the GLS model. If \code{NULL}, no correlation structure is assumed.}
 
-\item{corpar}{A list of parameters to be passed to the correlation structure function specified in \code{correlation}.}
+\item{corpar}{A list of parameters to be passed to
+the correlation structure function specified in \code{correlation}.}
 
-\item{groups}{A vector of group identifiers used to define the within-group correlation structure (e.g., repeated measures, time blocks).
-If not specified, defaults to \code{rep(1, n)}, assuming all observations belong to a single group.}
+\item{groups}{A vector of group identifiers used to define
+the within-group correlation structure (e.g., repeated measures, time blocks).
+If not specified, defaults to \code{rep(1, n)},
+assuming all observations belong to a single group.}
 
-\item{V}{An optional array of known covariance matrices of shape \code{[length(x), length(y), n, n]},
-where each \code{V[i,j,,]} corresponds to the covariance matrix for the observations at spatial location \code{(x[i], y[j])}.
-If V is given, then the GLS model will be fitted based on V. Otherwise, the GLS model will be fitted based on correlation structure.}
+\item{V}{An optional array of known covariance matrices of
+shape \code{[length(x), length(y), n, n]}, where each \code{V[i,j,,]}
+corresponds to the covariance matrix for the observations at spatial location
+\code{(x[i], y[j])}. If V is given, then the GLS model will be fitted based on V.
+Otherwise, the GLS model will be fitted based on correlation structure.}
 
-\item{alpha}{A numerical value specifying the confidence level for the Simultaneous Confidence Bands. Defalut is \code{0.1}.}
+\item{alpha}{A numerical value specifying the confidence level
+for the Simultaneous Confidence Bands. Defalut is \code{0.1}.}
 
-\item{N}{An integer specifying the number of bootstrap samples to construct the Simultaneous Confidence Bands. Default is \code{1000}.}
+\item{N}{An integer specifying the number of bootstrap samples to
+construct the Simultaneous Confidence Bands. Default is \code{1000}.}
 
-\item{mask}{An optional logical matrix same dimensions as \code{c(length(Z$x), length(Z$y))}, indicating spatial locations to include in the SCB computation.
-Non-included locations (e.g., water areas) should be set to 0 or \code{NA}. Default is \code{array(1, dim = c(length(Z$x), length(Z$y)))}}
+\item{mask}{An optional logical matrix same dimensions as
+\code{c(length(sp_list$x), length(sp_list$y))}, indicating spatial locations to
+include in the SCB computation. Non-included locations (e.g., water areas)
+should be set to 0 or \code{NA}.
+Default is \code{array(1, dim = c(length(sp_list$x), length(sp_list$y)))}}
 }
 \value{
 A list containing the following components:
 \describe{
-\item{\code{scb_up}}{A matrix of upper bounds for the simultaneous confidence bands at each spatial location.}
-\item{\code{scb_low}}{A matrix of lower bounds for the simultaneous confidence bands at each spatial location.}
-\item{\code{mu_hat}}{A matrix of estimated mean values at each spatial location.}
+\item{\code{scb_up}}{A matrix of upper bounds for
+the simultaneous confidence bands at each spatial location
+corresponding to the target function specified by \code{w}.}
+\item{\code{scb_low}}{A matrix of lower bounds for
+the simultaneous confidence bands at each spatial location
+corresponding to the target function specified by \code{w}.}
+\item{\code{mu_hat}}{A matrix of estimated mean values at each spatial location
+corresponding to the target function specified by \code{w}.}
 \item{\code{norm_est}}{A matrix of standardized test statistics \code{(mu_hat - level) / SE}.}
 \item{\code{thres}}{The bootstrap threshold used to construct the confidence bands.}
 \item{\code{x}}{The vector of x-coordinates corresponding to the columns of the spatial grid.}
@@ -71,10 +98,10 @@ Construct Simultaneous Confidence Bands for a Spatial Generalized Least Square M
 \examples{
 data(climate_data)
 library(nlme)
-# construct confidence sets for the increase of the mean temperature (June-August)
+# Construct confidence sets for the increase of the mean temperature (June-August)
 # in North America between the 20th and 21st centuries
-temp = SCB_gls_climate(Z = climate_data$Z, level = 2, X = climate_data$X,
-                       w = c(1,0,0,0), correlation = climate_data$correlation,
+temp = SCB_gls_climate(sp_list = climate_data$Z, level = 2, data_fit = climate_data$X,
+                       subset = c("X1 = 1"), correlation = climate_data$correlation,
                        mask = climate_data$mask, alpha = 0.1)
 }
 \references{

@@ -31,7 +31,7 @@ SCB_dense(
 }
 \value{
 If \code{SCB = TRUE}, returns a list containing:
-\item{yhat}{Estimated mean function for the group of interest.}
+\item{mu_hat}{Estimated mean function for the group of interest.}
 \item{se_hat}{Standard errors of the estimated means.}
 \item{scb_low}{Lower bound of the simultaneous confidence band.}
 \item{scb_up}{Upper bound of the simultaneous confidence band.}

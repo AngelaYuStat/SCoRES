@@ -9,7 +9,7 @@
 #' @param SCB Logical value for whether to calculate the SCB or not. Default is TRUE.
 #'
 #' @returns If `SCB = TRUE`, returns a list containing:
-#' \item{yhat}{Estimated mean function for the group of interest.}
+#' \item{mu_hat}{Estimated mean function for the group of interest.}
 #' \item{se_hat}{Standard errors of the estimated means.}
 #' \item{scb_low}{Lower bound of the simultaneous confidence band.}
 #' \item{scb_up}{Upper bound of the simultaneous confidence band.}
@@ -46,7 +46,7 @@ SCB_dense = function(A, mean_A = NULL, alpha = 0.05, Mboots  = NULL,
     scb_low = mean_A - thres*sd_A/sqrt(N)
     # return index, scb_up, scb_low
     dense_df <- list(
-      yhat = mean_A,
+      mu_hat = mean_A,
       se_hat = sd_A,
       scb_low = scb_low,
       scb_up = scb_up,

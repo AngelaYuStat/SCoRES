@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_cs.R
 \name{plot_cs}
 \alias{plot_cs}
-\title{Plot Inversion of Simultaneous Confidence Intervals (SCIs) into Inner and Outer Confidence Sets (CSs)}
+\title{Plot Inversion of Simultaneous Confidence Intervals (SCIs) into Inner and Outer Confidence Region}
 \usage{
 plot_cs(
   SCB,
@@ -22,9 +22,11 @@ plot_cs(
 )
 }
 \arguments{
-\item{SCB}{A numeric list returned by \code{regression_outcome_scb()}, \code{functional_outcome_scb()} or a custom list with two arrays of the same dimension: \code{scb_up} and \code{scb_low},
-representing the upper and lower confidence bounds respectively.
-\verb{SCB$scb_up} and \verb{SCB$scb_low} should be numeric vectors (1D) or matrices (2D) containing the upper simultaneous confidence interval.
+\item{SCB}{A numeric list returned by \code{regression_outcome_scb()},
+\code{functional_outcome_scb()} or a custom list with two arrays of the same dimension:
+\code{scb_up} and \code{scb_low}, representing the upper and lower confidence bounds
+respectively. \verb{SCB$scb_up} and \verb{SCB$scb_low} should be numeric vectors (1D)
+or matrices (2D) containing the upper simultaneous confidence interval.
 Dimensions of \code{SCB$scb_up} and \code{SCB$scb_low} must match.}
 
 \item{levels}{A numeric vector or list of scalers for different levels or matrix containing interval sets to construct the confidence sets.
@@ -33,38 +35,50 @@ If \code{type} = "upper" or "lower", \code{levels} should be a vector.
 If \code{type = "interval"}, then \code{levels} should be a \code{list} with two named elements:
 \code{low} and \code{up}, corresponding to the bounds of the interval \code{[low, up]}.}
 
-\item{type}{A character specifying the type of inverse sets to fit. Choices are \code{"upper"}, \code{"lower"} or \code{"interval"}. Default is \code{"upper"}.}
+\item{type}{A character specifying the type of inverse sets to fit.
+Choices are \code{"upper"}, \code{"lower"} or \code{"interval"}. Default is \code{"upper"}.}
 
-\item{x}{A numerical vector of x-axis coordinates for 1D and 2D cases. For discrete coordinates, use a character vector.}
+\item{x}{A numerical vector of x-axis coordinates for 1D and 2D cases.
+For discrete coordinates, use a character vector.}
 
 \item{y}{Optional vector of y-axis coordinates for 2D data.}
 
-\item{mu_hat}{A numeric array (1D) or matrix (2D) of estimated means. If \code{mu_true} is provided, this will be overwritten by the true mean. Default is NULL.
+\item{mu_hat}{A numeric array (1D) or matrix (2D) of estimated means.
+If \code{mu_true} is provided, this will be overwritten by the true mean. Default is NULL.
 An input must be provided for either \code{mu_hat} or \code{mu_true}.}
 
-\item{mu_true}{Optional numeric array (1D) or matrix (2D) of true means, which overrides \code{mu_hat} if provided. Default is NULL.}
+\item{mu_true}{Optional numeric array (1D) or matrix (2D) of true means,
+which overrides \code{mu_hat} if provided. Default is NULL.}
 
-\item{together}{Optional logical value for plotting option. If \code{TRUE}, plots all confidence levels on the same figure; otherwise, generates one plot per level. Default is \code{TRUE}.}
+\item{together}{Optional logical value for plotting option.
+If \code{TRUE}, plots all confidence levels on the same figure;
+otherwise, generates one plot per level. Default is \code{TRUE}.}
 
 \item{xlab}{Optional character for the label of the x-axis. Default is \code{"x1"}.}
 
 \item{ylab}{Optional character for the label of the y-axis. Default is \code{"x2"}.}
 
-\item{level_label}{Optional logical value for level displaying option. If \code{TRUE}, displays numeric level labels on contour lines for 2D confidence sets. Default is \code{TRUE}.}
+\item{level_label}{Optional logical value for level displaying option.
+If \code{TRUE}, displays numeric level labels on contour lines for 2D confidence sets.
+Default is \code{TRUE}.}
 
-\item{min.size}{Optional logical value for minimum number of points required for a contour to be labeled. Default is \code{5}.}
+\item{min.size}{Optional logical value for minimum number of points
+required for a contour to be labeled. Default is \code{5}.}
 
-\item{palette}{Optional character value for the name of the HCL color palette to use when plotting multiple levels together. Default is \code{"gray"}.}
+\item{palette}{Optional character value for the name of the HCL color palette
+to use when plotting multiple levels together. Default is \code{"gray"}.}
 
-\item{color_level_label}{Optional character value for the color used for contour level labels. Default is \code{"black"}.}
+\item{color_level_label}{Optional character value for the color used
+for contour level labels. Default is \code{"black"}.}
 }
 \value{
 A \code{ggplot2} object that includes both simultaneous confidence intervals
-and simultaneous confidence sets of excursion sets corresponding to levels assigned.
+and simultaneous confidence region of excursion sets corresponding to levels assigned.
 }
 \description{
-Visualizes simultaneous confidence sets of upper and lower excursion sets for discrete, 1D or 2D data, using contour or band plots.
-Supports plotting CSs at multiple levels and labeling contours.
+Visualizes simultaneous confidence sets of upper and lower excursion sets for
+discrete, 1D or 2D data, using contour or band plots.
+Supports plotting confidence region at multiple levels and labeling contours.
 }
 \examples{
 
@@ -83,8 +97,8 @@ fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
 
 pupil_cma <- SCB_functional_outcome(data = pupil_fpca, object = fosr_mod, method = "cma",
                                    est_mean = TRUE, outcome = "percent_change",
-                                   time = "seconds", group_name = "use",
-                                   group_value = 1, subject = "id")
+                                   domain = "seconds", subset= c("use = 1"),
+                                   id = "id")
 pupil_cma <- tibble::as_tibble(pupil_cma)
 
 plot_cs(pupil_cma,levels = c(-18, -20, -22, -24), x = pupil_cma$time,

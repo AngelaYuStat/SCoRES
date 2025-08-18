@@ -32,11 +32,11 @@
 <li class="nav-item"><a class="nav-link" href="../articles/SCoRES.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/Functional_Data_Example.html">Functional_Data_Example</a></li>
-    <li><a class="dropdown-item" href="../articles/Geographic_Data_Example.html">Geographic_Data_Example</a></li>
-    <li><a class="dropdown-item" href="../articles/Linear_Model_Example.html">Linear_Model_Example</a></li>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-vignettes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Vignettes</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes">
+<li><a class="dropdown-item" href="../articles/Functional_Data_Example.html">Functional Data Example</a></li>
+    <li><a class="dropdown-item" href="../articles/Geographic_Data_Example.html">Geographic Data Example</a></li>
+    <li><a class="dropdown-item" href="../articles/Linear_Model_Example.html">Linear Model Example</a></li>
     <li><a class="dropdown-item" href="../articles/Methods.html">Methods</a></li>
   </ul>
 </li>
@@ -62,7 +62,7 @@
       <h1>Geographic_Data_Example</h1>
                         <h4 data-toc-skip class="author">Angela Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-08-11</h4>
+            <h4 data-toc-skip class="date">2025-08-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Geographic_Data_Example.Rmd" class="external-link"><code>vignettes/Geographic_Data_Example.Rmd</code></a></small>
       <div class="d-none name"><code>Geographic_Data_Example.Rmd</code></div>
@@ -85,10 +85,10 @@ model analyzed in Sommerfeld et al.(2018).</p>
 <span><span class="va">start_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># construct confidence sets for the increase of the mean temperature (June-August) in North America between the 20th and 21st centuries</span></span>
-<span><span class="va">temp</span> <span class="op">=</span> <span class="fu"><a href="../reference/SCB_gls_climate.html">SCB_gls_climate</a></span><span class="op">(</span>Z <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">Z</span>, </span>
+<span><span class="va">temp</span> <span class="op">=</span> <span class="fu"><a href="../reference/SCB_gls_climate.html">SCB_gls_climate</a></span><span class="op">(</span>sp_list <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">Z</span>, </span>
 <span>                       level <span class="op">=</span> <span class="fl">2</span>, </span>
-<span>                       X <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">X</span>,</span>
-<span>                       w <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0</span>,<span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, </span>
+<span>                       data_fit <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">X</span>,</span>
+<span>                       subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1 = 1"</span><span class="op">)</span>,</span>
 <span>                       correlation <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">correlation</span>,</span>
 <span>                       mask <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">mask</span>, </span>
 <span>                       alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span>
@@ -96,16 +96,16 @@ model analyzed in Sommerfeld et al.(2018).</p>
 <span><span class="va">end_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">time_taken</span> <span class="op">&lt;-</span> <span class="va">end_time</span> <span class="op">-</span> <span class="va">start_time</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">time_taken</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Time difference of 12.60487 mins</span></span></code></pre></div>
+<span><span class="co">#&gt; Time difference of 6.368137 mins</span></span></code></pre></div>
 <p>Heat maps show the estimate of the mean temperature difference. The
-first row displays the contours of the outer confidence sets, estimated
-inverse set, and the inner confidence sets, for various levels. The
-three plots in the second row display the confidence sets for the
-inverse sets, where the estimated mean difference is greater or equal to
-the individual level 1.5, 2.0, or 2.5 respectively. In the second row,
-the blue line is the contour of the outer confidence set, the green line
-is the contour of the estimated inverse set and the red line is the
-contour of the inner confidence set.</p>
+first row displays the contours of the outer confidence region,
+estimated inverse region, and the inner confidence region, for various
+levels. The three plots in the second row display the confidence region
+for the inverse sets, where the estimated mean difference is greater or
+equal to the individual level 1.5, 2.0, or 2.5 respectively. In the
+second row, the blue line is the contour of the outer confidence region,
+the green line is the contour of the estimated inverse region and the
+red line is the contour of the inner confidence region.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> </span>
 <span><span class="va">p2</span> <span class="op">=</span> <span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>scb_up <span class="op">=</span> <span class="va">temp</span><span class="op">$</span><span class="va">scb_up</span><span class="op">[</span><span class="fl">17</span><span class="op">:</span><span class="fl">215</span>,<span class="fl">22</span><span class="op">:</span><span class="fl">110</span><span class="op">]</span>, scb_low <span class="op">=</span> <span class="va">temp</span><span class="op">$</span><span class="va">scb_low</span><span class="op">[</span><span class="fl">17</span><span class="op">:</span><span class="fl">215</span>,<span class="fl">22</span><span class="op">:</span><span class="fl">110</span><span class="op">]</span><span class="op">)</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="fl">2</span>,<span class="fl">2.5</span>,<span class="fl">3</span><span class="op">)</span>, x <span class="op">=</span> <span class="va">temp</span><span class="op">$</span><span class="va">x</span><span class="op">[</span><span class="fl">17</span><span class="op">:</span><span class="fl">215</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">temp</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="fl">22</span><span class="op">:</span><span class="fl">110</span><span class="op">]</span>, mu_hat <span class="op">=</span> <span class="va">temp</span><span class="op">$</span><span class="va">mu_hat</span><span class="op">[</span><span class="fl">17</span><span class="op">:</span><span class="fl">215</span>,<span class="fl">22</span><span class="op">:</span><span class="fl">110</span><span class="op">]</span>, xlab <span class="op">=</span> <span class="st">""</span>, ylab <span class="op">=</span> <span class="st">""</span>, level_label <span class="op">=</span> <span class="cn">T</span>, min.size <span class="op">=</span> <span class="fl">40</span>, palette <span class="op">=</span> <span class="st">"Spectral"</span>, color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span>
@@ -120,7 +120,7 @@ contour of the inner confidence set.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Angela Yu, Armin Schwartzman, Julia Wrobel.</p>
+  <p>Developed by Angela Yu, Armin Schwartzman, Junting Ren, Julia Wrobel.</p>
 </div>
 
 <div class="pkgdown-footer-right">

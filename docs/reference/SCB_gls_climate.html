@@ -18,10 +18,10 @@
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/SCoRES.html">Get started</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Functional_Data_Example.html">Functional_Data_Example</a></li>
-    <li><a class="dropdown-item" href="../articles/Geographic_Data_Examples.html">Geographic_Data_Examples</a></li>
-    <li><a class="dropdown-item" href="../articles/Linear_Model_Example.html">Linear_Model_Example</a></li>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-vignettes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Vignettes</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes"><li><a class="dropdown-item" href="../articles/Functional_Data_Example.html">Functional Data Example</a></li>
+    <li><a class="dropdown-item" href="../articles/Geographic_Data_Example.html">Geographic Data Example</a></li>
+    <li><a class="dropdown-item" href="../articles/Linear_Model_Example.html">Linear Model Example</a></li>
     <li><a class="dropdown-item" href="../articles/Methods.html">Methods</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -47,10 +47,10 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">SCB_gls_climate</span><span class="op">(</span></span>
-<span>  <span class="va">Z</span>,</span>
+<span>  <span class="va">sp_list</span>,</span>
 <span>  level <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  X <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  w <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  data_fit <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  subset <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  correlation <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  corpar <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  groups <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -65,70 +65,97 @@
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-z">Z<a class="anchor" aria-label="anchor" href="#arg-z"></a></dt>
+<dl><dt id="arg-sp-list">sp_list<a class="anchor" aria-label="anchor" href="#arg-sp-list"></a></dt>
 <dd><p>A list containing the spatial coordinates and the observations.
 Should include the following components:</p><ul><li><p><code>x</code>: A numeric vector of x-coordinates (e.g., longitude).</p></li>
 <li><p><code>y</code>: A numeric vector of y-coordinates (e.g., latitude).</p></li>
-<li><p><code>z</code>: A 3D array of observations with dimensions <code>length(x)</code> × <code>length(y)</code> × <code>n</code>.</p></li>
+<li><p><code>obs</code>: A 3D array of observations with dimensions
+<code>length(x)</code> × <code>length(y)</code> × <code>n</code>.</p></li>
 </ul></dd>
 
 
 <dt id="arg-level">level<a class="anchor" aria-label="anchor" href="#arg-level"></a></dt>
-<dd><p>A optional numeric threshold value used to test whether the estimated mean surface significantly deviates from it. Default is NULL.</p></dd>
+<dd><p>A optional numeric threshold value used to test whether the
+estimated mean surface significantly deviates from it. Default is NULL.</p></dd>
 
 
-<dt id="arg-x">X<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>A design matrix used in the generalized least squares (GLS) model. Each row corresponds to an observation, and each column to a covariate.
+<dt id="arg-data-fit">data_fit<a class="anchor" aria-label="anchor" href="#arg-data-fit"></a></dt>
+<dd><p>A named matrix or data frame used to fit the generalized least squares
+(GLS) model. Each row corresponds to an observation, and each column to a covariate
+to be included in the model. Outcome/boservation should not be included.
+The first column is typically an intercept column,
+which will contain only 1s, if an intercept is included in the model.
 Default is <code>matrix(1, n, 1)</code> (only keep the intercept term)</p></dd>
 
 
-<dt id="arg-w">w<a class="anchor" aria-label="anchor" href="#arg-w"></a></dt>
-<dd><p>A numeric vector specifying a linear combination of the regression coefficients. Default is <code>matrix(1, 1, 1)</code>.</p></dd>
+<dt id="arg-subset">subset<a class="anchor" aria-label="anchor" href="#arg-subset"></a></dt>
+<dd><p>An atomic character vector (e.g., c("X1 = 1"))
+specified the target function for constructing the SCB.
+Each element must be of the form <name> = <value>, where <name> is the name
+of a covariate in data_fit and <value> is the desired value.
+Whitespace is ignored. Default is NULL, will only construct the SCB for the
+first covariate in <code>data_fit</code>.</value></name></value></name></p></dd>
 
 
 <dt id="arg-correlation">correlation<a class="anchor" aria-label="anchor" href="#arg-correlation"></a></dt>
-<dd><p>A character string specifying the name of the correlation structure (e.g., <code>"corAR1"</code>, <code>"corCompSymm"</code>)
+<dd><p>A character string specifying the name of
+the correlation structure (e.g., <code>"corAR1"</code>, <code>"corCompSymm"</code>)
 to be used in the GLS model. If <code>NULL</code>, no correlation structure is assumed.</p></dd>
 
 
 <dt id="arg-corpar">corpar<a class="anchor" aria-label="anchor" href="#arg-corpar"></a></dt>
-<dd><p>A list of parameters to be passed to the correlation structure function specified in <code>correlation</code>.</p></dd>
+<dd><p>A list of parameters to be passed to
+the correlation structure function specified in <code>correlation</code>.</p></dd>
 
 
 <dt id="arg-groups">groups<a class="anchor" aria-label="anchor" href="#arg-groups"></a></dt>
-<dd><p>A vector of group identifiers used to define the within-group correlation structure (e.g., repeated measures, time blocks).
-If not specified, defaults to <code>rep(1, n)</code>, assuming all observations belong to a single group.</p></dd>
+<dd><p>A vector of group identifiers used to define
+the within-group correlation structure (e.g., repeated measures, time blocks).
+If not specified, defaults to <code>rep(1, n)</code>,
+assuming all observations belong to a single group.</p></dd>
 
 
 <dt id="arg-v">V<a class="anchor" aria-label="anchor" href="#arg-v"></a></dt>
-<dd><p>An optional array of known covariance matrices of shape <code>[length(x), length(y), n, n]</code>,
-where each <code>V[i,j,,]</code> corresponds to the covariance matrix for the observations at spatial location <code>(x[i], y[j])</code>.
-If V is given, then the GLS model will be fitted based on V. Otherwise, the GLS model will be fitted based on correlation structure.</p></dd>
+<dd><p>An optional array of known covariance matrices of
+shape <code>[length(x), length(y), n, n]</code>, where each <code>V[i,j,,]</code>
+corresponds to the covariance matrix for the observations at spatial location
+<code>(x[i], y[j])</code>. If V is given, then the GLS model will be fitted based on V.
+Otherwise, the GLS model will be fitted based on correlation structure.</p></dd>
 
 
 <dt id="arg-alpha">alpha<a class="anchor" aria-label="anchor" href="#arg-alpha"></a></dt>
-<dd><p>A numerical value specifying the confidence level for the Simultaneous Confidence Bands. Defalut is <code>0.1</code>.</p></dd>
+<dd><p>A numerical value specifying the confidence level
+for the Simultaneous Confidence Bands. Defalut is <code>0.1</code>.</p></dd>
 
 
 <dt id="arg-n">N<a class="anchor" aria-label="anchor" href="#arg-n"></a></dt>
-<dd><p>An integer specifying the number of bootstrap samples to construct the Simultaneous Confidence Bands. Default is <code>1000</code>.</p></dd>
+<dd><p>An integer specifying the number of bootstrap samples to
+construct the Simultaneous Confidence Bands. Default is <code>1000</code>.</p></dd>
 
 
 <dt id="arg-mask">mask<a class="anchor" aria-label="anchor" href="#arg-mask"></a></dt>
-<dd><p>An optional logical matrix same dimensions as <code>c(length(Z$x), length(Z$y))</code>, indicating spatial locations to include in the SCB computation.
-Non-included locations (e.g., water areas) should be set to 0 or <code>NA</code>. Default is <code>array(1, dim = c(length(Z$x), length(Z$y)))</code></p></dd>
+<dd><p>An optional logical matrix same dimensions as
+<code>c(length(sp_list$x), length(sp_list$y))</code>, indicating spatial locations to
+include in the SCB computation. Non-included locations (e.g., water areas)
+should be set to 0 or <code>NA</code>.
+Default is <code>array(1, dim = c(length(sp_list$x), length(sp_list$y)))</code></p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A list containing the following components:</p><dl><dt><code>scb_up</code></dt>
-<dd><p>A matrix of upper bounds for the simultaneous confidence bands at each spatial location.</p></dd>
+<dd><p>A matrix of upper bounds for
+the simultaneous confidence bands at each spatial location
+corresponding to the target function specified by <code>w</code>.</p></dd>
 
 <dt><code>scb_low</code></dt>
-<dd><p>A matrix of lower bounds for the simultaneous confidence bands at each spatial location.</p></dd>
+<dd><p>A matrix of lower bounds for
+the simultaneous confidence bands at each spatial location
+corresponding to the target function specified by <code>w</code>.</p></dd>
 
 <dt><code>mu_hat</code></dt>
-<dd><p>A matrix of estimated mean values at each spatial location.</p></dd>
+<dd><p>A matrix of estimated mean values at each spatial location
+corresponding to the target function specified by <code>w</code>.</p></dd>
 
 <dt><code>norm_est</code></dt>
 <dd><p>A matrix of standardized test statistics <code>(mu_hat - level) / SE</code>.</p></dd>
@@ -156,10 +183,10 @@ Confidence regions for spatial excursion sets from repeated random field observa
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">climate_data</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://svn.r-project.org/R-packages/trunk/nlme/" class="external-link">nlme</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="co"># construct confidence sets for the increase of the mean temperature (June-August)</span></span></span>
+<span class="r-in"><span><span class="co"># Construct confidence sets for the increase of the mean temperature (June-August)</span></span></span>
 <span class="r-in"><span><span class="co"># in North America between the 20th and 21st centuries</span></span></span>
-<span class="r-in"><span><span class="va">temp</span> <span class="op">=</span> <span class="fu">SCB_gls_climate</span><span class="op">(</span>Z <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">Z</span>, level <span class="op">=</span> <span class="fl">2</span>, X <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">X</span>,</span></span>
-<span class="r-in"><span>                       w <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0</span>,<span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, correlation <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">correlation</span>,</span></span>
+<span class="r-in"><span><span class="va">temp</span> <span class="op">=</span> <span class="fu">SCB_gls_climate</span><span class="op">(</span>sp_list <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">Z</span>, level <span class="op">=</span> <span class="fl">2</span>, data_fit <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">X</span>,</span></span>
+<span class="r-in"><span>                       subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1 = 1"</span><span class="op">)</span>, correlation <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">correlation</span>,</span></span>
 <span class="r-in"><span>                       mask <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">mask</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
@@ -168,7 +195,7 @@ Confidence regions for spatial excursion sets from repeated random field observa
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Angela Yu, Armin Schwartzman, Julia Wrobel.</p>
+  <p>Developed by Angela Yu, Armin Schwartzman, Junting Ren, Julia Wrobel.</p>
 </div>
 
 <div class="pkgdown-footer-right">

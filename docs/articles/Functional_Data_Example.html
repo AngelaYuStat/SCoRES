@@ -32,11 +32,11 @@
 <li class="nav-item"><a class="nav-link" href="../articles/SCoRES.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/Functional_Data_Example.html">Functional_Data_Example</a></li>
-    <li><a class="dropdown-item" href="../articles/Geographic_Data_Examples.html">Geographic_Data_Examples</a></li>
-    <li><a class="dropdown-item" href="../articles/Linear_Model_Example.html">Linear_Model_Example</a></li>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-vignettes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Vignettes</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes">
+<li><a class="dropdown-item" href="../articles/Functional_Data_Example.html">Functional Data Example</a></li>
+    <li><a class="dropdown-item" href="../articles/Geographic_Data_Example.html">Geographic Data Example</a></li>
+    <li><a class="dropdown-item" href="../articles/Linear_Model_Example.html">Linear Model Example</a></li>
     <li><a class="dropdown-item" href="../articles/Methods.html">Methods</a></li>
   </ul>
 </li>
@@ -62,7 +62,7 @@
       <h1>Functional_Data_Example</h1>
                         <h4 data-toc-skip class="author">Angela Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-08-08</h4>
+            <h4 data-toc-skip class="date">2025-08-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Functional_Data_Example.Rmd" class="external-link"><code>vignettes/Functional_Data_Example.Rmd</code></a></small>
       <div class="d-none name"><code>Functional_Data_Example.Rmd</code></div>
@@ -71,7 +71,7 @@
     
     
 <p>The example here is to use pupil functional data to construct the
-simultaneous outer and inner confidence sets (CSs) from simultaneous
+simultaneous outer and inner confidence region from simultaneous
 confidence bands (SCB) using Function-on-Scalar Regression (FoSR).</p>
 <p>The pupil dataset contains repeated measures of percent change over
 time for multiple subjects under two user categories (use: 1 and no use:
@@ -114,12 +114,12 @@ The SCoRES package provides two options for calculating simultaneous
 confidence bands (SCBs), specified via the method argument:
 <code>cma</code>: Correlation and Multiplicity Adjusted (CMA) confidence
 bands via parametric approach. <code>multiplier</code>: Dense confidence
-bands via Multiplier-t Bootstrap method. Use <code>groups</code> to
+bands via Multiplier-t Bootstrap method. Use <code>subset</code> to
 specify the names of grouping variables to analyze. The input data
 should have numerical binary 0/1 values for all scalar group variables.
 Here, we analyze the user group by specifying
-<code>groups = "use"</code>. Use <code>fitted</code> to specify the
-object for SCB estimation. If <code>fitted = TRUE</code>,
+<code>subset = c("use = 1")</code>. Use <code>fitted</code> to specify
+the object for SCB estimation. If <code>fitted = TRUE</code>,
 <code><a href="../reference/SCB_functional_outcome.html">SCoRES::SCB_functional_outcome</a></code> will construct the SCB for
 the fitted mean outcome function. If <code>fitted = FALSE</code>,
 <code><a href="../reference/SCB_functional_outcome.html">SCoRES::SCB_functional_outcome</a></code> will construct the SCB for
@@ -155,11 +155,10 @@ is a scalar covariate (use)</li>
 <span>                                          fitted <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                                          est_mean <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>                                          alpha <span class="op">=</span> <span class="fl">0.05</span>, </span>
-<span>                                          outcome <span class="op">=</span> <span class="st">"percent_change"</span>, </span>
-<span>                                          time <span class="op">=</span> <span class="st">"seconds"</span>, </span>
-<span>                                          group_name <span class="op">=</span> <span class="st">"use"</span>, </span>
-<span>                                          group_value <span class="op">=</span> <span class="fl">1</span>, </span>
-<span>                                          subject <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
+<span>                                          outcome <span class="op">=</span> <span class="st">"percent_change"</span>,</span>
+<span>                                          domain <span class="op">=</span> <span class="st">"seconds"</span>, </span>
+<span>                                          subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"use = 1"</span><span class="op">)</span>, </span>
+<span>                                          id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#CMA approach for parameter function</span></span>
 <span><span class="va">results_pupil_cma_para</span> <span class="op">&lt;-</span> <span class="fu">SCoRES</span><span class="fu">::</span><span class="fu"><a href="../reference/SCB_functional_outcome.html">SCB_functional_outcome</a></span><span class="op">(</span></span>
@@ -169,11 +168,10 @@ is a scalar covariate (use)</li>
 <span>                                          fitted <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                                          est_mean <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>                                          alpha <span class="op">=</span> <span class="fl">0.05</span>, </span>
-<span>                                          outcome <span class="op">=</span> <span class="st">"percent_change"</span>, </span>
-<span>                                          time <span class="op">=</span> <span class="st">"seconds"</span>, </span>
-<span>                                          group_name <span class="op">=</span> <span class="st">"use"</span>, </span>
-<span>                                          group_value <span class="op">=</span> <span class="fl">1</span>, </span>
-<span>                                          subject <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
+<span>                                          outcome <span class="op">=</span> <span class="st">"percent_change"</span>,</span>
+<span>                                          domain <span class="op">=</span> <span class="st">"seconds"</span>, </span>
+<span>                                          subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"use = 1"</span><span class="op">)</span>, </span>
+<span>                                          id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Multiplier-t Bootstrap</span></span>
 <span><span class="va">results_pupil_multiplier</span> <span class="op">&lt;-</span> <span class="fu">SCoRES</span><span class="fu">::</span><span class="fu"><a href="../reference/SCB_functional_outcome.html">SCB_functional_outcome</a></span><span class="op">(</span></span>
@@ -183,11 +181,10 @@ is a scalar covariate (use)</li>
 <span>                                          fitted <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                                          est_mean <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>                                          alpha <span class="op">=</span> <span class="fl">0.05</span>, </span>
-<span>                                          outcome <span class="op">=</span> <span class="st">"percent_change"</span>, </span>
-<span>                                          time <span class="op">=</span> <span class="st">"seconds"</span>, </span>
-<span>                                          group_name <span class="op">=</span> <span class="st">"use"</span>, </span>
-<span>                                          group_value <span class="op">=</span> <span class="fl">1</span>, </span>
-<span>                                          subject <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
+<span>                                          outcome <span class="op">=</span> <span class="st">"percent_change"</span>,</span>
+<span>                                          domain <span class="op">=</span> <span class="st">"seconds"</span>, </span>
+<span>                                          subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"use = 1"</span><span class="op">)</span>, </span>
+<span>                                          id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">results_pupil_multiplier_para</span> <span class="op">&lt;-</span> <span class="fu">SCoRES</span><span class="fu">::</span><span class="fu"><a href="../reference/SCB_functional_outcome.html">SCB_functional_outcome</a></span><span class="op">(</span></span>
 <span>                                          data_df <span class="op">=</span> <span class="va">pupil</span>,</span>
@@ -196,11 +193,10 @@ is a scalar covariate (use)</li>
 <span>                                          fitted <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                                          est_mean <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>                                          alpha <span class="op">=</span> <span class="fl">0.05</span>, </span>
-<span>                                          outcome <span class="op">=</span> <span class="st">"percent_change"</span>, </span>
-<span>                                          time <span class="op">=</span> <span class="st">"seconds"</span>, </span>
-<span>                                          group_name <span class="op">=</span> <span class="st">"use"</span>, </span>
-<span>                                          group_value <span class="op">=</span> <span class="fl">1</span>, </span>
-<span>                                          subject <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
+<span>                                          outcome <span class="op">=</span> <span class="st">"percent_change"</span>,</span>
+<span>                                          domain <span class="op">=</span> <span class="st">"seconds"</span>, </span>
+<span>                                          subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"use = 1"</span><span class="op">)</span>, </span>
+<span>                                          id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Multiplier-t Bootstrap (use sample mean)</span></span>
 <span><span class="va">results_pupil_multiplier_sample</span> <span class="op">&lt;-</span> <span class="fu">SCoRES</span><span class="fu">::</span><span class="fu"><a href="../reference/SCB_functional_outcome.html">SCB_functional_outcome</a></span><span class="op">(</span></span>
@@ -210,11 +206,10 @@ is a scalar covariate (use)</li>
 <span>                                          fitted <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                                          est_mean <span class="op">=</span> <span class="cn">FALSE</span>, </span>
 <span>                                          alpha <span class="op">=</span> <span class="fl">0.05</span>, </span>
-<span>                                          outcome <span class="op">=</span> <span class="st">"percent_change"</span>, </span>
-<span>                                          time <span class="op">=</span> <span class="st">"seconds"</span>, </span>
-<span>                                          group_name <span class="op">=</span> <span class="st">"use"</span>, </span>
-<span>                                          group_value <span class="op">=</span> <span class="fl">1</span>, </span>
-<span>                                          subject <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
+<span>                                          outcome <span class="op">=</span> <span class="st">"percent_change"</span>,</span>
+<span>                                          domain <span class="op">=</span> <span class="st">"seconds"</span>, </span>
+<span>                                          subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"use = 1"</span><span class="op">)</span>, </span>
+<span>                                          id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">results_pupil_multiplier_overall</span> <span class="op">&lt;-</span> <span class="fu">SCoRES</span><span class="fu">::</span><span class="fu"><a href="../reference/SCB_functional_outcome.html">SCB_functional_outcome</a></span><span class="op">(</span></span>
 <span>                                          data_df <span class="op">=</span> <span class="va">pupil</span>,</span>
@@ -222,11 +217,10 @@ is a scalar covariate (use)</li>
 <span>                                          fitted <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                                          est_mean <span class="op">=</span> <span class="cn">FALSE</span>, </span>
 <span>                                          alpha <span class="op">=</span> <span class="fl">0.05</span>, </span>
-<span>                                          outcome <span class="op">=</span> <span class="st">"percent_change"</span>, </span>
-<span>                                          time <span class="op">=</span> <span class="st">"seconds"</span>, </span>
-<span>                                          group_name <span class="op">=</span> <span class="st">"use"</span>, </span>
-<span>                                          group_value <span class="op">=</span> <span class="fl">1</span>, </span>
-<span>                                          subject <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
+<span>                                          outcome <span class="op">=</span> <span class="st">"percent_change"</span>,</span>
+<span>                                          domain <span class="op">=</span> <span class="st">"seconds"</span>, </span>
+<span>                                          subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"use = 1"</span><span class="op">)</span>, </span>
+<span>                                          id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "No Functional Regression Object provided, will only compute an overall SCB for the outcome regardless of the group specified."</span></span></code></pre></div>
 <p>In the multiplier bootstrap procedure, <code>SCoRES</code> supports
 three types of multiplier distributions, which is specified by
@@ -254,21 +248,21 @@ which is specified by <code>method_SD</code>:</p>
 </ul>
 <p>Default is <code>t</code>.</p>
 <p>For mathematical details, see vignette Methods.</p>
-<p>The code below visualizes the simultaneous outer and inner confidence
-sets (CSs) derived from SCB results using the
-<code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code> function. The <code>results</code> object
-is first converted to a tibble for easier manipulation.</p>
+<p>The code below visualizes the simultaneous outer and inner region
+derived from SCB results using the <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code>
+function. The <code>results</code> object is first converted to a tibble
+for easier manipulation.</p>
 <p>The <code>levels = c(-18, -20, -22, -24)</code> argument specifies a
 set of thresholds, and <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code> function estimates
 multiple inverse upper excursion sets corresponding to these thresholds,
-and plot the estimated inverse set, the inner confidence set, and the
-outer confidence set.</p>
+and plot the estimated inverse region, the inner confidence region, and
+the outer confidence region.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_pupil_cma</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results_pupil_cma</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results_pupil_cma</span>,</span>
 <span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">18</span>, <span class="op">-</span><span class="fl">20</span>, <span class="op">-</span><span class="fl">22</span>, <span class="op">-</span><span class="fl">24</span><span class="op">)</span>, </span>
-<span>        x <span class="op">=</span> <span class="va">results_pupil_cma</span><span class="op">$</span><span class="va">time</span>, </span>
-<span>        mu_hat <span class="op">=</span> <span class="va">results_pupil_cma</span><span class="op">$</span><span class="va">yhat</span>, </span>
+<span>        x <span class="op">=</span> <span class="va">results_pupil_cma</span><span class="op">$</span><span class="va">domain</span>, </span>
+<span>        mu_hat <span class="op">=</span> <span class="va">results_pupil_cma</span><span class="op">$</span><span class="va">mu_hat</span>, </span>
 <span>        xlab <span class="op">=</span> <span class="st">"Seconds"</span>, </span>
 <span>        ylab <span class="op">=</span> <span class="st">"Percent_Outcome"</span>, </span>
 <span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
@@ -280,21 +274,21 @@ outer confidence set.</p>
 estimated mean is greater than or equal to the four levels -18, -20, -22
 and -24 for ccds data. The gray shaded area is the 95% SCB, the solid
 black line is the estimated mean. The red horizontal line shows the
-inner confidence sets (where the lower SCB is greater than the
-corresponding level) that are contained in the estimated inverse set
+inner confidence region (where the lower SCB is greater than the
+corresponding level) that are contained in the estimated inverse region
 represented by the union of the yellow and red horizontal line (where
 the estimated mean is greater than the corresponding levels); the outer
-confidence sets are the union of the blue, yellow and red line (where
+confidence region are the union of the blue, yellow and red line (where
 the upper SCB is greater than the corresponding levels) and contain both
-the estimated inverse sets and the inner confidence sets.</p>
+the estimated inverse region and the inner confidence region.</p>
 <p>The next plot shows the SCB for the coefficient function for the use
 group.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_pupil_cma_para</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results_pupil_cma_para</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results_pupil_cma_para</span>,</span>
 <span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.5</span>, <span class="fl">5</span>, <span class="fl">5.5</span>, <span class="fl">6</span><span class="op">)</span>, </span>
-<span>        x <span class="op">=</span> <span class="va">results_pupil_cma_para</span><span class="op">$</span><span class="va">time</span>, </span>
-<span>        mu_hat <span class="op">=</span> <span class="va">results_pupil_cma_para</span><span class="op">$</span><span class="va">yhat</span>, </span>
+<span>        x <span class="op">=</span> <span class="va">results_pupil_cma_para</span><span class="op">$</span><span class="va">domain</span>, </span>
+<span>        mu_hat <span class="op">=</span> <span class="va">results_pupil_cma_para</span><span class="op">$</span><span class="va">mu_hat</span>, </span>
 <span>        xlab <span class="op">=</span> <span class="st">"Seconds"</span>, </span>
 <span>        ylab <span class="op">=</span> <span class="st">"Percent_Outcome"</span>, </span>
 <span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
@@ -311,8 +305,8 @@ possible NA’s are imputed using <code><a href="https://rdrr.io/pkg/refund/man/
 <code class="sourceCode R"><span><span class="va">results_pupil_multiplier</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results_pupil_multiplier</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results_pupil_multiplier</span>,</span>
 <span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">18</span>, <span class="op">-</span><span class="fl">20</span>, <span class="op">-</span><span class="fl">22</span>, <span class="op">-</span><span class="fl">24</span><span class="op">)</span>, </span>
-<span>        x <span class="op">=</span> <span class="va">results_pupil_multiplier</span><span class="op">$</span><span class="va">time</span>, </span>
-<span>        mu_hat <span class="op">=</span> <span class="va">results_pupil_multiplier</span><span class="op">$</span><span class="va">yhat</span>, </span>
+<span>        x <span class="op">=</span> <span class="va">results_pupil_multiplier</span><span class="op">$</span><span class="va">domain</span>, </span>
+<span>        mu_hat <span class="op">=</span> <span class="va">results_pupil_multiplier</span><span class="op">$</span><span class="va">mu_hat</span>, </span>
 <span>        xlab <span class="op">=</span> <span class="st">"Seconds"</span>, </span>
 <span>        ylab <span class="op">=</span> <span class="st">"Percent_Outcome"</span>,</span>
 <span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
@@ -324,8 +318,8 @@ possible NA’s are imputed using <code><a href="https://rdrr.io/pkg/refund/man/
 <code class="sourceCode R"><span><span class="va">results_pupil_multiplier_para</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results_pupil_multiplier_para</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results_pupil_multiplier_para</span>,</span>
 <span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.5</span>, <span class="fl">5</span>, <span class="fl">5.5</span>, <span class="fl">6</span><span class="op">)</span>, </span>
-<span>        x <span class="op">=</span> <span class="va">results_pupil_multiplier_para</span><span class="op">$</span><span class="va">time</span>, </span>
-<span>        mu_hat <span class="op">=</span> <span class="va">results_pupil_multiplier_para</span><span class="op">$</span><span class="va">yhat</span>, </span>
+<span>        x <span class="op">=</span> <span class="va">results_pupil_multiplier_para</span><span class="op">$</span><span class="va">domain</span>, </span>
+<span>        mu_hat <span class="op">=</span> <span class="va">results_pupil_multiplier_para</span><span class="op">$</span><span class="va">mu_hat</span>, </span>
 <span>        xlab <span class="op">=</span> <span class="st">"Seconds"</span>, </span>
 <span>        ylab <span class="op">=</span> <span class="st">"Percent_Outcome"</span>,</span>
 <span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
@@ -337,8 +331,8 @@ possible NA’s are imputed using <code><a href="https://rdrr.io/pkg/refund/man/
 <code class="sourceCode R"><span><span class="va">results_pupil_multiplier_sample</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results_pupil_multiplier_sample</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results_pupil_multiplier_sample</span>,</span>
 <span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">18</span>, <span class="op">-</span><span class="fl">20</span>, <span class="op">-</span><span class="fl">22</span>, <span class="op">-</span><span class="fl">24</span><span class="op">)</span>, </span>
-<span>        x <span class="op">=</span> <span class="va">results_pupil_multiplier_sample</span><span class="op">$</span><span class="va">time</span>, </span>
-<span>        mu_hat <span class="op">=</span> <span class="va">results_pupil_multiplier_sample</span><span class="op">$</span><span class="va">yhat</span>, </span>
+<span>        x <span class="op">=</span> <span class="va">results_pupil_multiplier_sample</span><span class="op">$</span><span class="va">domain</span>, </span>
+<span>        mu_hat <span class="op">=</span> <span class="va">results_pupil_multiplier_sample</span><span class="op">$</span><span class="va">mu_hat</span>, </span>
 <span>        xlab <span class="op">=</span> <span class="st">"Seconds"</span>, </span>
 <span>        ylab <span class="op">=</span> <span class="st">"Percent_Outcome"</span>, </span>
 <span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
@@ -350,8 +344,8 @@ possible NA’s are imputed using <code><a href="https://rdrr.io/pkg/refund/man/
 <code class="sourceCode R"><span><span class="va">results_pupil_multiplier_overall</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results_pupil_multiplier_overall</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results_pupil_multiplier_overall</span>,</span>
 <span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">18</span>, <span class="op">-</span><span class="fl">20</span>, <span class="op">-</span><span class="fl">22</span>, <span class="op">-</span><span class="fl">24</span><span class="op">)</span>, </span>
-<span>        x <span class="op">=</span> <span class="va">results_pupil_multiplier_overall</span><span class="op">$</span><span class="va">time</span>, </span>
-<span>        mu_hat <span class="op">=</span> <span class="va">results_pupil_multiplier_overall</span><span class="op">$</span><span class="va">yhat</span>, </span>
+<span>        x <span class="op">=</span> <span class="va">results_pupil_multiplier_overall</span><span class="op">$</span><span class="va">domain</span>, </span>
+<span>        mu_hat <span class="op">=</span> <span class="va">results_pupil_multiplier_overall</span><span class="op">$</span><span class="va">mu_hat</span>, </span>
 <span>        xlab <span class="op">=</span> <span class="st">"Seconds"</span>, </span>
 <span>        ylab <span class="op">=</span> <span class="st">"Percent_Outcome"</span>, </span>
 <span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
@@ -394,10 +388,11 @@ is a scalar covariate (gender)</li>
 <span>                                          est_mean <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>                                          alpha <span class="op">=</span> <span class="fl">0.05</span>, </span>
 <span>                                          outcome <span class="op">=</span> <span class="st">"percent_change"</span>, </span>
-<span>                                          time <span class="op">=</span> <span class="st">"seconds"</span>, </span>
-<span>                                          group_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"use"</span>, <span class="st">"age"</span>, <span class="st">"gender"</span><span class="op">)</span>, </span>
-<span>                                          group_value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">40</span>, <span class="fl">0</span><span class="op">)</span>, </span>
-<span>                                          subject <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
+<span>                                          domain <span class="op">=</span> <span class="st">"seconds"</span>, </span>
+<span>                                          subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"use = 1"</span>, </span>
+<span>                                                     <span class="st">"age = 40"</span>, </span>
+<span>                                                     <span class="st">"gender = 0"</span><span class="op">)</span>,  </span>
+<span>                                          id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Multiplier-t Bootstrap</span></span>
 <span><span class="va">results_pupil_multiplier</span> <span class="op">&lt;-</span> <span class="fu">SCoRES</span><span class="fu">::</span><span class="fu"><a href="../reference/SCB_functional_outcome.html">SCB_functional_outcome</a></span><span class="op">(</span></span>
@@ -408,10 +403,11 @@ is a scalar covariate (gender)</li>
 <span>                                          est_mean <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>                                          alpha <span class="op">=</span> <span class="fl">0.05</span>, </span>
 <span>                                          outcome <span class="op">=</span> <span class="st">"percent_change"</span>, </span>
-<span>                                          time <span class="op">=</span> <span class="st">"seconds"</span>, </span>
-<span>                                          group_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"use"</span>, <span class="st">"age"</span>, <span class="st">"gender"</span><span class="op">)</span>, </span>
-<span>                                          group_value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">40</span>, <span class="fl">0</span><span class="op">)</span>, </span>
-<span>                                          subject <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span></code></pre></div>
+<span>                                          domain <span class="op">=</span> <span class="st">"seconds"</span>, </span>
+<span>                                          subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"use = 1"</span>, </span>
+<span>                                                     <span class="st">"age = 40"</span>, </span>
+<span>                                                     <span class="st">"gender = 0"</span><span class="op">)</span>, </span>
+<span>                                          id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span></code></pre></div>
 <p>The following plots show the SCBs and inverse SCBs for the mean
 outcome function. The first one is from CMA approach and the second is
 from multiplier bootstrap.</p>
@@ -419,8 +415,8 @@ from multiplier bootstrap.</p>
 <code class="sourceCode R"><span><span class="va">results_pupil_cma</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results_pupil_cma</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results_pupil_cma</span>,</span>
 <span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">18</span>, <span class="op">-</span><span class="fl">20</span>, <span class="op">-</span><span class="fl">22</span>, <span class="op">-</span><span class="fl">24</span><span class="op">)</span>, </span>
-<span>        x <span class="op">=</span> <span class="va">results_pupil_cma</span><span class="op">$</span><span class="va">time</span>, </span>
-<span>        mu_hat <span class="op">=</span> <span class="va">results_pupil_cma</span><span class="op">$</span><span class="va">yhat</span>, </span>
+<span>        x <span class="op">=</span> <span class="va">results_pupil_cma</span><span class="op">$</span><span class="va">domain</span>, </span>
+<span>        mu_hat <span class="op">=</span> <span class="va">results_pupil_cma</span><span class="op">$</span><span class="va">mu_hat</span>, </span>
 <span>        xlab <span class="op">=</span> <span class="st">"Seconds"</span>, </span>
 <span>        ylab <span class="op">=</span> <span class="st">"Percent_Outcome"</span>,</span>
 <span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
@@ -432,8 +428,8 @@ from multiplier bootstrap.</p>
 <code class="sourceCode R"><span><span class="va">results_pupil_multiplier</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results_pupil_multiplier</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results_pupil_multiplier</span>,</span>
 <span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">18</span>, <span class="op">-</span><span class="fl">20</span>, <span class="op">-</span><span class="fl">22</span>, <span class="op">-</span><span class="fl">24</span><span class="op">)</span>, </span>
-<span>        x <span class="op">=</span> <span class="va">results_pupil_multiplier</span><span class="op">$</span><span class="va">time</span>, </span>
-<span>        mu_hat <span class="op">=</span> <span class="va">results_pupil_multiplier</span><span class="op">$</span><span class="va">yhat</span>, </span>
+<span>        x <span class="op">=</span> <span class="va">results_pupil_multiplier</span><span class="op">$</span><span class="va">domain</span>, </span>
+<span>        mu_hat <span class="op">=</span> <span class="va">results_pupil_multiplier</span><span class="op">$</span><span class="va">mu_hat</span>, </span>
 <span>        xlab <span class="op">=</span> <span class="st">"Seconds"</span>, </span>
 <span>        ylab <span class="op">=</span> <span class="st">"Percent_Outcome"</span>,</span>
 <span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
@@ -448,7 +444,7 @@ from multiplier bootstrap.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Angela Yu, Armin Schwartzman, Julia Wrobel.</p>
+  <p>Developed by Angela Yu, Armin Schwartzman, Junting Ren, Julia Wrobel.</p>
 </div>
 
 <div class="pkgdown-footer-right">

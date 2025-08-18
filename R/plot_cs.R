@@ -1,33 +1,47 @@
-#' Plot Inversion of Simultaneous Confidence Intervals (SCIs) into Inner and Outer Confidence Sets (CSs)
+#' Plot Inversion of Simultaneous Confidence Intervals (SCIs) into Inner and Outer Confidence Region
 #'
-#' Visualizes simultaneous confidence sets of upper and lower excursion sets for discrete, 1D or 2D data, using contour or band plots.
-#' Supports plotting CSs at multiple levels and labeling contours.
+#' Visualizes simultaneous confidence sets of upper and lower excursion sets for
+#' discrete, 1D or 2D data, using contour or band plots.
+#' Supports plotting confidence region at multiple levels and labeling contours.
 #'
-#' @param SCB A numeric list returned by `regression_outcome_scb()`, `functional_outcome_scb()` or a custom list with two arrays of the same dimension: `scb_up` and `scb_low`,
-#'            representing the upper and lower confidence bounds respectively.
-#'            \verb{SCB$scb_up} and \verb{SCB$scb_low} should be numeric vectors (1D) or matrices (2D) containing the upper simultaneous confidence interval.
-#'            Dimensions of `SCB$scb_up` and `SCB$scb_low` must match.
+#' @param SCB A numeric list returned by `regression_outcome_scb()`,
+#' `functional_outcome_scb()` or a custom list with two arrays of the same dimension:
+#' `scb_up` and `scb_low`, representing the upper and lower confidence bounds
+#' respectively. \verb{SCB$scb_up} and \verb{SCB$scb_low} should be numeric vectors (1D)
+#' or matrices (2D) containing the upper simultaneous confidence interval.
+#' Dimensions of `SCB$scb_up` and `SCB$scb_low` must match.
 #' @param levels A numeric vector or list of scalers for different levels or matrix containing interval sets to construct the confidence sets.
-#'               If \code{type} = "upper" or "lower", `levels` should be a vector.
-#'               "upper" represents upper excursion sets, and "lower" represents lower excursion sets.
-#'               If \code{type = "interval"}, then \code{levels} should be a \code{list} with two named elements:
-#'               \code{low} and \code{up}, corresponding to the bounds of the interval \code{[low, up]}.
-#' @param type A character specifying the type of inverse sets to fit. Choices are `"upper"`, `"lower"` or `"interval"`. Default is `"upper"`.
-#' @param x A numerical vector of x-axis coordinates for 1D and 2D cases. For discrete coordinates, use a character vector.
+#' If \code{type} = "upper" or "lower", `levels` should be a vector.
+#' "upper" represents upper excursion sets, and "lower" represents lower excursion sets.
+#' If \code{type = "interval"}, then \code{levels} should be a \code{list} with two named elements:
+#' \code{low} and \code{up}, corresponding to the bounds of the interval \code{[low, up]}.
+#' @param type A character specifying the type of inverse sets to fit.
+#' Choices are `"upper"`, `"lower"` or `"interval"`. Default is `"upper"`.
+#' @param x A numerical vector of x-axis coordinates for 1D and 2D cases.
+#' For discrete coordinates, use a character vector.
 #' @param y Optional vector of y-axis coordinates for 2D data.
-#' @param mu_hat A numeric array (1D) or matrix (2D) of estimated means. If `mu_true` is provided, this will be overwritten by the true mean. Default is NULL.
-#'               An input must be provided for either `mu_hat` or `mu_true`.
-#' @param mu_true Optional numeric array (1D) or matrix (2D) of true means, which overrides `mu_hat` if provided. Default is NULL.
-#' @param together Optional logical value for plotting option. If `TRUE`, plots all confidence levels on the same figure; otherwise, generates one plot per level. Default is `TRUE`.
+#' @param mu_hat A numeric array (1D) or matrix (2D) of estimated means.
+#' If `mu_true` is provided, this will be overwritten by the true mean. Default is NULL.
+#' An input must be provided for either `mu_hat` or `mu_true`.
+#' @param mu_true Optional numeric array (1D) or matrix (2D) of true means,
+#' which overrides `mu_hat` if provided. Default is NULL.
+#' @param together Optional logical value for plotting option.
+#' If `TRUE`, plots all confidence levels on the same figure;
+#' otherwise, generates one plot per level. Default is `TRUE`.
 #' @param xlab Optional character for the label of the x-axis. Default is `"x1"`.
 #' @param ylab Optional character for the label of the y-axis. Default is `"x2"`.
-#' @param level_label Optional logical value for level displaying option. If `TRUE`, displays numeric level labels on contour lines for 2D confidence sets. Default is `TRUE`.
-#' @param min.size Optional logical value for minimum number of points required for a contour to be labeled. Default is `5`.
-#' @param palette Optional character value for the name of the HCL color palette to use when plotting multiple levels together. Default is `"gray"`.
-#' @param color_level_label Optional character value for the color used for contour level labels. Default is `"black"`.
+#' @param level_label Optional logical value for level displaying option.
+#' If `TRUE`, displays numeric level labels on contour lines for 2D confidence sets.
+#' Default is `TRUE`.
+#' @param min.size Optional logical value for minimum number of points
+#' required for a contour to be labeled. Default is `5`.
+#' @param palette Optional character value for the name of the HCL color palette
+#' to use when plotting multiple levels together. Default is `"gray"`.
+#' @param color_level_label Optional character value for the color used
+#' for contour level labels. Default is `"black"`.
 #'
 #' @returns A \code{ggplot2} object that includes both simultaneous confidence intervals
-#' and simultaneous confidence sets of excursion sets corresponding to levels assigned.
+#' and simultaneous confidence region of excursion sets corresponding to levels assigned.
 #'
 #' @importFrom metR geom_text_contour
 #' @import ggplot2
@@ -56,8 +70,8 @@
 #'
 #' pupil_cma <- SCB_functional_outcome(data = pupil_fpca, object = fosr_mod, method = "cma",
 #'                                    est_mean = TRUE, outcome = "percent_change",
-#'                                    time = "seconds", group_name = "use",
-#'                                    group_value = 1, subject = "id")
+#'                                    domain = "seconds", subset= c("use = 1"),
+#'                                    id = "id")
 #' pupil_cma <- tibble::as_tibble(pupil_cma)
 #'
 #' plot_cs(pupil_cma,levels = c(-18, -20, -22, -24), x = pupil_cma$time,

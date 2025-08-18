@@ -25,10 +25,10 @@ estimation.
 
 Ren et al. (2023) generalized the estimation to dense and non-dense
 domains, and developed a fast and reliable construction method of
-confidence sets for inverse sets over arbitrary chosen thresholds $c$
+confidence region for inverse sets over arbitrary chosen thresholds $c$
 simultaneously. Based on Ren’s approach, this package provides useful
 statistical tools for both the estimation of the inverse set and the
-corresponding simultaneous outer and inner confidence sets (CSs).
+corresponding simultaneous outer and inner confidence region.
 Acceptable forms of input includes both 1D and 2D data for linear
 regression, logistic regression, functional regression and spatial
 generalized least square regression. Useful functions are also provided
@@ -57,13 +57,19 @@ devtools::install_github("AngelaYuStat/SCoRES")
 ------------------------------------------------------------------------
 
 The example here is to use pupil functional data to construct the
-simultaneous outer and inner confidence sets (CSs) from simultaneous
+simultaneous outer and inner confidence region from simultaneous
 confidence bands (SCB) using Function-on-Scalar Regression (FoSR).
 
 The pupil dataset contains repeated measures of percent change over time
 for multiple subjects under two user categories (use: 1 and no use: 0).
 It contains both user and non-user groups, multiple time points, and
 several covariates, including age, gender, BMI, and alcohol consumption.
+
+Note that `mgcv` is only required for fitting the GAMM-FPCA model and is otherwise
+unnecessary for the package. GAMM-FPCA (Generalized Additive Mixed Model Functional 
+Principal Component Analysis) is a method for modeling functional data with both 
+smooth effects and random variation. More details about this model can be found 
+in Methods vignette.
 
 ``` r
 library(SCoRES)
@@ -73,9 +79,10 @@ data(pupil)
 
 Before calculating the SCBs, we first process pupil data by fitting a
 mean GAM model, extracting residuals and performing FPCA using
-`SCoRES::prepare_pupil_fpca()`, the function will return an enhanced
-dataset includes the FPCA-derived basis scores (Phi1, Phi2, Phi3, Phi4)
-for Function-on-Scalar Regression (FoSR) analysis.
+`SCoRES::prepare_pupil_fpca()`, a function specifically designed for modeling 
+pupil data. The function will return an enhanced dataset includes the FPCA-derived 
+basis scores (Phi1, Phi2, Phi3, Phi4) for Function-on-Scalar Regression (FoSR) 
+analysis.
 
 Following the FPCA-based data augmentation, we fit a FoSR model using
 `mgcv::bam()`, which allows efficient estimation of Generalized Additive
@@ -134,23 +141,22 @@ results_pupil_cma <- SCoRES::SCB_functional_outcome(
                                           fitted = TRUE,
                                           est_mean = TRUE, 
                                           alpha = 0.05, 
-                                          outcome = "percent_change", 
-                                          time = "seconds", 
-                                          group_name = "use", 
-                                          group_value = 1, 
-                                          subject = "id")
+                                          outcome = "percent_change",
+                                          domain = "seconds", 
+                                          subset = c("use = 1"), 
+                                          id = "id")
 ```
 
-The code below visualizes the **simultaneous outer and inner confidence
-sets (CSs)** derived from SCB results using the `SCoRES::plot_cs()`
+The code below visualizes the **simultaneous outer and inner confidence region** 
+derived from SCB results using the `SCoRES::plot_cs()`
 function. The `results` object is first converted to a tibble for easier
 manipulation.
 
 The `levels = c(-18, -20, -22, -24)` argument specifies a set of
 thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse
 upper excursion sets corresponding to these thresholds, and plot the
-estimated inverse set, the inner confidence set, and the outer
-confidence set.
+estimated inverse region, the inner confidence region, and the outer
+confidence region.
 
 ``` r
 results_pupil_cma <- tibble::as_tibble(results_pupil_cma)
@@ -172,10 +178,10 @@ The plot demonstrate how to use SCB to find regions of s where the
 estimated mean is greater than or equal to the four levels -18, -20, -22
 and -24 for pupil data. The gray shaded area is the 95% SCB, the solid
 black line is the estimated mean. The red horizontal line shows the
-inner confidence sets (where the lower SCB is greater than the
-corresponding level) that are contained in the estimated inverse set
+inner confidence region (where the lower SCB is greater than the
+corresponding level) that are contained in the estimated inverse region
 represented by the union of the yellow and red horizontal line (where
 the estimated mean is greater than the corresponding levels); the outer
-confidence sets are the union of the blue, yellow and red line (where
+confidence region are the union of the blue, yellow and red line (where
 the upper SCB is greater than the corresponding levels) and contain both
-the estimated inverse sets and the inner confidence sets.
+the estimated inverse region and the inner confidence region.

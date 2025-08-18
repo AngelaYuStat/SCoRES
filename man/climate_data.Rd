@@ -8,7 +8,7 @@
 A list with the following components:
 \describe{
 \item{\code{Z}}{A list containing spatial data with three components:
-\code{x} (longitude), \code{y} (latitude), and \code{z}, a 3D array of observations with dimensions \code{[lon, lat, n]}.
+\code{x} (longitude), \code{y} (latitude), and \code{obs}, a 3D array of observations with dimensions \code{[lon, lat, n]}.
 The first \code{na} slices of \code{z} come from mean summer temperature (June-August) in North America recorded from 1971 to 1999,
 and the last \code{nb} slices contain mean summer temperature from 2041 to 2069.}
 \item{\code{mask}}{A logical or numeric matrix of dimensions \code{length(lon)} × \code{length(lat)}.

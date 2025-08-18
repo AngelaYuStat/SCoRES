@@ -18,7 +18,7 @@ A tibble containing:
 \itemize{
 \item Original pupil variables
 \item FPCA eigenfunctions (Phi1, Phi2,...)
-\item Sorted by subject and time
+\item Sorted by ID and domain
 }
 }
 \description{

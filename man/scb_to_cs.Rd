@@ -2,7 +2,7 @@
 % Please edit documentation in R/scb_to_cs.R
 \name{scb_to_cs}
 \alias{scb_to_cs}
-\title{Construct Simultaneous Confidence Sets for Excursion/Interval Sets from Simultaneous Confidence Bands}
+\title{Construct Simultaneous Confidence Region for Excursion/Interval Sets from Simultaneous Confidence Bands}
 \usage{
 scb_to_cs(
   scb_up,
@@ -20,60 +20,88 @@ scb_to_cs(
 )
 }
 \arguments{
-\item{scb_up}{A numeric vector (1D) or matrix (2D) containing the upper simultaneous confidence interval.}
+\item{scb_up}{A numeric vector (1D) or matrix (2D) containing
+the upper simultaneous confidence interval.}
 
-\item{scb_low}{A numeric vector (1D) or matrix (2D) containing the lower bounds of the simultaneous confidence bands.
+\item{scb_low}{A numeric vector (1D) or matrix (2D) containing
+the lower bounds of the simultaneous confidence bands.
 Dimensions of \code{scb_up} and \code{scb_low} must match.}
 
-\item{levels}{A numeric vector or list of scalers for different levels or matrix containing interval sets to construct the confidence sets.
+\item{levels}{A numeric vector or list of scalers for different levels or matrix
+containing interval sets to construct the confidence sets.
 If \code{type} = "upper", "lower", or "two-sided", \code{levels} should be a vector.
 "upper" represents upper excursion sets, and "lower" represents lower excursion sets.
-If "two-sided" option is chosen, will estimate only outer CSs for both upper and lower excursion sets.
-If \code{type = "interval"}, then \code{levels} should be a \code{list} with two named elements:
-\code{low} and \code{up}, corresponding to the bounds of the interval \code{[low, up]}.}
+If "two-sided" option is chosen, will estimate only outer CSs for both upper
+and lower excursion sets.
+If \code{type = "interval"}, then \code{levels} should be a \code{list}
+with two named elements: \code{low} and \code{up},
+corresponding to the bounds of the interval \code{[low, up]}.}
 
 \item{true_mean}{Optional matrix of the true mean function.
 Should have the same dimension as \code{scb_up} and \code{scb_low}.}
 
-\item{est_mean}{Optional matrix of the estimated mean function, used for plotting if \code{true_mean} is not available.
+\item{est_mean}{Optional matrix of the estimated mean function,
+used for plotting if \code{true_mean} is not available.
 Should have the same dimension as \code{scb_up} and \code{scb_low}.}
 
-\item{x1}{A numeric vector of coordinates for the first dimension used for plotting the inner and outer confidence sets (CSs). Default is NULL.
+\item{x1}{A numeric vector of coordinates for the first dimension used
+for plotting the inner and outer confidence region. Default is NULL.
 Dimension of \code{x1} must match the first dimension of \code{scb_up} and \code{scb_low}.}
 
-\item{x2}{A numeric vector of coordinates for the second dimension used for plotting inner and outer confidence sets (CSs). Default is NULL.
+\item{x2}{A numeric vector of coordinates for the second dimension used
+for plotting inner and outer confidence region. Default is NULL.
 Dimension of \code{x1} must match the second dimension of \code{scb_up} and \code{scb_low}.}
 
-\item{type}{A character string specifying the type of inverse set to construct if levels are not a matrix.
-Choices are \code{"upper"}, \code{"lower"}, \code{"two-sided"} or \code{"interval"}.
-Notice that \code{"two-sided"} type is not available for plotting (\code{return_plot = TRUE}).}
+\item{type}{A character string specifying the type of inverse set to construct
+if levels are not a matrix. Choices are \code{"upper"}, \code{"lower"}, \code{"two-sided"}
+or \code{"interval"}. Notice that \code{"two-sided"} type is not available for
+plotting (\code{return_plot = TRUE}).}
 
-\item{return_contain_only}{Logical. If \code{TRUE}, only return a matrix/logical map indicating which point is contained within two types of CSs across all levels.}
+\item{return_contain_only}{Logical. If \code{TRUE}, only return a matrix/logical
+map indicating which point is contained within two types of CSs across all levels.}
 
-\item{return_plot}{Logical. If \code{TRUE}, return a ggplot object for visualizing the inner and outer confidence sets (CSs).}
+\item{return_plot}{Logical. If \code{TRUE}, return a ggplot object for visualizing
+the inner and outer confidence region.}
 
-\item{xlab}{A character for the name of the x axis used for plotting the inner and outer confidence sets (CSs). Default is NULL.}
+\item{xlab}{A character for the name of the x axis used for plotting the inner
+and outer confidence region. Default is NULL.}
 
-\item{ylab}{A character for the name of the y axis used for plotting the inner and outer confidence sets (CSs). Default is NULL.}
+\item{ylab}{A character for the name of the y axis used for plotting the inner
+and outer confidence region. Default is NULL.}
 }
 \value{
 A list containing the following components:
 \describe{
-\item{levels}{A vector (or list) of threshold levels used to define the confidence sets. Same as the input \code{levels}.}
-\item{U_in}{(Optional) A list of logical matrices indicating whether each point is within the simultaneous inner confidence set for each level. Returned only when \code{return_contain_only = FALSE} and \code{type != "two-sided"}.}
-\item{U_out}{(Optional) A list of logical matrices indicating whether each point is within the simultaneous outer confidence set for each level. Returned only when \code{return_contain_only = FALSE} and \code{type != "two-sided"}.}
-\item{L_out}{(Two-sided only) A list of logical matrices indicating lower bound containment (for \code{type = "two-sided"}).}
-\item{U_out}{(Two-sided only) A list of logical matrices indicating upper bound containment (for \code{type = "two-sided"}).}
-\item{contain_individual}{A logical vector indicating whether the true mean is fully contained within each level's simultaneous inner and outer CSs. Returned only if \code{true_mean} is provided.}
-\item{contain_all}{A single logical value indicating whether the true mean is contained in all levels' simultaneous inner and outer CSs. Returned only if \code{true_mean} is provided.}
-\item{plot_cs}{(Optional) A list of ggplot2 objects for visualizing the SCBs and simultaneous CSs across all levels, returned when \code{return_plot = TRUE}. Includes both a combined plot and individual plots per level.}
+\item{levels}{A vector (or list) of threshold levels used to define the
+confidence sets. Same as the input \code{levels}.}
+\item{U_in}{(Optional) A list of logical matrices indicating whether each
+point is within the simultaneous inner confidence set for each level.
+Returned only when \code{return_contain_only = FALSE} and \code{type != "two-sided"}.}
+\item{U_out}{(Optional) A list of logical matrices indicating whether each
+point is within the simultaneous outer confidence set for each level.
+Returned only when \code{return_contain_only = FALSE} and \code{type != "two-sided"}.}
+\item{L_out}{(Two-sided only) A list of logical matrices
+indicating lower bound containment (for \code{type = "two-sided"}).}
+\item{U_out}{(Two-sided only) A list of logical matrices
+indicating upper bound containment (for \code{type = "two-sided"}).}
+\item{contain_individual}{A logical vector indicating
+whether the true mean is fully contained within each level's simultaneous
+inner and outer confidence region. Returned only if \code{true_mean} is provided.}
+\item{contain_all}{A single logical value indicating whether the true mean
+is contained in all levels' simultaneous inner and outer confidence region.
+Returned only if \code{true_mean} is provided.}
+\item{plot_cs}{(Optional) A list of ggplot2 objects for visualizing the
+SCBs and simultaneous confidence region across all levels,
+returned when \code{return_plot = TRUE}. Includes both a combined plot and
+individual plots per level.}
 }
 }
 \description{
-This function constructs simultaneous confidence sets for upper and lower excursion sets, and interval sets
-from simultaneous confidence bands (SCB). It allows estimation of inner and outer confidence sets (CSs) under
-single or multiple thresholds. Visualization of the CS sets is also included, along with a containment check
-for the coverage of true or estimated functions.
+This function constructs simultaneous confidence region for upper and lower
+excursion sets, and interval sets from simultaneous confidence bands (SCB).
+It allows estimation of inner and outer confidence region under
+single or multiple thresholds. Visualization of the confidence region is also
+included, along with a containment check for the coverage of true or estimated functions.
 }
 \examples{
 set.seed(262)

@@ -37,7 +37,7 @@ for(j in 1:na) Y[,,j] = summer[,,j,1]
 for(j in 1:nb) Y[,,na+j] = summer[,,j,2]
 #for(j in 1:na) Y[,,j] = winter[,,j,1]
 #for(j in 1:nb) Y[,,na+j] = winter[,,j,2]
-Z = list(x = lon, y = lat, z = Y)
+Z = list(x = lon, y = lat, obs = Y)
 correlation = "corAR1"
 
 climate_data <- list(Z = Z, mask = mask, X = X, correlation = correlation)

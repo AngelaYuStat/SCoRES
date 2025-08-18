@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The example here is to use pupil functional data to construct the simultaneous outer and inner confidence sets (CSs) from simultaneous confidence bands (SCB) using Function-on-Scalar Regression (FoSR).
+The example here is to use pupil functional data to construct the simultaneous outer and inner confidence region from simultaneous confidence bands (SCB) using Function-on-Scalar Regression (FoSR).
 
 The pupil dataset contains repeated measures of percent change over time for multiple subjects under two user categories (use: 1 and no use: 0). It contains both user and non-user groups, multiple time points, and several covariates, including age, gender, BMI, and alcohol consumption.
 
@@ -63,7 +63,7 @@ The SCoRES package provides two options for calculating simultaneous confidence 
 `cma`: Correlation and Multiplicity Adjusted (CMA) confidence bands
 via parametric approach.
 `multiplier`: Dense confidence bands via Multiplier-t Bootstrap method.
-Use `groups` to specify the names of grouping variables to analyze. The input data should have numerical binary 0/1 values for all scalar group variables. Here, we analyze the user group by specifying `groups = "use"`.
+Use `subset` to specify the names of grouping variables to analyze. The input data should have numerical binary 0/1 values for all scalar group variables. Here, we analyze the user group by specifying `subset = c("use = 1")`.
 Use `fitted` to specify the object for SCB estimation. If `fitted = TRUE`, `SCoRES::SCB_functional_outcome` will construct the SCB for the fitted mean outcome function. If `fitted = FALSE`, `SCoRES::SCB_functional_outcome` will construct the SCB for the fitted parameter function.
 Use est_mean to specify the point estimate used for constructing SCBs in SCoRES::SCB_functional_outcome. This argument is for `multiplier`
 If est_mean = `TRUE`, the multiplier bootstrap will be performed based on the fitted mean outcome function.
@@ -88,11 +88,10 @@ results_pupil_cma <- SCoRES::SCB_functional_outcome(
                                           fitted = TRUE,
                                           est_mean = TRUE, 
                                           alpha = 0.05, 
-                                          outcome = "percent_change", 
-                                          time = "seconds", 
-                                          group_name = "use", 
-                                          group_value = 1, 
-                                          subject = "id")
+                                          outcome = "percent_change",
+                                          domain = "seconds", 
+                                          subset = c("use = 1"), 
+                                          id = "id")
 
 #CMA approach for parameter function
 results_pupil_cma_para <- SCoRES::SCB_functional_outcome(
@@ -102,11 +101,10 @@ results_pupil_cma_para <- SCoRES::SCB_functional_outcome(
                                           fitted = FALSE,
                                           est_mean = TRUE, 
                                           alpha = 0.05, 
-                                          outcome = "percent_change", 
-                                          time = "seconds", 
-                                          group_name = "use", 
-                                          group_value = 1, 
-                                          subject = "id")
+                                          outcome = "percent_change",
+                                          domain = "seconds", 
+                                          subset = c("use = 1"), 
+                                          id = "id")
 
 # Multiplier-t Bootstrap
 results_pupil_multiplier <- SCoRES::SCB_functional_outcome(
@@ -116,11 +114,10 @@ results_pupil_multiplier <- SCoRES::SCB_functional_outcome(
                                           fitted = TRUE,
                                           est_mean = TRUE, 
                                           alpha = 0.05, 
-                                          outcome = "percent_change", 
-                                          time = "seconds", 
-                                          group_name = "use", 
-                                          group_value = 1, 
-                                          subject = "id")
+                                          outcome = "percent_change",
+                                          domain = "seconds", 
+                                          subset = c("use = 1"), 
+                                          id = "id")
 
 results_pupil_multiplier_para <- SCoRES::SCB_functional_outcome(
                                           data_df = pupil,
@@ -129,11 +126,10 @@ results_pupil_multiplier_para <- SCoRES::SCB_functional_outcome(
                                           fitted = FALSE,
                                           est_mean = TRUE, 
                                           alpha = 0.05, 
-                                          outcome = "percent_change", 
-                                          time = "seconds", 
-                                          group_name = "use", 
-                                          group_value = 1, 
-                                          subject = "id")
+                                          outcome = "percent_change",
+                                          domain = "seconds", 
+                                          subset = c("use = 1"), 
+                                          id = "id")
 
 # Multiplier-t Bootstrap (use sample mean)
 results_pupil_multiplier_sample <- SCoRES::SCB_functional_outcome(
@@ -143,11 +139,10 @@ results_pupil_multiplier_sample <- SCoRES::SCB_functional_outcome(
                                           fitted = TRUE,
                                           est_mean = FALSE, 
                                           alpha = 0.05, 
-                                          outcome = "percent_change", 
-                                          time = "seconds", 
-                                          group_name = "use", 
-                                          group_value = 1, 
-                                          subject = "id")
+                                          outcome = "percent_change",
+                                          domain = "seconds", 
+                                          subset = c("use = 1"), 
+                                          id = "id")
 
 results_pupil_multiplier_overall <- SCoRES::SCB_functional_outcome(
                                           data_df = pupil,
@@ -155,11 +150,10 @@ results_pupil_multiplier_overall <- SCoRES::SCB_functional_outcome(
                                           fitted = TRUE,
                                           est_mean = FALSE, 
                                           alpha = 0.05, 
-                                          outcome = "percent_change", 
-                                          time = "seconds", 
-                                          group_name = "use", 
-                                          group_value = 1, 
-                                          subject = "id")
+                                          outcome = "percent_change",
+                                          domain = "seconds", 
+                                          subset = c("use = 1"), 
+                                          id = "id")
 ```
 
 In the multiplier bootstrap procedure, `SCoRES` supports three types of multiplier distributions, which is specified by `weights`:
@@ -181,17 +175,16 @@ Default is `t`.
 
 For mathematical details, see vignette Methods.
   
-The code below visualizes the simultaneous outer and inner confidence
-sets (CSs) derived from SCB results using the `SCoRES::plot_cs()` function. The `results` object is first converted to a tibble for easier manipulation.
+The code below visualizes the simultaneous outer and inner region derived from SCB results using the `SCoRES::plot_cs()` function. The `results` object is first converted to a tibble for easier manipulation.
 
-The `levels = c(-18, -20, -22, -24)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse set, the inner confidence set, and the outer confidence set. 
+The `levels = c(-18, -20, -22, -24)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse region, the inner confidence region, and the outer confidence region. 
 
 ```{r pupil_plot_cs_cma, echo = TRUE}
 results_pupil_cma <- tibble::as_tibble(results_pupil_cma)
 plot_cs(results_pupil_cma,
         levels = c(-18, -20, -22, -24), 
-        x = results_pupil_cma$time, 
-        mu_hat = results_pupil_cma$yhat, 
+        x = results_pupil_cma$domain, 
+        mu_hat = results_pupil_cma$mu_hat, 
         xlab = "Seconds", 
         ylab = "Percent_Outcome", 
         level_label = T, 
@@ -200,7 +193,7 @@ plot_cs(results_pupil_cma,
         color_level_label = "black")
 ```
 
-The plot demonstrate how to use SCB to find regions of s where the estimated mean is greater than or equal to the four levels -18, -20, -22 and -24 for ccds data. The gray shaded area is the 95% SCB, the solid black line is the estimated mean. The red horizontal line shows the inner confidence sets (where the lower SCB is greater than the corresponding level) that are contained in the estimated inverse set represented by the union of the yellow and red horizontal line (where the estimated mean is greater than the corresponding levels); the outer confidence sets are the union of the blue, yellow and red line (where the upper SCB is greater than the corresponding levels) and contain both the estimated inverse sets and the inner confidence sets.
+The plot demonstrate how to use SCB to find regions of s where the estimated mean is greater than or equal to the four levels -18, -20, -22 and -24 for ccds data. The gray shaded area is the 95% SCB, the solid black line is the estimated mean. The red horizontal line shows the inner confidence region (where the lower SCB is greater than the corresponding level) that are contained in the estimated inverse region represented by the union of the yellow and red horizontal line (where the estimated mean is greater than the corresponding levels); the outer confidence region are the union of the blue, yellow and red line (where the upper SCB is greater than the corresponding levels) and contain both the estimated inverse region and the inner confidence region.
 
 The next plot shows the SCB for the coefficient function for the use group.
 
@@ -208,8 +201,8 @@ The next plot shows the SCB for the coefficient function for the use group.
 results_pupil_cma_para <- tibble::as_tibble(results_pupil_cma_para)
 plot_cs(results_pupil_cma_para,
         levels = c(4.5, 5, 5.5, 6), 
-        x = results_pupil_cma_para$time, 
-        mu_hat = results_pupil_cma_para$yhat, 
+        x = results_pupil_cma_para$domain, 
+        mu_hat = results_pupil_cma_para$mu_hat, 
         xlab = "Seconds", 
         ylab = "Percent_Outcome", 
         level_label = T, 
@@ -224,8 +217,8 @@ The following plots show the results of multiplier bootstrap. The only differenc
 results_pupil_multiplier <- tibble::as_tibble(results_pupil_multiplier)
 plot_cs(results_pupil_multiplier,
         levels = c(-18, -20, -22, -24), 
-        x = results_pupil_multiplier$time, 
-        mu_hat = results_pupil_multiplier$yhat, 
+        x = results_pupil_multiplier$domain, 
+        mu_hat = results_pupil_multiplier$mu_hat, 
         xlab = "Seconds", 
         ylab = "Percent_Outcome",
         level_label = T, 
@@ -238,8 +231,8 @@ plot_cs(results_pupil_multiplier,
 results_pupil_multiplier_para <- tibble::as_tibble(results_pupil_multiplier_para)
 plot_cs(results_pupil_multiplier_para,
         levels = c(4.5, 5, 5.5, 6), 
-        x = results_pupil_multiplier_para$time, 
-        mu_hat = results_pupil_multiplier_para$yhat, 
+        x = results_pupil_multiplier_para$domain, 
+        mu_hat = results_pupil_multiplier_para$mu_hat, 
         xlab = "Seconds", 
         ylab = "Percent_Outcome",
         level_label = T, 
@@ -252,8 +245,8 @@ plot_cs(results_pupil_multiplier_para,
 results_pupil_multiplier_sample <- tibble::as_tibble(results_pupil_multiplier_sample)
 plot_cs(results_pupil_multiplier_sample,
         levels = c(-18, -20, -22, -24), 
-        x = results_pupil_multiplier_sample$time, 
-        mu_hat = results_pupil_multiplier_sample$yhat, 
+        x = results_pupil_multiplier_sample$domain, 
+        mu_hat = results_pupil_multiplier_sample$mu_hat, 
         xlab = "Seconds", 
         ylab = "Percent_Outcome", 
         level_label = T, 
@@ -266,8 +259,8 @@ plot_cs(results_pupil_multiplier_sample,
 results_pupil_multiplier_overall <- tibble::as_tibble(results_pupil_multiplier_overall)
 plot_cs(results_pupil_multiplier_overall,
         levels = c(-18, -20, -22, -24), 
-        x = results_pupil_multiplier_overall$time, 
-        mu_hat = results_pupil_multiplier_overall$yhat, 
+        x = results_pupil_multiplier_overall$domain, 
+        mu_hat = results_pupil_multiplier_overall$mu_hat, 
         xlab = "Seconds", 
         ylab = "Percent_Outcome", 
         level_label = T, 
@@ -300,10 +293,11 @@ results_pupil_cma <- SCoRES::SCB_functional_outcome(
                                           est_mean = TRUE, 
                                           alpha = 0.05, 
                                           outcome = "percent_change", 
-                                          time = "seconds", 
-                                          group_name = c("use", "age", "gender"), 
-                                          group_value = c(1, 40, 0), 
-                                          subject = "id")
+                                          domain = "seconds", 
+                                          subset = c("use = 1", 
+                                                     "age = 40", 
+                                                     "gender = 0"),  
+                                          id = "id")
 
 # Multiplier-t Bootstrap
 results_pupil_multiplier <- SCoRES::SCB_functional_outcome(
@@ -314,10 +308,11 @@ results_pupil_multiplier <- SCoRES::SCB_functional_outcome(
                                           est_mean = TRUE, 
                                           alpha = 0.05, 
                                           outcome = "percent_change", 
-                                          time = "seconds", 
-                                          group_name = c("use", "age", "gender"), 
-                                          group_value = c(1, 40, 0), 
-                                          subject = "id")
+                                          domain = "seconds", 
+                                          subset = c("use = 1", 
+                                                     "age = 40", 
+                                                     "gender = 0"), 
+                                          id = "id")
 ```
 
 The following plots show the SCBs and inverse SCBs for the mean outcome function. The first one is from CMA approach and the second is from multiplier bootstrap.
@@ -326,8 +321,8 @@ The following plots show the SCBs and inverse SCBs for the mean outcome function
 results_pupil_cma <- tibble::as_tibble(results_pupil_cma)
 plot_cs(results_pupil_cma,
         levels = c(-18, -20, -22, -24), 
-        x = results_pupil_cma$time, 
-        mu_hat = results_pupil_cma$yhat, 
+        x = results_pupil_cma$domain, 
+        mu_hat = results_pupil_cma$mu_hat, 
         xlab = "Seconds", 
         ylab = "Percent_Outcome",
         level_label = T, 
@@ -340,8 +335,8 @@ plot_cs(results_pupil_cma,
 results_pupil_multiplier <- tibble::as_tibble(results_pupil_multiplier)
 plot_cs(results_pupil_multiplier,
         levels = c(-18, -20, -22, -24), 
-        x = results_pupil_multiplier$time, 
-        mu_hat = results_pupil_multiplier$yhat, 
+        x = results_pupil_multiplier$domain, 
+        mu_hat = results_pupil_multiplier$mu_hat, 
         xlab = "Seconds", 
         ylab = "Percent_Outcome",
         level_label = T, 

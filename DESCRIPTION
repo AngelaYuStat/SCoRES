@@ -5,12 +5,12 @@ Authors@R:
     c(
       person("Angela", "Yu", , "angela.yu@emory.edu", role = c("aut", "cre")),
       person("Armin", "Schwartzman", , "armins@health.ucsd.edu", role = "aut"),
-      person("Julia", "Wrobel", , "julia.wrobel@emory.edu", role = "aut"),
-      person("Junting", "Ren", , "junting.ren.stat@gmail.com", role = "ctb")
+      person("Junting", "Ren", , "junting.ren.stat@gmail.com", role = "aut"),
+      person("Julia", "Wrobel", , "julia.wrobel@emory.edu", role = "aut")
     )
 Description: This package provides useful statistical tools for both the 
   estimation of the inverse set and the corresponding simultaneous outer and 
-  inner confidence sets. Acceptable forms of input includes both 1D and 2D data 
+  inner confidence region. Acceptable forms of input includes both 1D and 2D data 
   for linear regression, logistic regression, functional regression and spatial 
   generalized least square regression. Useful functions are also provided for 
   constructing simultaneous confidence bands (SCB) for these models.
