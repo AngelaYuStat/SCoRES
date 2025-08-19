@@ -159,15 +159,7 @@ $$
 
 For details of the algorithm, please refer to Telschow et al. (2019)
 
-`SCoRES` provides two options for estimating $\hat{\mu}_N$ in $R_n^N$. If `est_mean = TRUE`, $\hat{\mu}_N$ will be estimated though using the fitted regression object. If `est_mean = FALSE`, sample mean will be calculated. Default is `FALSE`.
-
-1. The **sample mean** 
-$$
-\hat{\mu}_N(s) = \frac{1}{N} \sum_{i=1}^N {Y}_i(s)
-$$
-, where ${Y}_i(s)$ is the observed functional response.
-
-2. The **fitted mean value** from a functional regression model (e.g., using `mgcv::bam`).
+$\hat{\mu}_N$ will be estimated though using the **fitted mean value** from a functional regression model (e.g., using `mgcv::bam`).
 
 In the multiplier bootstrap procedure, `SCoRES` supports three types of multiplier distributions, which is specified by `weights`:
 

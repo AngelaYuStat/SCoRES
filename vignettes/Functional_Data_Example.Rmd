@@ -65,10 +65,8 @@ via parametric approach.
 `multiplier`: Dense confidence bands via Multiplier-t Bootstrap method.
 Use `subset` to specify the names of grouping variables to analyze. The input data should have numerical binary 0/1 values for all scalar group variables. Here, we analyze the user group by specifying `subset = c("use = 1")`.
 Use `fitted` to specify the object for SCB estimation. If `fitted = TRUE`, `SCoRES::SCB_functional_outcome` will construct the SCB for the fitted mean outcome function. If `fitted = FALSE`, `SCoRES::SCB_functional_outcome` will construct the SCB for the fitted parameter function.
-Use est_mean to specify the point estimate used for constructing SCBs in SCoRES::SCB_functional_outcome. This argument is for `multiplier`
-If est_mean = `TRUE`, the multiplier bootstrap will be performed based on the fitted mean outcome function.
-If est_mean = `FALSE`, the multiplier bootstrap will be performed based on the sample mean.
-For `multiplier` option, users need to provide a functional regression object through argument object. If object = `NULL`, the function will only output the SCB for an overall mean outcome function regardless of the group specified.
+For `cma` option, users are required to provide a functional regression object through argument `object`.
+For `multiplier` option, users also need to provide input for `object`. If `object = NULL`, the function will only output the SCB for an overall mean outcome function regardless of the group specified.
 
 Here, we estimated SCBs using both options separately for the mean outcome Y(t) of user's group:
 $$
@@ -85,8 +83,7 @@ results_pupil_cma <- SCoRES::SCB_functional_outcome(
                                           data_df = pupil,
                                           object = fosr_mod, 
                                           method = "cma",
-                                          fitted = TRUE,
-                                          est_mean = TRUE, 
+                                          fitted = TRUE, 
                                           alpha = 0.05, 
                                           outcome = "percent_change",
                                           domain = "seconds", 
@@ -98,8 +95,7 @@ results_pupil_cma_para <- SCoRES::SCB_functional_outcome(
                                           data_df = pupil,
                                           object = fosr_mod, 
                                           method = "cma",
-                                          fitted = FALSE,
-                                          est_mean = TRUE, 
+                                          fitted = FALSE, 
                                           alpha = 0.05, 
                                           outcome = "percent_change",
                                           domain = "seconds", 
@@ -111,8 +107,7 @@ results_pupil_multiplier <- SCoRES::SCB_functional_outcome(
                                           data_df = pupil,
                                           object = fosr_mod, 
                                           method = "multiplier",
-                                          fitted = TRUE,
-                                          est_mean = TRUE, 
+                                          fitted = TRUE, 
                                           alpha = 0.05, 
                                           outcome = "percent_change",
                                           domain = "seconds", 
@@ -123,21 +118,7 @@ results_pupil_multiplier_para <- SCoRES::SCB_functional_outcome(
                                           data_df = pupil,
                                           object = fosr_mod, 
                                           method = "multiplier",
-                                          fitted = FALSE,
-                                          est_mean = TRUE, 
-                                          alpha = 0.05, 
-                                          outcome = "percent_change",
-                                          domain = "seconds", 
-                                          subset = c("use = 1"), 
-                                          id = "id")
-
-# Multiplier-t Bootstrap (use sample mean)
-results_pupil_multiplier_sample <- SCoRES::SCB_functional_outcome(
-                                          data_df = pupil,
-                                          object = fosr_mod, 
-                                          method = "multiplier",
-                                          fitted = TRUE,
-                                          est_mean = FALSE, 
+                                          fitted = FALSE, 
                                           alpha = 0.05, 
                                           outcome = "percent_change",
                                           domain = "seconds", 
@@ -148,7 +129,6 @@ results_pupil_multiplier_overall <- SCoRES::SCB_functional_outcome(
                                           data_df = pupil,
                                           method = "multiplier",
                                           fitted = TRUE,
-                                          est_mean = FALSE, 
                                           alpha = 0.05, 
                                           outcome = "percent_change",
                                           domain = "seconds", 
@@ -241,20 +221,6 @@ plot_cs(results_pupil_multiplier_para,
         color_level_label = "black")
 ```
 
-```{r pupil_plot_cs_multiplier_sample, echo = TRUE}
-results_pupil_multiplier_sample <- tibble::as_tibble(results_pupil_multiplier_sample)
-plot_cs(results_pupil_multiplier_sample,
-        levels = c(-18, -20, -22, -24), 
-        x = results_pupil_multiplier_sample$domain, 
-        mu_hat = results_pupil_multiplier_sample$mu_hat, 
-        xlab = "Seconds", 
-        ylab = "Percent_Outcome", 
-        level_label = T, 
-        min.size = 40, 
-        palette = "Spectral", 
-        color_level_label = "black")
-```
-
 ```{r pupil_plot_cs_multiplier_overall, echo = TRUE}
 results_pupil_multiplier_overall <- tibble::as_tibble(results_pupil_multiplier_overall)
 plot_cs(results_pupil_multiplier_overall,
@@ -290,7 +256,6 @@ results_pupil_cma <- SCoRES::SCB_functional_outcome(
                                           object = fosr_mod, 
                                           method = "cma", 
                                           fitted = TRUE,
-                                          est_mean = TRUE, 
                                           alpha = 0.05, 
                                           outcome = "percent_change", 
                                           domain = "seconds", 
@@ -305,7 +270,6 @@ results_pupil_multiplier <- SCoRES::SCB_functional_outcome(
                                           object = fosr_mod,
                                           fitted = TRUE,
                                           method = "multiplier", 
-                                          est_mean = TRUE, 
                                           alpha = 0.05, 
                                           outcome = "percent_change", 
                                           domain = "seconds", 

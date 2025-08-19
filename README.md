@@ -117,12 +117,6 @@ scalar group variables. Here, we analyze the user group by specifying
 `groups = "use"`. Use `fitted` to specify the object for SCB estimation.
 If `fitted = TRUE`, `SCoRES::SCB_functional_outcome` will construct the
 SCB for the fitted mean outcome function. If `fitted = FALSE`,
-`SCoRES::SCB_functional_outcome` will construct the SCB for the fitted
-parameter function. Use `est_mean` to specify the point estimate for
-constructing SCB. If `est_mean = TRUE`, `SCoRES::SCB_functional_outcome`
-will estimate the simultaneous confidence bands for fitted mean outcome
-function. If `est_mean = FALSE`, `SCoRES::SCB_functional_outcome` will
-estimate the simultaneous confidence bands for sample mean.
 
 Here, we estimated SCBs using both options seperately for the mean
 outcome Y(t) of user’s group: 

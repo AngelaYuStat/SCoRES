@@ -29,25 +29,6 @@
 #'     for fitted parameter function.
 #'     }
 #'   Default is \code{TRUE}.
-#' @param est_mean Logical. Whether to use the fitted mean from a functional
-#' regression model in Multiplier Bootstrap (\code{method = "multiplier"}) for
-#' estimating the quantile.
-#' This argument can be ignored if choose \code{method = "cma"}.
-#'   If \code{TRUE}, the function will use:
-#'   \itemize{
-#'     \item \strong{Fitted mean:} The estimated mean function from a fitted model
-#'     (e.g., \code{mgcv::bam}).
-#'     Need to provide a fitted functional outcome regression model object.
-#'     Otherwise, the sample mean will be calculated.
-#'   }
-#'   If \code{FALSE}, the function will instead use:
-#'   \itemize{
-#'     \item \strong{Sample mean:} The estimated mean function will be calculated
-#'     as the average of the functional outcome across all IDs.
-#'     For the sample mean option, if missing values (NA) exist in the outcome variable
-#'     in \code{data_df}, the function will perform imputation to fill in those
-#'     values before computing the mean.}
-#'   Default is \code{FALSE}.
 #' @param alpha Significance level for SCB. Default is 0.05.
 #' @param outcome A character string specifying the name of the outcome variable
 #' used in the model.
@@ -100,7 +81,7 @@
 #'
 #' # CMA approach
 #' results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod,
-#'                                   method = "cma", fitted = TRUE, est_mean = TRUE,
+#'                                   method = "cma", fitted = TRUE,
 #'                                   outcome = "percent_change", domain = "seconds",
 #'                                   subset = c("use = 1"), id = "id")
 #'
@@ -108,18 +89,18 @@
 #' # multiplier bootstrap
 #' results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod,
 #'                                   method = "multiplier", fitted = TRUE,
-#'                                   est_mean = TRUE, outcome = "percent_change",
-#'                                   domain = "seconds", subset = c("use = 1"), id = "id")
+#'                                   outcome = "percent_change", domain = "seconds",
+#'                                   subset = c("use = 1"), id = "id")
 #'
 #' results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod,
 #'                                   method = "multiplier", fitted = TRUE,
-#'                                   est_mean = FALSE, outcome = "percent_change",
-#'                                   domain = "seconds", subset = c("use = 1"), id = "id")
+#'                                   outcome = "percent_change", domain = "seconds",
+#'                                   subset = c("use = 1"), id = "id")
 #'
 #'
 #' @export
 SCB_functional_outcome = function(data_df, object = NULL, method, fitted = TRUE,
-                                  est_mean = TRUE, alpha = 0.05, outcome, domain,
+                                  alpha = 0.05, outcome, domain,
                                   subset = NULL, id, nboot = NULL,
                                   method_SD = "t", weights = "rademacher") {
   if (is.null(data_df)) {
@@ -248,54 +229,38 @@ SCB_functional_outcome = function(data_df, object = NULL, method, fitted = TRUE,
     Y_mat <- matrix(Y_samples, nrow = n_time, ncol = n_subject)
     # Y_mat[is.na(Y_mat)] <- 0  # replace NA with 0
 
-    if(est_mean){
-      thres <- SCB_dense(A = Y_mat, mean_A = pred_df$mean, alpha = alpha,
-                         Mboots = nboot, method = method_SD, weights = weights, SCB = FALSE)
-      scb_up = pred_df$mean + thres*pred_df$se
-      scb_low = pred_df$mean - thres*pred_df$se
-      # return index, scb_up, scb_low
-      results <- list(
-        domain = s_pred,
-        mu_hat = pred_df$mean,
-        se_hat = pred_df$se,
-        scb_low = scb_low,
-        scb_up = scb_up,
-        type = "Dense Confidence Interval"
-      )
-      return(results)
+
+    # Check if exists zero entries
+    if (s_pred[1] == 0 && all(Y_mat[1, ] == 0)) {
+      Y_mat <- Y_mat[-1, , drop = FALSE]
+      s_pred <- s_pred[-1]
+      yhat <- pred_df$mean[-1]
+      se_hat <- pred_df$se[-1]
     }else{
-      # Check if exists zero entries
-      if (s_pred[1] == 0 && all(Y_mat[1, ] == 0)) {
-        Y_mat <- Y_mat[-1, , drop = FALSE]
-        s_pred <- s_pred[-1]
-        yhat <- pred_df$mean[-1]
-        se_hat <- pred_df$se[-1]
-      }else{
-        yhat <- pred_df$mean
-        se_hat <- pred_df$se
-      }
-      # Identify rows where all entries are zero, if exist, throw an error.
-      # zero_rows <- rowSums(Y_mat == 0) == ncol(Y_mat)
-      # Y_mat <- Y_mat[!zero_rows, ]
-      zero_rows <- rowSums(Y_mat == 0) == ncol(Y_mat)
-      if(any(zero_rows)){
-        stop(paste0("Expected no rows where all entries are zero in `data_df` for `est_mean = 'FALSE'`."))
-      }
-      thres <- SCB_dense(A = Y_mat, alpha = alpha,
-                            Mboots = nboot, method = method_SD, weights = weights, SCB = FALSE)
-      scb_up = yhat + thres*se_hat
-      scb_low = yhat - thres*se_hat
-      # return index, scb_up, scb_low
-      results <- list(
-        domain = s_pred,
-        mu_hat = yhat,
-        se_hat = se_hat,
-        scb_low = scb_low,
-        scb_up = scb_up,
-        type = "Dense Confidence Interval"
-      )
-      return(results)
+      yhat <- pred_df$mean
+      se_hat <- pred_df$se
     }
+    # Identify rows where all entries are zero, if exist, throw an error.
+    # zero_rows <- rowSums(Y_mat == 0) == ncol(Y_mat)
+    # Y_mat <- Y_mat[!zero_rows, ]
+    zero_rows <- rowSums(Y_mat == 0) == ncol(Y_mat)
+    if(any(zero_rows)){
+      warnings(paste0("Expected no rows where all entries are zero in `data_df`."))
+    }
+    thres <- SCB_dense(A = Y_mat, mean_A = pred_df$mean, alpha = alpha,
+            Mboots = nboot, method = method_SD, weights = weights, SCB = FALSE)
+    scb_up = yhat + thres*se_hat
+    scb_low = yhat - thres*se_hat
+    # return index, scb_up, scb_low
+    results <- list(
+      domain = s_pred,
+      mu_hat = yhat,
+      se_hat = se_hat,
+      scb_low = scb_low,
+      scb_up = scb_up,
+      type = "Dense Confidence Interval"
+    )
+    return(results)
   }else{
     print("No Functional Regression Object provided, will only compute an overall SCB for the outcome regardless of the group specified.")
 

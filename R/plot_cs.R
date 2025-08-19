@@ -69,7 +69,7 @@
 #'   method = "fREML", data = pupil_fpca, discrete = TRUE)
 #'
 #' pupil_cma <- SCB_functional_outcome(data = pupil_fpca, object = fosr_mod, method = "cma",
-#'                                    est_mean = TRUE, outcome = "percent_change",
+#'                                    outcome = "percent_change",
 #'                                    domain = "seconds", subset= c("use = 1"),
 #'                                    id = "id")
 #' pupil_cma <- tibble::as_tibble(pupil_cma)
