@@ -35,7 +35,9 @@ Imports:
     tidyr,
     refund,
     reshape,
-    tibble
+    tibble,
+    rlang,
+    magrittr
 Depends: 
     R (>= 3.5)
 LazyData: true

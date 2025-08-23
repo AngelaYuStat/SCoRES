@@ -13,12 +13,11 @@
 #' @param levels A numeric vector or list of scalers for different levels or matrix containing interval sets to construct the confidence sets.
 #' If \code{type} = "upper" or "lower", `levels` should be a vector.
 #' "upper" represents upper excursion sets, and "lower" represents lower excursion sets.
-#' If \code{type = "interval"}, then \code{levels} should be a \code{list} with two named elements:
-#' \code{low} and \code{up}, corresponding to the bounds of the interval \code{[low, up]}.
 #' @param type A character specifying the type of inverse sets to fit.
-#' Choices are `"upper"`, `"lower"` or `"interval"`. Default is `"upper"`.
+#' Choices are `"upper"` and `"lower"`. Default is `"upper"`.
 #' @param x A numerical vector of x-axis coordinates for 1D and 2D cases.
 #' For discrete coordinates, use a character vector.
+#' The order of x should correspond to the order of `scb_up` and `scb_low` in `SCB`.
 #' @param y Optional vector of y-axis coordinates for 2D data.
 #' @param mu_hat A numeric array (1D) or matrix (2D) of estimated means.
 #' If `mu_true` is provided, this will be overwritten by the true mean. Default is NULL.
@@ -47,7 +46,8 @@
 #' @import ggplot2
 #' @importFrom patchwork plot_layout wrap_plots
 #' @importFrom reshape melt
-#' @importFrom dplyr %>% mutate desc
+#' @importFrom dplyr mutate desc
+#' @importFrom magrittr %>%
 #' @importFrom forcats fct_reorder
 #' @importFrom grDevices hcl.colors
 #'
@@ -62,6 +62,8 @@
 #'
 #' fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
 #'   s(seconds, by = use, k=30, bs = "cr") +
+#'   s(seconds, by = age, k = 30, bs = "cr") +
+#'   s(seconds, by = gender, k = 30, bs = "cr") +
 #'   s(id, by = Phi1, bs="re") +
 #'   s(id, by = Phi2, bs="re")+
 #'   s(id, by = Phi3, bs="re") +
@@ -74,8 +76,8 @@
 #'                                    id = "id")
 #' pupil_cma <- tibble::as_tibble(pupil_cma)
 #'
-#' plot_cs(pupil_cma,levels = c(-18, -20, -22, -24), x = pupil_cma$time,
-#'         mu_hat = pupil_cma$yhat, xlab = "", ylab = "",
+#' plot_cs(pupil_cma,levels = c(-18, -20, -22, -24), x = pupil_cma$domain,
+#'         mu_hat = pupil_cma$mu_hat, xlab = "", ylab = "",
 #'         level_label = T, min.size = 40, palette = "Spectral",
 #'         color_level_label = "black")
 plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_true = NULL, together = TRUE, xlab = "X1", ylab = "X2", level_label = TRUE,
@@ -85,9 +87,6 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
   if(!all(c("scb_low", "scb_up") %in% names(SCB))) {
     stop("`SCB` must have elements named 'scb_low' and 'scb_up'.")
   }else{
-    if(!identical(dim(SCB$scb_up), dim(SCB$scb_low))) {
-      stop("Dimensions of `SCB$scb_up` and `SCB$scb_low` must match.")
-    }
     if(!is.numeric(SCB$scb_up) || !is.numeric(SCB$scb_low)) {
       stop("Values of `SCB$scb_up` and `SCB$scb_low` must be numeric.")
     }
@@ -96,55 +95,131 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
   if(is.null(levels)) {
     stop("Must provide input for `levels`.")
   }else{
-    if(type %in% c("upper", "lower", "two-sided")){
-      if(!is.vector(levels)) stop("`levels` should be a vector if `type` = upper, lower, or two-sided.")
+    if(type %in% c("upper", "lower")){
+      if(!(is.atomic(levels) && is.null(dim(levels)))) stop("`levels` should be a vector if `type` = upper or lower.")
       if(!is.numeric(levels)) {
         stop("Values of `levels` must be numeric.")
       }
     }else if(type == "interval"){
-      if(!is.list(levels)) stop("`levels` should be a list if `type` = interval")
-      if (!all(c("low", "up") %in% names(levels))) {
-        stop("`levels` must have elements named 'low' and 'up'.")
-      }
-      if(!is.numeric(levels$low)||!is.numeric(levels$up)) {
-        stop("All elements in `levels` must be numeric.")
-      }
+      #if(!is.list(levels)) stop("`levels` should be a list if `type` = interval")
+      #if (!all(c("low", "up") %in% names(levels))) {
+        #stop("`levels` must have elements named 'low' and 'up'.")
+      #}
+      #if(!is.numeric(levels$low)||!is.numeric(levels$up)) {
+        #stop("All elements in `levels` must be numeric.")
+      #}
+      stop("'interval' is not avaliable for plotting, please choose between 'upper' and 'lower'.")
     }else if(type == "two-sided"){
-      stop("'two-sided' is not avaliable for plotting, please choose between 'upper', 'lower' or 'interval'.")
+      #stop("'two-sided' is not avaliable for plotting, please choose between 'upper', 'lower' or 'interval'.")
+      stop("'two-sided' is not avaliable for plotting, please choose between 'upper' and 'lower'.")
     }else{
-      stop("`type` must be chosen between 'upper', 'lower' or 'interval'.")
+      #stop("`type` must be chosen between 'upper', 'lower' or 'interval'.")
+      stop("`type` must be chosen between 'upper' and 'lower'.")
     }
+    levels <- sort(unique(levels))
   }
 
   if(is.null(x)) {
     stop("Must provide input for `x`.")
-  }else{
-    if(!is.numeric(x) && !(is.vector(x) || is.array(x))) stop("`x` must be a numeric vector or numeric array.")
+  }#else{
+    #if(!(is.numeric(x)||is.character(x)) && !(is.vector(x) || is.array(x))) stop("`x` must be a numeric/character vector or numeric/character array.")
+  #}
+
+  #if(!is.null(y)) {
+    #if(!is.numeric(y) && !(is.vector(y) || is.array(y))) stop("`y` should be a numeric vector or numeric array..")
+  #}
+
+  nd <- length(dim(SCB$scb_up))
+  if (nd == 0L) {  # 1D
+    if(!(length(SCB$scb_up) == length(SCB$scb_low))) {
+      stop("Dimensions of `SCB$scb_up` and `SCB$scb_low` must match.")
+    }
+    if (any(SCB$scb_low > SCB$scb_up, na.rm = TRUE)) {
+      warning("Found entries where `scb_low > scb_up`. Please check your inputs.")
+    }
+    # x must be provided as vector
+    if (!(is.atomic(x) && is.null(dim(x)))) stop("For 1D, `x` must be a vector.")
+    if(!(is.numeric(x)||is.character(x))){
+      stop("`x` must be numeric/character.")
+    }
+    if (length(x) != length(SCB$scb_up)) {
+      stop("For 1D, `length(x)` must match length of `SCB$scb_up/scb_low`.")
+    }
+    if(is.numeric(x)){
+      x <- sort(x)
+    }
+
+    if(!is.null(mu_hat)){
+      if(!is.numeric(mu_hat)) stop("Input values of `mu_hat` must be numeric.")
+      if(!(length(SCB$scb_up) == length(mu_hat))) {
+        stop("Dimensions of `SCB$scb_up`, `SCB$scb_low` and `mu_hat` must match.")
+      }
+      if (!((is.atomic(mu_hat) && is.null(dim(mu_hat))) || is.matrix(mu_hat) || is.array(mu_hat))) {
+        stop("`mu_hat` must be a vector, array or matrix.")
+      }
+    }
+    if(!is.null(mu_true)){
+      if(!is.numeric(mu_true)) stop("Input values of `mu_true` must be numeric.")
+      if(!(length(SCB$scb_up) == length(mu_true))){
+        stop("Dimensions of `SCB$scb_up`, `SCB$scb_low` and `mu_true` must match.")
+      }
+      if (!((is.atomic(mu_true) && is.null(dim(mu_true))) || is.matrix(mu_true) || is.array(mu_true))) {
+        stop("`mu_true` must be a vector, array or matrix.")
+      }
+    }
+  } else if (nd == 2L) {  # 2D
+    if(!(identical(dim(SCB$scb_up), dim(SCB$scb_low)))) {
+      stop("Dimensions of `SCB$scb_up` and `SCB$scb_low` must match.")
+    }
+    if (any(SCB$scb_low > SCB$scb_up, na.rm = TRUE)) {
+      warning("Found entries where `scb_low > scb_up`. Please check your inputs.")
+    }
+    if(!(is.numeric(x))){
+      stop("`x` must be numeric.")
+    }
+    if (!(is.atomic(x) && is.null(dim(x)))) stop("For 2D, `x` must be a vector.")
+    if(!(is.numeric(y))){
+      stop("`y` must be numeric.")
+    }
+    if (!(is.atomic(y) && is.null(dim(y)))) stop("For 2D, `y` must be a vector.")
+    if (length(x) != nrow(SCB$scb_up)) {
+      stop("For 2D, `length(x)` must equal `nrow(SCB$scb_up)`.")
+    }
+    x <- sort(x)
+    if (!is.null(y) && length(y) != ncol(SCB$scb_up)) {
+      stop("For 2D, `length(y)` must equal `ncol(SCB$scb_up)`.")
+    }
+    y <- sort(y)
+    if(!is.null(mu_hat)){
+      if(!is.numeric(mu_hat)) stop("Input values of `mu_hat` must be numeric.")
+      if(!identical(dim(SCB$scb_up), dim(mu_hat))) {
+        stop("Dimensions of `SCB$scb_up`, `SCB$scb_low` and `mu_hat` must match.")
+      }
+      if (!(is.atomic(mu_hat) && is.null(dim(mu_hat)) || is.matrix(mu_hat) || is.array(mu_hat))) {
+        stop("`mu_hat` must be a vector, array or matrix.")
+      }
+    }
+    if(!is.null(mu_true)){
+      if(!is.numeric(mu_true)) stop("Input values of `mu_true` must be numeric.")
+      if(!identical(dim(SCB$scb_up), dim(mu_true))) {
+        stop("Dimensions of `SCB$scb_up`, `SCB$scb_low` and `mu_true` must match.")
+      }
+      if (!(is.atomic(mu_true) && is.null(dim(mu_true)) || is.matrix(mu_true) || is.array(mu_true))) {
+        stop("`mu_true` must be a vector, array or matrix.")
+      }
+    }
   }
 
-  if(!is.null(y)) {
-    if(!is.numeric(y) && !(is.vector(y) || is.array(y))) stop("`y` should be a numeric vector or numeric array..")
-  }
+  if(is.null(mu_hat) && is.null(mu_true)) stop("An input must be provided for either `mu_hat` or `mu_true`.")
 
-  if(!is.null(mu_hat)){
-    if(!is.numeric(mu_hat)) stop("Input values of `mu_hat` must be numeric.")
-    if(!identical(dim(SCB$scb_up), dim(mu_hat))) {
-      stop("Dimensions of `SCB$scb_up`, `SCB$scb_low` and `mu_hat` must match.")
-    }
-    if (!(is.vector(mu_hat) || is.matrix(mu_hat) || is.array(mu_hat))) {
-      stop("`mu_hat` must be a vector, array or matrix.")
+  if(!is.null(xlab)){
+    if (!is.character(xlab) || length(xlab) != 1L) stop("`xlab` must be a single string.")
+  }
+  if (!is.null(ylab)){
+    if ((!is.character(ylab) || length(ylab) != 1L)) {
+      stop("`ylab` must be NULL or a single string.")
     }
   }
-  if(!is.null(mu_true)){
-    if(!is.numeric(mu_true)) stop("Input values of `mu_true` must be numeric.")
-    if(!identical(dim(SCB$scb_up), dim(mu_true))) {
-      stop("Dimensions of `SCB$scb_up`, `SCB$scb_low` and `mu_true` must match.")
-    }
-    if (!(is.vector(mu_true) || !is.matrix(mu_true) || !is.array(mu_true))) {
-      stop("`mu_true` must be a vector, array or matrix.")
-    }
-  }
-  if(!is.null(mu_hat) && !is.null(mu_true)) stop("An input must be provided for either `mu_hat` or `mu_true`.")
 
   if (!is.character(palette) || length(palette) != 1) {
     stop("`palette` must be a single character string.")
@@ -163,7 +238,7 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
         p = df_plot %>% ggplot(aes(x = x))+ geom_errorbar(aes(ymin = low, ymax = up)) +
           geom_hline(yintercept = levels, linetype="dashed")
         p = p + geom_point(data = df_plot,aes(x = x, y = mu_hat),color = "black")
-        if(type == "interval"){ i <- 1 }
+        #if(type == "interval"){ i <- 1 }
         for(l in levels){
           if(type == "upper"){
             df_plot_l = df_plot %>%
@@ -179,17 +254,18 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
               )
           }else if(type == "interval"){
             # l_dim = dim(levels)
-            l = levels[i,]
-            df_plot_l = df_plot %>%
-              mutate(l_in = ifelse(low >= l$low & up <= l$up, l, NA),
-                     l_est = ifelse((est_mean >= l$low & est_mean <= l$up) & is.na(l_in), l$low, NA),
-                     l_out = ifelse((up >= l$low & low <= up) & is.na(l_est) & is.na(l_in), l$low, NA)
-              )
-            i = i + 1
+            #l = levels[i,]
+            #df_plot_l = df_plot %>%
+              #mutate(l_in = ifelse(low >= l$low & up <= l$up, l, NA),
+                     #l_est = ifelse((est_mean >= l$low & est_mean <= l$up) & is.na(l_in), l$low, NA),
+                     #l_out = ifelse((up >= l$low & low <= up) & is.na(l_est) & is.na(l_in), l$low, NA)
+              #)
+            #i = i + 1
+            stop("'interval' is not avaliable for plotting, please choose between 'upper' and 'lower'.")
           }else if(type == "two-sided"){
-            stop("'two-sided' is not avaliable for plotting, please choose between 'upper', 'lower' or 'interval'.")
+            stop("'two-sided' is not avaliable for plotting, please choose between 'upper' and 'lower'.")
           }else{
-            stop("`type` must be chosen between 'upper', 'lower' or 'interval'.")
+            stop("`type` must be chosen between 'upper' and 'lower'.")
           }
           if(!all(is.na(df_plot_l$l_out))){
             p = p+ geom_point(aes(x, l_out), data = df_plot_l, color = "blue")
@@ -210,7 +286,7 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
                     aes(x = x, y = y, label = labels,vjust = -0.5, hjust = -0.05))
         #scale_y_continuous(breaks =levels)
         #p = p + geom_point(data = df_plot,aes(x = x, y = mu_hat),color = "black")
-        if(type == "interval"){ i <- 1}
+        #if(type == "interval"){ i <- 1}
         for(l in levels){
           if(type == "upper"){
             df_plot_l = df_plot %>%
@@ -224,16 +300,16 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
                      l_est = ifelse(true_mean <= l & is.na(l_in), l, NA),
                      l_out = ifelse(low <= l & is.na(l_est) & is.na(l_in), l, NA)
               )
-          }else if(type == "interval"){
+          }#else if(type == "interval"){
             # l_dim = dim(levels)
-            l = levels[i,]
-            df_plot_l = df_plot %>%
-              mutate(l_in = ifelse(low >= l$low & up <= l$up, l$low, NA),
-                     l_est = ifelse((true_mean >= l$low & true_mean <= l$up) & is.na(l_in), l$low, NA),
-                     l_out = ifelse((up >= l$low & low <= up) & is.na(l_est) & is.na(l_in), l$low, NA)
-              )
-            i = i + 1
-          }
+            #l = levels[i,]
+            #df_plot_l = df_plot %>%
+              #mutate(l_in = ifelse(low >= l$low & up <= l$up, l$low, NA),
+                     #l_est = ifelse((true_mean >= l$low & true_mean <= l$up) & is.na(l_in), l$low, NA),
+                     #l_out = ifelse((up >= l$low & low <= up) & is.na(l_est) & is.na(l_in), l$low, NA)
+              #)
+            #i = i + 1
+          #}
           if(!all(is.na(df_plot_l$l_out))){
             p = p+ geom_point(aes(x, l_out), data = df_plot_l, color = "blue")
           }
@@ -251,7 +327,7 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
         labs(x = "Coefficients", y = "Magnitude")
       return(p)
     }else{# Plotting for continuous x coordinate
-      if(!is.numeric(x)) stop("`x` should be of type numeric or character.")
+      if(!is.numeric(x)) stop("`x` should be of type numeric for continuous variable.")
       if(is.null(mu_true)){
         df_plot = data.frame(x = x, low = SCB$scb_low, up = SCB$scb_up, est_mean = mu_hat)
         p = df_plot %>% ggplot(aes(x = x, y = est_mean)) +
@@ -260,7 +336,7 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
           geom_text(data = data.frame(x = rep(min(x), length(levels)), y = levels, labels = levels),
                     aes(x = x, y = y, label = labels,vjust = -0.5))
         p = p + geom_line(data = df_plot,aes(x = x, y = mu_hat),color = "black")
-        if(type == "interval"){ i <- 1}
+        #if(type == "interval"){ i <- 1}
         for(l in levels){
           if(type == "upper"){
             df_plot_l = df_plot %>% mutate(l_in = ifelse(low >= l, l, NA),
@@ -272,15 +348,16 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
                                            l_out = ifelse(low <= l , l, NA))
           }else if(type == "interval"){
             # l_dim = dim(levels)
-            l = levels[i,]
-            df_plot_l = df_plot %>% mutate(l_in = ifelse(low >= l$low & up <= l$up, l$low, NA),
-                                           l_est = ifelse(est_mean >= l$low & est_mean <= l$up, l$low, NA),
-                                           l_out = ifelse(up >= l$low & low <= l$lup , l$low, NA))
-            i = i + 1
+            #l = levels[i,]
+            #df_plot_l = df_plot %>% mutate(l_in = ifelse(low >= l$low & up <= l$up, l$low, NA),
+                                           #l_est = ifelse(est_mean >= l$low & est_mean <= l$up, l$low, NA),
+                                           #l_out = ifelse(up >= l$low & low <= l$lup , l$low, NA))
+            #i = i + 1
+            stop("'interval' is not avaliable for plotting, please choose between 'upper' and 'lower'.")
           }else if(type == "two-sided"){
-            stop("'two-sided' is not avaliable for plotting, please choose between 'upper', 'lower' or 'interval'.")
+            stop("'two-sided' is not avaliable for plotting, please choose between 'upper' and 'lower'.")
           }else{
-            stop("Type must be chosen between 'upper', 'lower' or 'interval'.")
+            stop("Type must be chosen between 'upper' and 'lower'.")
           }
           if(!all(is.na(df_plot_l$l_out))){
             p = p + geom_line(data = df_plot_l,aes(x = x, y = l_out),color = "blue",lwd=1.5)
@@ -301,7 +378,7 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
           geom_text(data = data.frame(x = rep(min(x), length(levels)), y = levels, labels = levels),
                     aes(x = x, y = y, label = labels, vjust = -0.5))
         #p = p + geom_line(data = df_plot,aes(x = x, y = mu_hat),color = "black")
-        if(type == "interval"){ i <- 1}
+        #if(type == "interval"){ i <- 1}
         for(l in levels){
           if(type == "upper"){
             df_plot_l = df_plot %>% mutate(l_in = ifelse(low >= l, l, NA),
@@ -311,14 +388,14 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
             df_plot_l = df_plot %>% mutate(l_in = ifelse(up <= l, l, NA),
                                            l_est = ifelse(true_mean <= l, l, NA),
                                            l_out = ifelse(low <= l , l, NA))
-          }else if(type == "interval"){
+          }#else if(type == "interval"){
             # l_dim = dim(levels)
-            l = levels[i,]
-            df_plot_l = df_plot %>% mutate(l_in = ifelse(low >= l$low & up <= l$up, l$low, NA),
-                                           l_est = ifelse(true_mean >= l$low & true_mean <= l$up, l$low, NA),
-                                           l_out = ifelse(up >= l$low & low <= l$up , l$low, NA))
-            i = i + 1
-          }
+            #l = levels[i,]
+            #df_plot_l = df_plot %>% mutate(l_in = ifelse(low >= l$low & up <= l$up, l$low, NA),
+                                           #l_est = ifelse(true_mean >= l$low & true_mean <= l$up, l$low, NA),
+                                           #l_out = ifelse(up >= l$low & low <= l$up , l$low, NA))
+            #i = i + 1
+          #}
           if(!all(is.na(df_plot_l$l_out))){
             p = p + geom_line(data = df_plot_l,aes(x = x, y = l_out),color = "blue",lwd=1.5)
           }
@@ -336,9 +413,15 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
           #             arrow=arrow(ends = 'both', type = "closed", length = unit(1, "mm")), color = "red")
         }
       }
-      p = p + ggtitle("Confidence sets") + theme_light() +
-        theme(plot.title = element_text(face = "bold", hjust = 0.5,), plot.margin = unit(c(1,0.2,0.2,0.2), "mm"))+
-        labs(x = xlab, y = "")
+      if(is.null(ylab)){
+        p = p + ggtitle("Confidence sets") + theme_light() +
+          theme(plot.title = element_text(face = "bold", hjust = 0.5,), plot.margin = unit(c(1,0.2,0.2,0.2), "mm"))+
+          labs(x = xlab, y = "")
+      }else{
+        p = p + ggtitle("Confidence sets") + theme_light() +
+          theme(plot.title = element_text(face = "bold", hjust = 0.5,), plot.margin = unit(c(1,0.2,0.2,0.2), "mm"))+
+          labs(x = xlab, y = ylab)
+      }
       return(p)
     }
 
@@ -349,18 +432,23 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
       x = seq(0,1,dim(SCB$scb_up)[1])
       y = seq(0,1,dim(SCB$scb_up)[2])
     }
+    if(!(is.numeric(x) || is.numeric(y))){
+      stop("`x` and `y` should be of type numeric for 2D data.")
+    }
     rownames(SCB$scb_up) = x
     colnames(SCB$scb_up) = y
     rownames(SCB$scb_low) = x
     colnames(SCB$scb_low) = y
-    rownames(mu_hat) = x
-    colnames(mu_hat) = y
     SCB$scb_up = suppressWarnings(melt(SCB$scb_up))
     SCB$scb_low = suppressWarnings(melt(SCB$scb_low))
-    mu_hat = suppressWarnings(melt(mu_hat))
     colnames(SCB$scb_up)=c("X1","X2", "scb_up")
     colnames(SCB$scb_low)=c("X1","X2", "scb_low")
-    colnames(mu_hat)=c("X1","X2", "est")
+    if(!is.null(mu_hat)){
+      rownames(mu_hat) = x
+      colnames(mu_hat) = y
+      mu_hat = suppressWarnings(melt(mu_hat))
+      colnames(mu_hat)=c("X1","X2", "est")
+    }
     # Mean frame for plotting
     # TO GET RID OF THE WARNING REFER TO THIS LINK
     # https://stackoverflow.com/questions/50359647/plotting-2-dimensional-function-in-ggplot
@@ -380,6 +468,10 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
       stop("Must provide 'mu_true' or 'mu_hat'.")
     }
     #Plotting]
+
+    if (!is.logical(together) || length(together) != 1L) {
+      stop("`together` must be a single logical value.")
+    }
 
     if(together == T){
       colors = hcl.colors(length(levels),palette = palette, rev =T)

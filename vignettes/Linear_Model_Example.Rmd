@@ -54,8 +54,8 @@ suppressWarnings(plot_cs(results,
         levels = c(-0.3, 0, 0.3), 
         x = seq(-1, 1, length.out = 100), 
         mu_hat = results$Mean, 
-        xlab = "", 
-        ylab = "", 
+        xlab = "x1", 
+        ylab = "y", 
         level_label = T, 
         min.size = 40, 
         palette = "Spectral", 
@@ -65,7 +65,7 @@ suppressWarnings(plot_cs(results,
 In the following example, we establishes simultaneous confidence bands for the expected response surface $E[Y|X_1,X^2_1,X^3_1, X_2 =0]$, with the independent variable $X_1$ discretized into 100 equidistant points over the domain $[-1, 1]$.
 
 ```{r simulate data_estimate SCI_linear_2, echo = TRUE}
-grid <- data.frame(x1 = seq(-1, 1, length.out = 100))
+grid <- data.frame(x2 = seq(-1, 1, length.out = 100))
 results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
 ```
 
@@ -77,32 +77,8 @@ suppressWarnings(plot_cs(results,
         levels = c(-1.5, -1.0, -0.5), 
         x = seq(-1, 1, length.out = 100), 
         mu_hat = results$Mean, 
-        xlab = "", 
-        ylab = "", 
-        level_label = T, 
-        min.size = 40, 
-        palette = "Spectral", 
-        color_level_label = "black"))
-```
-
-Plotting for linear combinations of regression coefficients is also avaliable, by specifying `fitted = FALSE`. In the following example, we establishes simultaneous confidence bands for the expected response surface $\beta_1X_1+\beta_2X^2_1+\beta_3X^3_1$, with the independent variable $X_1$ discretized into 100 equidistant points over the domain $[-1, 1]$.
-
-```{r simulate data_estimate SCI_linear_3, echo = TRUE}
-grid <- data.frame(x1 = seq(-1, 1, length.out = 100))
-results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid, 
-                              fitted =FALSE)
-```
-
-The `levels = c(0, 0.3, 0.6)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse region, the inner confidence region, and the outer confidence region.
-
-```{r simulate_plot_cs_linear_3, echo = TRUE}
-results <- tibble::as_tibble(results)
-suppressWarnings(plot_cs(results,
-        levels = c(0, 0.3, 0.6), 
-        x = seq(-1, 1, length.out = 100), 
-        mu_hat = results$Mean, 
-        xlab = "", 
-        ylab = "", 
+        xlab = "x2", 
+        ylab = "y", 
         level_label = T, 
         min.size = 40, 
         palette = "Spectral", 
@@ -132,8 +108,8 @@ plot_cs(results,
         levels = c(0.3, 0.4, 0.5), 
         x = seq(-1, 1, length.out = 100), 
         mu_hat = results$Mean, 
-        xlab = "", 
-        ylab = "", 
+        xlab = "x1", 
+        ylab = "y", 
         level_label = T, 
         min.size = 40, 
         palette = "Spectral", 
@@ -143,7 +119,7 @@ plot_cs(results,
 In the following example, we establishes simultaneous confidence bands for the expected response surface $E[Y|X_1,X^2_1,X^3_1, X_2 =0]$, with the independent variable $X_1$ discretized into 100 equidistant points over the domain $[-1, 1]$.
 
 ```{r simulate data_estimate SCI_logistic_2, echo = TRUE}
-grid <- data.frame(x1 = seq(-1, 1, length.out = 100))
+grid <- data.frame(x2 = seq(-1, 1, length.out = 100))
 results <- SCB_logistic_outcome(df_fit = df, model = model, grid_df = grid)
 ```
 
@@ -155,8 +131,8 @@ suppressWarnings(plot_cs(results,
         levels = c(0.3, 0.4, 0.5), 
         x = seq(-1, 1, length.out = 100), 
         mu_hat = results$Mean, 
-        xlab = "", 
-        ylab = "", 
+        xlab = "x2", 
+        ylab = "y", 
         level_label = T, 
         min.size = 40, 
         palette = "Spectral", 
@@ -192,11 +168,81 @@ plot_cs(results,
         levels = c(-2, -0.5, -0.1, 0.2), 
         x = names(df), 
         mu_hat = results$Mean, 
-        xlab = "", 
-        ylab = "", 
+        xlab = "Coefficients", 
+        ylab = "SCBs for Coefficients", 
         level_label = T, 
         min.size = 40, 
         palette = "Spectral", 
         color_level_label = "black")
 ```
 
+Users can also utilize the SCB contained in `results` to calculate the SCB for any linear combination of these regression coefficients.
+
+In the following example, we load `mtcars`, a popular dataset from base R, and establishes simultaneous confidence bands for the expected response surface  $E[mpg|wt,am=0]$
+
+```{r mtcars_estimate SCI_linear, echo = TRUE}
+library(SCoRES)
+library(dplyr)
+set.seed(262)
+data(mtcars)
+df <- mtcars %>%
+      dplyr::select(mpg, wt, am) %>%
+      dplyr::mutate(am = as.factor(am))
+grid <- df %>%
+      dplyr::select(wt, am) %>%
+      dplyr::mutate(am = 0) %>%
+      dplyr::mutate(am = as.factor(am))
+# fit the linear regression model and obtain the SCB for y
+model <- "mpg ~ ."
+results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
+```
+
+The `levels = c(-25, 20, 15)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse region, the inner confidence region, and the outer confidence region.
+
+```{r mtcars_plot_cs_linear, echo = TRUE}
+results <- tibble::as_tibble(results)
+suppressWarnings(plot_cs(results,
+        levels = c(25, 20, 15), 
+        x = grid$wt, 
+        mu_hat = results$Mean, 
+        xlab = "wt", 
+        ylab = "mpg", 
+        level_label = T, 
+        min.size = 40, 
+        palette = "Spectral", 
+        color_level_label = "black"))
+```
+
+In the following example, we load `ipad` dataset, and establishes simultaneous confidence bands for the expected response surface  $E[i\_composite\_score|use\_group]$
+
+```{r ipad_estimate SCI_linear, echo = TRUE}
+library(SCoRES)
+library(dplyr)
+set.seed(262)
+data(ipad)
+df <- ipad %>%
+  mutate(use_group = factor(use_group,
+                       levels = c(3, 2, 1),
+                       labels = c("No Use", "Occasional", "Daily")))
+grid <- df %>% 
+  select(use_group)
+# fit the linear regression model and obtain the SCB for y
+model <- "i_composite_score ~ use_group"
+results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
+```
+
+The `levels = c(-25, 20, 15)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse region, the inner confidence region, and the outer confidence region.
+
+```{r ipad_plot_cs_linear, echo = TRUE}
+results <- tibble::as_tibble(results)
+suppressWarnings(plot_cs(results,
+        levels = c(0.2, 0.3, 0.4), 
+        x = as.character(grid$use_group), 
+        mu_hat = results$Mean, 
+        xlab = "", 
+        ylab = "", 
+        level_label = T, 
+        min.size = 40, 
+        palette = "Spectral", 
+        color_level_label = "black"))
+```

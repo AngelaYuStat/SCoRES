@@ -9,7 +9,6 @@ SCB_functional_outcome(
   object = NULL,
   method,
   fitted = TRUE,
-  est_mean = TRUE,
   alpha = 0.05,
   outcome,
   domain,
@@ -50,26 +49,6 @@ for fitted mean outcome function.
 for fitted parameter function.
 }
 Default is \code{TRUE}.}
-
-\item{est_mean}{Logical. Whether to use the fitted mean from a functional
-regression model in Multiplier Bootstrap (\code{method = "multiplier"}) for
-estimating the quantile.
-This argument can be ignored if choose \code{method = "cma"}.
-If \code{TRUE}, the function will use:
-\itemize{
-\item \strong{Fitted mean:} The estimated mean function from a fitted model
-(e.g., \code{mgcv::bam}).
-Need to provide a fitted functional outcome regression model object.
-Otherwise, the sample mean will be calculated.
-}
-If \code{FALSE}, the function will instead use:
-\itemize{
-\item \strong{Sample mean:} The estimated mean function will be calculated
-as the average of the functional outcome across all IDs.
-For the sample mean option, if missing values (NA) exist in the outcome variable
-in \code{data_df}, the function will perform imputation to fill in those
-values before computing the mean.}
-Default is \code{FALSE}.}
 
 \item{alpha}{Significance level for SCB. Default is 0.05.}
 
@@ -123,6 +102,8 @@ pupil_fpca <- prepare_pupil_fpca(pupil)
 
 fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
   s(seconds, by = use, k=30, bs = "cr") +
+  s(seconds, by = age, k = 30, bs = "cr") +
+  s(seconds, by = gender, k = 30, bs = "cr") +
   s(id, by = Phi1, bs="re") +
   s(id, by = Phi2, bs="re")+
   s(id, by = Phi3, bs="re") +
@@ -131,7 +112,7 @@ fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
 
 # CMA approach
 results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod,
-                                  method = "cma", fitted = TRUE, est_mean = TRUE,
+                                  method = "cma", fitted = TRUE,
                                   outcome = "percent_change", domain = "seconds",
                                   subset = c("use = 1"), id = "id")
 
@@ -139,13 +120,13 @@ results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod,
 # multiplier bootstrap
 results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod,
                                   method = "multiplier", fitted = TRUE,
-                                  est_mean = TRUE, outcome = "percent_change",
-                                  domain = "seconds", subset = c("use = 1"), id = "id")
+                                  outcome = "percent_change", domain = "seconds",
+                                  subset = c("use = 1"), id = "id")
 
 results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod,
                                   method = "multiplier", fitted = TRUE,
-                                  est_mean = FALSE, outcome = "percent_change",
-                                  domain = "seconds", subset = c("use = 1"), id = "id")
+                                  outcome = "percent_change", domain = "seconds",
+                                  subset = c("use = 1"), id = "id")
 
 
 }

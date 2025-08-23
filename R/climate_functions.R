@@ -10,18 +10,17 @@
 #'   }
 #' @param level A optional numeric threshold value used to test whether the
 #' estimated mean surface significantly deviates from it. Default is NULL.
-#' @param data_fit A named matrix or data frame used to fit the generalized least squares
+#' @param data_fit A design matrix used to fit the generalized least squares
 #' (GLS) model. Each row corresponds to an observation, and each column to a covariate
 #' to be included in the model. Outcome/boservation should not be included.
 #' The first column is typically an intercept column,
 #' which will contain only 1s, if an intercept is included in the model.
+#' Categorical variables in `data_fit` should be coverted to dummy variables.
 #' Default is `matrix(1, n, 1)` (only keep the intercept term)
-#' @param subset An atomic character vector (e.g., c("X1 = 1"))
-#' specified the target function for constructing the SCB.
-#' Each element must be of the form <name> = <value>, where <name> is the name
-#' of a covariate in data_fit and <value> is the desired value.
-#' Whitespace is ignored. Default is NULL, will only construct the SCB for the
-#' first covariate in `data_fit`.
+#' @param w A numeric vector specifying the target function for constructing the SCB,
+#' by giving a linear combination of the regression coefficients in the GLS model.
+#' Default is `matrix(1, 1, 1)`, will only construct the SCB for the first regression
+#' coefficient.
 #' @param correlation A character string specifying the name of
 #' the correlation structure (e.g., \code{"corAR1"}, \code{"corCompSymm"})
 #' to be used in the GLS model. If \code{NULL}, no correlation structure is assumed.
@@ -69,7 +68,7 @@
 #' \doi{10.1080/01621459.2017.1356318}
 #'
 #' @importFrom MASS lm.gls
-#' @importFrom nlme gls corMatrix
+#' @import nlme
 #' @importFrom stats quantile formula sd
 #' @importFrom Matrix bdiag
 #'
@@ -81,20 +80,39 @@
 #' # Construct confidence sets for the increase of the mean temperature (June-August)
 #' # in North America between the 20th and 21st centuries
 #' temp = SCB_gls_climate(sp_list = climate_data$Z, level = 2, data_fit = climate_data$X,
-#'                        subset = c("X1 = 1"), correlation = climate_data$correlation,
+#'                        w = c(1,0,0,0), correlation = climate_data$correlation,
 #'                        mask = climate_data$mask, alpha = 0.1)
 SCB_gls_climate =
-  function (sp_list, level = NULL, data_fit = NULL, subset = NULL,
+  function (sp_list, level = NULL, data_fit = NULL, w = NULL,
             correlation = NULL, corpar = NULL, groups = NULL, V = NULL,
             alpha = 0.1, N = 1000, mask = NULL)
   {
     # require(nlme)
+    if(is.null(sp_list)) stop("Must provide input for `sp_list`.")
     if(!is.list(sp_list)) stop("`sp_list` should be a list.")
     if(!all(c("x", "y", "obs") %in% names(sp_list))) {
       stop("`sp_list` must have elements named 'x', 'y' and 'obs'.")
     }
-    if(!is.numeric(sp_list$x)|| !is.numeric(sp_list$y)||!is.numeric(sp_list$obs)){
-      stop("All elements in `sp_list` should be numeric.")
+
+    if (!(is.numeric(sp_list$x) && length(dim(sp_list$x)) <= 1)) {
+      stop("`sp_list$x` must be a 1D numeric vector.")
+    }
+    if (!(is.numeric(sp_list$y) && length(dim(sp_list$y)) <= 1)) {
+      stop("`sp_list$y` must be a 1D numeric vector.")
+    }
+    if (!(is.array(sp_list$obs) && is.numeric(sp_list$obs))) {
+      stop("`sp_list$obs` must be a numeric array.")
+    }
+    if (length(dim(sp_list$obs)) != 3) {
+      stop("`sp_list$obs` must be a 3D array with dims [length(x), length(y), n].")
+    }
+    d <- dim(sp_list$obs)
+    if (d[1] != length(sp_list$x) || d[2] != length(sp_list$y)) {
+      stop(sprintf("`sp_list$obs` dims mismatch: got [%d, %d, %d], expected [%d, %d, n].",
+                   d[1], d[2], d[3], length(sp_list$x), length(sp_list$y)))
+    }
+    if (d[3] < 1) {
+      stop("`sp_list$obs` third dimension (n) must be >= 1.")
     }
 
     if(!is.null(level)) {
@@ -102,7 +120,7 @@ SCB_gls_climate =
     }
 
     if (!is.numeric(N) || N <= 0 || N %% 1 != 0){
-        stop("`nboot` must be a positive integer.")
+        stop("`N` must be a positive integer.")
     }
 
     if (!is.numeric(alpha) || alpha <= 0 || alpha >= 1){
@@ -114,54 +132,55 @@ SCB_gls_climate =
     Y = sp_list$obs # observations
     n = dim(Y)[3]
     nloc <- length(x) * length(y)
+
     if (is.null(data_fit)) {
       data_fit <- matrix(1, n, 1) # design matrix
+    }else{
+      if(!(is.matrix(data_fit)||is.array(data_fit)) || !is.numeric(data_fit)){
+        stop("`data_fit` should be a numeric matrix or array.")
+      }
+      if (nrow(data_fit) != n) {
+        stop("The number of rows in `data_fit` must be equal to the third dimension of `sp_list$obs`.")
+      }
+    }
+
+    if (is.null(w)) {
       w <- matrix(1, 1, 1) # covariate (linear combination)
     }else{
-      if (!((is.data.frame(data_fit) && !is.null(colnames(data_fit))) ||
-            (is.matrix(data_fit) && !is.null(colnames(data_fit))))) {
-        stop("`data_fit` should be a named data frame or a matrix with colnames.")
-      }
-
-      # transform character variable to factor
-      char_vars <- names(data_fit)[sapply(data_fit, is.character)]
-      for (v in char_vars) {
-        data_fit[[v]] <- factor(data_fit[[v]])
-      }
-
-      #if(!(is.vector(w)||is.array(w)||is.matrix(w)) || !is.numeric(w)){
-        #stop("`w` should be a numeric vector, matrix or array with only one dimension.")
-      #}
-      if (nrow(data_fit) != n) {
-        stop("The number of rows in `data_fit` must be equal to
-             the third dimension of `sp_list$obs`.")
+      if(!((is.atomic(w) && is.null(dim(w)))||is.array(w)||is.matrix(w)) || !is.numeric(w)){
+        stop("`w` should be a numeric vector, matrix or array.")
       }
     }
 
     p <- ncol(data_fit)
-    #if(is.vector(w)){
-      #if (length(w) != p) {
-        #stop("The length of `w` must be equal to the number of rows of `data_fit`.")
-      #}
-    #}else{
-      #if (nrow(w) != p && length(dim(w)) != 1) {
-        #stop("Dimension of `w` should be 1, and the number of rows in `w` must
-             #be equal to the number of rows of `data_fit`.")
-      #}
-    #}
+    if(is.vector(w)){
+      if (length(w) != p) {
+        stop("The length of `w` must be equal to the number of columns of `data_fit`.")
+      }
+    }else{
+      if (nrow(w) != p && length(dim(w)) != 1) {
+        stop("Dimension of `w` should be 1, and the number of rows in `w` must
+             be equal to the number of columns of `data_fit`.")
+      }
+    }
 
     M <- c(length(x), length(y))
     if (!is.null(mask)) {
-      if(!identical(dim(mask), M)) stop("`mask` must have dimensions ",
-                                        paste(M, collapse = " x "), ".")
-      if (!(is.matrix(mask) || is.array(mask))) {
-        stop("`mask` must be a matrix or array.")
+      if (!is.array(mask)) {
+        stop("`mask` must be a numeric matrix or array.")
+      }
+      if (length(dim(mask)) != 2) {
+        stop("`mask` must be 2-dimensional with dimensions length(x) x length(y).")
+      }
+      if (!identical(dim(mask), M)) {
+        stop("`mask` must have dimensions ",
+             paste(M, collapse = " x "), ".")
       }
     }
 
     if (!is.null(V)) {
-      if (!(is.matrix(V) || is.array(V)) || (!is.numeric(V) || length(dim(V)) != 4)) {
-        stop("`V` must be a numeric 4-dimensional matrix or array.")
+      if (!(is.array(V)) || (!is.numeric(V) || length(dim(V)) != 4)) {
+        stop("`V` must be a numeric 4-dimensional array.")
       }
 
       dims <- dim(V)
@@ -183,7 +202,7 @@ SCB_gls_climate =
     if (is.null(groups)) {
       groups <- rep(1, n)
     }
-    if (!( (is.vector(groups) && is.numeric(groups)) || is.factor(groups) )) {
+    if (!( (is.atomic(groups) && is.numeric(groups)) || is.factor(groups) )) {
       stop("`groups` must be either a numeric vector or a factor.")
     }
     if (length(groups) != n) {
@@ -205,7 +224,6 @@ SCB_gls_climate =
       correlation = do.call(get(correlation), c(corpar, form = ~1 |
                                                   groups)) # correlation structure between observations
 
-    first_iter <- TRUE
     for (i in 1:length(x)) {
       for (j in 1:length(y)) {
         ytemp <- Y[i, j, ]
@@ -229,87 +247,7 @@ SCB_gls_climate =
           }else{
             stop("Must provide one of 'correlation' and 'V'.")
           }
-          if (!is.null(subset) && first_iter){
-            if(is.null(data_fit)){
-              stop("Must provide input for `data_fit` if `subset` is not NULL.")
-            }
-            w <- rep(0, length(model$coefficients))
-            # Identify covariates
-            m <- regexec("^\\s*([^=]+?)\\s*=\\s*(.+)$", subset)
-            res <- regmatches(subset, m)
 
-            ok <- lengths(res) > 0
-            if (any(!ok)) {
-              warning("Some elements did not match the required <name> = <value> pattern.
-              Please check your input for `subset`.")
-            }
-
-            group_name <- sapply(res, `[`, 2)
-            group_value <- sapply(res, `[`, 3)
-            #safely converge to numeric if possible
-            group_value <- type.convert(trimws(group_value), as.is = TRUE)
-
-            if (!is.null(group_name) && !is.null(group_value)){
-              for (i in seq_along(group_name)) {
-                var <- group_name[i]
-                val <- group_value[i]
-
-                if(is.data.frame(data_fit)){
-                  if (!var %in% names(data_fit)) {
-                    stop(paste0("Variable '", var, "' not found in `data_fit`."))
-                  }
-                  if (is.factor(df[[var]])) {
-                    x <- data_fit[[var]]
-                    lv <- levels(x)
-                    if (!(val %in% lv)) {
-                      stop(sprintf("Value '%s' not in levels of variable `%s`", val, var))
-                    }
-                    code <- which(lv == val)
-                    col_idx <- match(var, colnames(data_fit))
-                    w[col_idx+code-1] <- 1
-                  }
-
-                  if (is.numeric(data_fit[[var]])) { # numeric
-                    #unique_vals <- unique(data_df[[var]])
-                    #if (!(val %in% unique_vals)) {
-                    #stop(paste0("Value '", val, "' not found in numeric variable '", var, "'. "))
-                    #}
-                    col_idx <- match(var, colnames(data_fit))
-                    w[col_idx] <- val
-                  }else{
-                    stop(paste0("The variable '", var, "' is not of type numeric or factor. ",
-                                "Please convert it to a numeric/factor variable."))
-                  }
-                }else{
-                  if (!var %in% colnames(data_fit)) {
-                    stop(paste0("Variable '", var, "' not found in `data_fit`."))
-                  }
-                  col_inx <- which(colnames(data_fit) == var)
-                  if (is.factor(data_fit[,col_inx])) {
-                    x <- data_fit[,col_inx]
-                    lv <- levels(x)
-                    if (!(val %in% lv)) {
-                      stop(sprintf("Value '%s' not in levels of variable `%s`", val, var))
-                    }
-                    code <- which(lv == val)
-                    w[col_inx+code-1] <- 1
-                  }
-
-                  if (is.numeric(data_fit[,col_inx])) { # numeric
-                    #unique_vals <- unique(data_df[[var]])
-                    #if (!(val %in% unique_vals)) {
-                    #stop(paste0("Value '", val, "' not found in numeric variable '", var, "'. "))
-                    #}
-                    #col_idx <- match(var, colnames(data_fit))
-                    w[col_inx] <- val
-                  }else{
-                    stop(paste0("The variable '", var, "' is not of type numeric or factor. ",
-                                "Please convert it to a numeric/factor variable."))
-                  }
-                }
-              }
-            }
-          }
           mu_hat[i, j] <- t(w) %*% model$coefficients
           if (!is.null(correlation)) {
             cM <- corMatrix(model$modelStruct$corStruct,
@@ -324,10 +262,10 @@ SCB_gls_climate =
             deR[i, j, ] <- chol(solve(V[i, j, , ])) %*%
               model$residuals
             deR[i, j, ] <- deR[i, j, ]/sd(deR[i, j, ])
-            design_mat <- model.matrix(model)
-            attributes(design_mat) <- attributes(design_mat)[c("dim", "dimnames")]
-            model$varBeta = solve(t(design_mat) %*% solve(V[i, j,
-                                                   , ], design_mat))
+            #design_mat <- model.matrix(model)
+            #attributes(design_mat) <- attributes(design_mat)[c("dim", "dimnames")]
+            model$varBeta = solve(t(data_fit) %*% solve(V[i, j,
+                                                   , ], data_fit))
           }
           else {
             deR[i, j, ] <- model$residuals

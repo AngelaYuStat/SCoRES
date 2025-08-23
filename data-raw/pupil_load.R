@@ -1,4 +1,4 @@
-## code to load `ccds` dataset goes here
+## code to load `pupil` dataset goes here
 
 library(readr)
 library(dplyr)

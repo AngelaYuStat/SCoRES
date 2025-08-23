@@ -81,9 +81,9 @@ Returned only when \code{return_contain_only = FALSE} and \code{type != "two-sid
 point is within the simultaneous outer confidence set for each level.
 Returned only when \code{return_contain_only = FALSE} and \code{type != "two-sided"}.}
 \item{L_out}{(Two-sided only) A list of logical matrices
-indicating lower bound containment (for \code{type = "two-sided"}).}
+indicating lower bound containment (for \code{type = "two-sided"} and \code{return_contain_only = FALSE}).}
 \item{U_out}{(Two-sided only) A list of logical matrices
-indicating upper bound containment (for \code{type = "two-sided"}).}
+indicating upper bound containment (for \code{type = "two-sided"} and \code{return_contain_only = FALSE}).}
 \item{contain_individual}{A logical vector indicating
 whether the true mean is fully contained within each level's simultaneous
 inner and outer confidence region. Returned only if \code{true_mean} is provided.}

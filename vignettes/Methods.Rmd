@@ -36,7 +36,7 @@ for a pre-specified confidence level $1-\alpha$ (e.g., $\alpha = 0.05$).
 
 Existing approaches require restrictive assumptions, including domain density of $S$ in $R$, continuity of $\hat{\mu}_n$ and $\mu$ near thresholds, and  large-sample guarantees, which limit the applicability. Besides, the estimation  and coverage depend on setting a fixed threshold level, which is difficult to  determine.  
 
-Ren et al. (2023) proposed a framework that generalizes the estimation of such  inverse sets to dense and non-dense domains with protection against inflated Type I error, and constructs multiple upper, lower or interval confidence sets of  $\mu^{-1}(U)$ over arbitrary chosen thresholds. The coverage probability is  achieved non-asymptotically and simultaneously through inverting simultaneous  confidence intervals. For instance, suppose we are interested in inverse set  $\mu^{-1}([c,\infty))$ for a single value $c$, the inverse confidence sets (CSs) are  constructed by inverting simultaneous confidence intervals (SCIs). Given SCI  bounds $\hat{B}_{l}(\boldsymbol{s})$ and $\hat{B}_{u}(\boldsymbol{s})$ satisfying:
+Ren et al. (2023) proposed a framework that generalizes the estimation of such  inverse sets to dense and non-dense domains with protection against inflated Type I error, and constructs multiple upper, lower or interval confidence region of  $\mu^{-1}(U)$ over arbitrary chosen thresholds. The coverage probability is  achieved non-asymptotically and simultaneously through inverting simultaneous  confidence intervals. For instance, suppose we are interested in inverse set  $\mu^{-1}([c,\infty))$ for a single value $c$, the inverse confidence region are  constructed by inverting simultaneous confidence intervals (SCIs). Given SCI  bounds $\hat{B}_{l}(\boldsymbol{s})$ and $\hat{B}_{u}(\boldsymbol{s})$ satisfying:
 
 $$
 \mathbb{P}\left(\forall\boldsymbol{s}\in\mathcal{S}: \hat{B}_{l}(\boldsymbol{s}) \leq \mu(\boldsymbol{s}) \leq \hat{B}_{u}(\boldsymbol{s})\right) = 1-\alpha
@@ -51,7 +51,7 @@ $$
 \text{CS}_{\text{out}}[c,\infty) := \hat{B}_u^{-1}[c, \infty)
 $$
 
-The outer and inner confidence sets (CSs) for the inverse lower excursion set $\mu^{-1}\left(-\infty, c\right]$ are defined as:
+The outer and inner confidence region for the inverse lower excursion set $\mu^{-1}\left(-\infty, c\right]$ are defined as:
 
 $$
 \text{CS}_{\text{in}}\left(-\infty, c\right] := \hat{B}_u^{-1}\left(-\infty, c\right]

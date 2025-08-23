@@ -62,8 +62,10 @@
 #' }
 #'
 #'@importFrom tidyr pivot_wider
-#'@importFrom dplyr select mutate all_of %>%
+#'@importFrom dplyr select mutate all_of
 #'@importFrom refund fpca.face
+#'@importFrom magrittr %>%
+#'@importFrom rlang :=
 #'
 #' @examples
 #' # example using pupil data
@@ -73,6 +75,8 @@
 #'
 #' fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
 #'   s(seconds, by = use, k=30, bs = "cr") +
+#'   s(seconds, by = age, k = 30, bs = "cr") +
+#'   s(seconds, by = gender, k = 30, bs = "cr") +
 #'   s(id, by = Phi1, bs="re") +
 #'   s(id, by = Phi2, bs="re")+
 #'   s(id, by = Phi3, bs="re") +
@@ -128,6 +132,11 @@ SCB_functional_outcome = function(data_df, object = NULL, method, fitted = TRUE,
   # Check the existance of column names
   if (is.null(colnames(data_df))) {
     stop("`data_df` must have column names.")
+  }
+
+  if(!is.null(subset)){
+    if(!(is.atomic(subset) && is.null(dim(subset)))) stop("`subset` should be a vector.")
+    if(!is.character(subset)) stop("`subset` should be character.")
   }
 
   if (method == "cma") {

@@ -42,7 +42,7 @@ start_time <- Sys.time()
 temp = SCB_gls_climate(sp_list = climate_data$Z, 
                        level = 2, 
                        data_fit = climate_data$X,
-                       subset = c("X1 = 1"),
+                       w = c(1,0,0,0),
                        correlation = climate_data$correlation,
                        mask = climate_data$mask, 
                        alpha = 0.1)
@@ -57,8 +57,8 @@ Heat maps show the estimate of the mean temperature difference. The first row di
  
 ```{r climate_data-plot_cs}
 par(mfrow = c(2, 3), mar = c(3, 3, 2, 1)) 
-p2 = plot_cs(list(scb_up = temp$scb_up[17:215,22:110], scb_low = temp$scb_low[17:215,22:110]), levels = c(1.5, 2,2.5,3), x = temp$x[17:215], y = temp$y[22:110], mu_hat = temp$mu_hat[17:215,22:110], xlab = "", ylab = "", level_label = T, min.size = 40, palette = "Spectral", color_level_label = "black")
-p1 = plot_cs(list(scb_up = temp$scb_up[17:215,22:110], scb_low = temp$scb_low[17:215,22:110]), levels = c(1.5,2,2.5), x = temp$x[17:215], y = temp$y[22:110], mu_hat = temp$mu_hat[17:215,22:110], xlab = "", ylab = "",together = F)
+p2 = plot_cs(list(scb_up = temp$scb_up, scb_low = temp$scb_low), levels = c(1.5, 2,2.5,3), x = temp$x, y = temp$y, mu_hat = temp$mu_hat, xlab = "Longitude", ylab = "Latitude", level_label = T, min.size = 40, palette = "Spectral", color_level_label = "black")
+p1 = plot_cs(list(scb_up = temp$scb_up, scb_low = temp$scb_low), levels = c(1.5,2,2.5), x = temp$x, y = temp$y, mu_hat = temp$mu_hat, xlab = "Longitude", ylab = "Latitude",together = F)
 p = p2/p1
 p
 ```

@@ -48,9 +48,10 @@
 #' }
 #'
 #' @importFrom stats formula model.frame vcov
-#' @importFrom dplyr %>% mutate
+#' @importFrom dplyr mutate
 #' @importFrom tibble as_tibble
 #' @importFrom stats predict
+#' @importFrom magrittr %>%
 #'
 #' @examples
 #' library(mgcv)
@@ -59,6 +60,8 @@
 #'
 #' fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
 #'   s(seconds, by = use, k=30, bs = "cr") +
+#'   s(seconds, by = age, k = 30, bs = "cr") +
+#'   s(seconds, by = gender, k = 30, bs = "cr") +
 #'   s(id, by = Phi1, bs="re") +
 #'   s(id, by = Phi2, bs="re")+
 #'   s(id, by = Phi3, bs="re") +
@@ -159,7 +162,11 @@ mean_response_predict = function(data_df, object, fitted = TRUE, outcome, domain
     }
   }
 
-  if(!is.null(id)){
+  #if(!is.null(id)){
+    #df_pred[id] <- as.character(model.frame(object)[[id]][1])
+  #}
+
+  if (id %in% names(model.frame(object))) {
     df_pred[id] <- as.character(model.frame(object)[[id]][1])
   }
 
@@ -255,6 +262,8 @@ mean_response_predict = function(data_df, object, fitted = TRUE, outcome, domain
 #'
 #' fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
 #'   s(seconds, by = use, k=30, bs = "cr") +
+#'   s(seconds, by = age, k = 30, bs = "cr") +
+#'   s(seconds, by = gender, k = 30, bs = "cr") +
 #'   s(id, by = Phi1, bs="re") +
 #'   s(id, by = Phi2, bs="re")+
 #'   s(id, by = Phi3, bs="re") +

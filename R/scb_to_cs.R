@@ -55,9 +55,9 @@
 #'   point is within the simultaneous outer confidence set for each level.
 #'   Returned only when \code{return_contain_only = FALSE} and \code{type != "two-sided"}.}
 #'   \item{L_out}{(Two-sided only) A list of logical matrices
-#'   indicating lower bound containment (for \code{type = "two-sided"}).}
+#'   indicating lower bound containment (for \code{type = "two-sided"} and \code{return_contain_only = FALSE}).}
 #'   \item{U_out}{(Two-sided only) A list of logical matrices
-#'   indicating upper bound containment (for \code{type = "two-sided"}).}
+#'   indicating upper bound containment (for \code{type = "two-sided"} and \code{return_contain_only = FALSE}).}
 #'   \item{contain_individual}{A logical vector indicating
 #'   whether the true mean is fully contained within each level's simultaneous
 #'   inner and outer confidence region. Returned only if \code{true_mean} is provided.}
@@ -86,8 +86,8 @@
 #'
 scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL, est_mean = NULL, x1 = NULL, x2 = NULL, type = "upper", return_contain_only = F, return_plot = F, xlab = NULL, ylab = NULL)
 {
-  if(!identical(dim(scb_up), dim(scb_low))) {
-    stop("Dimensions of `scb_up` and `scb_low` must match.")
+  if(is.null(scb_up)||is.null(scb_low)){
+    stop("Must provide input for `scb_up` and `scb_low`.")
   }
 
   if(!is.numeric(scb_up) || !is.numeric(scb_low)) {
@@ -95,18 +95,38 @@ scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL, est_mean = NULL,
   }
 
   if (!all(sapply(list(scb_up, scb_low),
-                  function(x) is.vector(x) || is.matrix(x) || is.array(x)))) {
+                  function(x) (is.atomic(x) && is.null(dim(x)) || is.matrix(x) || is.array(x))))) {
     stop("`scb_up` and `scb_low` must each be a vector, array or matrix.")
   }
 
-  if(!is.null(true_mean)){
-    if(!is.numeric(true_mean)) stop("Values of `true_mean` must be numeric.")
-    if(!identical(dim(scb_up), dim(true_mean))) {
-      stop("Dimensions of `scb_up`, `scb_low` and `true_mean` must match.")
+  nd <- length(dim(scb_up))
+  if (nd == 0L) {
+    if(!(length(scb_up) == length(scb_low))) {
+      stop("Dimensions of `scb_up` and `scb_low` must match.")
     }
-    if (!all(sapply(list(true_mean),
-                    function(x) is.vector(x) || is.matrix(x) || is.array(x)))) {
-      stop("`true_mean` must each be a vector, array or matrix.")
+    if(!is.null(true_mean)){
+      if(!is.numeric(true_mean)) stop("Values of `true_mean` must be numeric.")
+      if(!(length(scb_up) == length(true_mean))) {
+        stop("Dimensions of `scb_up`, `scb_low` and `true_mean` must match.")
+      }
+      if (!all(sapply(list(true_mean),
+                      function(x) (is.atomic(x) && is.null(dim(x))) || is.matrix(x) || is.array(x)))) {
+        stop("`true_mean` must each be a vector, array or matrix.")
+      }
+    }
+  }else{
+    if(!identical(dim(scb_up), dim(scb_low))) {
+      stop("Dimensions of `scb_up` and `scb_low` must match.")
+    }
+    if(!is.null(true_mean)){
+      if(!is.numeric(true_mean)) stop("Values of `true_mean` must be numeric.")
+      if(!identical(dim(scb_up), dim(true_mean))) {
+        stop("Dimensions of `scb_up`, `scb_low` and `true_mean` must match.")
+      }
+      if (!all(sapply(list(true_mean),
+                      function(x) (is.atomic(x) && is.null(dim(x))) || is.matrix(x) || is.array(x)))) {
+        stop("`true_mean` must each be a vector, array or matrix.")
+      }
     }
   }
 
@@ -114,7 +134,7 @@ scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL, est_mean = NULL,
     stop("Must provide input for `levels`.")
   }else{
     if(type %in% c("upper", "lower", "two-sided")){
-      if(!is.vector(levels)) stop("`levels` should be a vector if `type` = upper, lower, or two-sided.")
+      if(!(is.atomic(levels) && is.null(dim(levels)))) stop("`levels` should be a vector if `type` = upper or lower.")
       if(!is.numeric(levels)) {
         stop("Values of `levels` must be numeric.")
       }
@@ -133,9 +153,9 @@ scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL, est_mean = NULL,
 
   if(!is.logical(return_contain_only)) stop("`return_contain_only` must be logical.")
   if(!is.logical(return_plot)) stop("`return_plot` must be logical.")
-  if(return_plot && type == "two-sided") stop("Current function doesn't support plotting for `two-sided`.")
+  if(return_plot && type %in% c("two-sided", "interval")) stop("Current function doesn't support plotting for `two-sided` and `interval`.")
 
-  if(return_plot && type != "two-sided"){
+  if(return_plot){
     p_para <- list(xlab = xlab, ylab = ylab)
     if(is.null(true_mean)){
       pl_together = plot_cs(SCB = list(scb_up = scb_up, scb_low = scb_low),
@@ -208,8 +228,17 @@ scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL, est_mean = NULL,
         }
         j = j + 1
       }
-      return(list(levels = levels, L_out = out_set_low_list, U_out = out_set_up_list,
-                  contain_individual = contain_v, contain_all = all(contain_v), plot_cs = plot_cs))
+      if(return_contain_only && !is.null(true_mean)){
+        return(list(levels = levels, contain_individual = contain_v, contain_all = all(contain_v), plot_cs = pl))
+
+      }else if(!return_contain_only && !is.null(true_mean)){
+        return(list(levels = levels, L_out = out_set_low_list, U_out = out_set_up_list,
+                    contain_individual = contain_v, contain_all = all(contain_v), plot_cs = pl))
+      }else if(!return_contain_only && is.null(true_mean)){
+        return(list(levels = levels, L_out = out_set_low_list, U_out = out_set_up_list, plot_cs = pl))
+      }else{
+        return(list(levels = levels, plot_cs = pl))
+      }
     }
 
   }else if(type == "interval"){# When we have interval level sets
@@ -228,8 +257,17 @@ scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL, est_mean = NULL,
       }
     }
   }
-  return(list(levels = levels, U_in = in_list, U_out = out_list,
-              contain_individual = contain_v, contain_all = all(contain_v), plot_cs = pl))
+  if(return_contain_only && !is.null(true_mean)){
+    return(list(levels = levels, contain_individual = contain_v, contain_all = all(contain_v), plot_cs = pl))
+
+  }else if(!return_contain_only && !is.null(true_mean)){
+    return(list(levels = levels, U_in = in_list, U_out = out_list,
+                contain_individual = contain_v, contain_all = all(contain_v), plot_cs = pl))
+  }else if(!return_contain_only && is.null(true_mean)){
+    return(list(levels = levels, U_in = in_list, U_out = out_list, plot_cs = pl))
+  }else{
+    return(list(levels = levels, plot_cs = pl))
+  }
 }
 
 #' Test inclusion relationship between two logical vectors

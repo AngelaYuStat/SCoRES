@@ -1,0 +1,70 @@
+#' iPad task and physiology (40-minute timepoint)
+#'
+#' @description
+#' The dataset `ipad` contains tablet-based task performance measures, pupillography
+#' features, blood cannabinoid metabolite concentrations, and cardiovascular
+#' measures collected **40 minutes after** smoking (or after a rest period for
+#' controls). Each row is one participant at this timepoint. The identifier
+#' \code{id} has been converted to a factor, and the data have been filtered to
+#' \code{timept = 2} only.
+#'
+#' @format
+#' A \code{tibble}), one row per participant at timepoint 2.
+#' Variables are grouped below.
+#'
+#' \describe{
+#'   \item{\strong{Identifiers}}{
+#'     \describe{
+#'       \item{\code{id}}{Participant identifier (factor).}
+#'       \item{\code{timept}}{Timepoint indicator (fixed at 2 = 40 minutes).}
+#'       \item{\code{use_group}}{Participant use group: 1 = Daily, 2 = Occasional, 3 = No Use.}
+#'       \item{\code{recent_smoke}}{Recent use at this timepoint: 0 = No Use, 1 = Use.}
+#'     }
+#'   }
+#'
+#'   \item{\strong{Blood (metabolite concentrations)}}{
+#'     \code{t_thc}, \code{t_thc_oh}, \code{t_thc_cooh}, \code{t_thc_gluc},
+#'     \code{t_thc_cooh_gluc}, \code{t_cbg}, \code{t_cbd}, \code{t_cbn},
+#'     \code{t_mmr1}, \code{t_mmr2}.
+#'   }
+#'
+#'   \item{\strong{Pupillography}}{
+#'     \code{p_fpc1}–\code{p_fpc6} (functional pupil components 1–6);
+#'     \code{p_PMC_pctChg} (percent change at point of minimum constriction);
+#'     \code{p_auc} (AUC of the pupillary constriction curve).
+#'   }
+#'
+#'   \item{\strong{Tablet (task metrics)}}{
+#'     \code{i_prop_false_timeout},
+#'     \code{i_prop_failed1}, \code{i_prop_failed2},
+#'     \code{i_judgement_time1}, \code{i_judgement_time2},
+#'     \code{i_time_outside_reticle}, \code{i_time_on_edge},
+#'     \code{i_prop_hit}, \code{i_correct_reaction2},
+#'     \code{i_reaction_time_max2}, \code{i_reaction_time2},
+#'     \code{i_rep_shapes12}, \code{i_rep_shapes34},
+#'     \code{i_memory_time12}, \code{i_memory_time34},
+#'     \code{i_composite_score}.
+#'   }
+#'
+#'   \item{\strong{Cardiovascular}}{
+#'     \code{h_hr} (heart rate), \code{h_dbp} (diastolic blood pressure),
+#'     \code{h_sbp} (systolic blood pressure).
+#'   }
+#' }
+#'
+#' @details
+#' Participants completed an iPad test assessing reaction time, decision making,
+#' working memory, and spatial-motor performance before and after cannabis use
+#' (or a rest period for controls). This dataset retains the **post** (40-minute)
+#' measurements only. Consider converting \code{use_group} and
+#' \code{recent_smoke} to factors with informative labels for modeling/plotting.
+#' Units for biochemical and physiological variables follow the original source.
+#'
+#' @usage
+#' data(ipad)
+#'
+#' @examples
+#' data(ipad)
+#'
+#' @keywords datasets
+"ipad"

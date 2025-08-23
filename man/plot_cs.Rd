@@ -31,15 +31,14 @@ Dimensions of \code{SCB$scb_up} and \code{SCB$scb_low} must match.}
 
 \item{levels}{A numeric vector or list of scalers for different levels or matrix containing interval sets to construct the confidence sets.
 If \code{type} = "upper" or "lower", \code{levels} should be a vector.
-"upper" represents upper excursion sets, and "lower" represents lower excursion sets.
-If \code{type = "interval"}, then \code{levels} should be a \code{list} with two named elements:
-\code{low} and \code{up}, corresponding to the bounds of the interval \code{[low, up]}.}
+"upper" represents upper excursion sets, and "lower" represents lower excursion sets.}
 
 \item{type}{A character specifying the type of inverse sets to fit.
-Choices are \code{"upper"}, \code{"lower"} or \code{"interval"}. Default is \code{"upper"}.}
+Choices are \code{"upper"} and \code{"lower"}. Default is \code{"upper"}.}
 
 \item{x}{A numerical vector of x-axis coordinates for 1D and 2D cases.
-For discrete coordinates, use a character vector.}
+For discrete coordinates, use a character vector.
+The order of x should correspond to the order of \code{scb_up} and \code{scb_low} in \code{SCB}.}
 
 \item{y}{Optional vector of y-axis coordinates for 2D data.}
 
@@ -89,6 +88,8 @@ pupil_fpca <- prepare_pupil_fpca(pupil)
 
 fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
   s(seconds, by = use, k=30, bs = "cr") +
+  s(seconds, by = age, k = 30, bs = "cr") +
+  s(seconds, by = gender, k = 30, bs = "cr") +
   s(id, by = Phi1, bs="re") +
   s(id, by = Phi2, bs="re")+
   s(id, by = Phi3, bs="re") +
@@ -96,13 +97,13 @@ fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
   method = "fREML", data = pupil_fpca, discrete = TRUE)
 
 pupil_cma <- SCB_functional_outcome(data = pupil_fpca, object = fosr_mod, method = "cma",
-                                   est_mean = TRUE, outcome = "percent_change",
+                                   outcome = "percent_change",
                                    domain = "seconds", subset= c("use = 1"),
                                    id = "id")
 pupil_cma <- tibble::as_tibble(pupil_cma)
 
-plot_cs(pupil_cma,levels = c(-18, -20, -22, -24), x = pupil_cma$time,
-        mu_hat = pupil_cma$yhat, xlab = "", ylab = "",
+plot_cs(pupil_cma,levels = c(-18, -20, -22, -24), x = pupil_cma$domain,
+        mu_hat = pupil_cma$mu_hat, xlab = "", ylab = "",
         level_label = T, min.size = 40, palette = "Spectral",
         color_level_label = "black")
 }

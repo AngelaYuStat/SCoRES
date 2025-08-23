@@ -51,6 +51,8 @@ $$
 pupil_fpca <- SCoRES::prepare_pupil_fpca(pupil)
 fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
             s(seconds, by = use, k=30, bs = "cr") +
+            s(seconds, by = age, k = 30, bs = "cr") +
+            s(seconds, by = gender, k = 30, bs = "cr") +
             s(id, by = Phi1, bs="re") +
             s(id, by = Phi2, bs="re") +
             s(id, by = Phi3, bs="re") +

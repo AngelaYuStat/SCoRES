@@ -8,7 +8,7 @@ SCB_gls_climate(
   sp_list,
   level = NULL,
   data_fit = NULL,
-  subset = NULL,
+  w = NULL,
   correlation = NULL,
   corpar = NULL,
   groups = NULL,
@@ -31,19 +31,18 @@ Should include the following components:
 \item{level}{A optional numeric threshold value used to test whether the
 estimated mean surface significantly deviates from it. Default is NULL.}
 
-\item{data_fit}{A named matrix or data frame used to fit the generalized least squares
+\item{data_fit}{A design matrix used to fit the generalized least squares
 (GLS) model. Each row corresponds to an observation, and each column to a covariate
 to be included in the model. Outcome/boservation should not be included.
 The first column is typically an intercept column,
 which will contain only 1s, if an intercept is included in the model.
+Categorical variables in \code{data_fit} should be coverted to dummy variables.
 Default is \code{matrix(1, n, 1)} (only keep the intercept term)}
 
-\item{subset}{An atomic character vector (e.g., c("X1 = 1"))
-specified the target function for constructing the SCB.
-Each element must be of the form \if{html}{\out{<name>}} = \if{html}{\out{<value>}}, where \if{html}{\out{<name>}} is the name
-of a covariate in data_fit and \if{html}{\out{<value>}} is the desired value.
-Whitespace is ignored. Default is NULL, will only construct the SCB for the
-first covariate in \code{data_fit}.}
+\item{w}{A numeric vector specifying the target function for constructing the SCB,
+by giving a linear combination of the regression coefficients in the GLS model.
+Default is \code{matrix(1, 1, 1)}, will only construct the SCB for the first regression
+coefficient.}
 
 \item{correlation}{A character string specifying the name of
 the correlation structure (e.g., \code{"corAR1"}, \code{"corCompSymm"})
@@ -101,7 +100,7 @@ library(nlme)
 # Construct confidence sets for the increase of the mean temperature (June-August)
 # in North America between the 20th and 21st centuries
 temp = SCB_gls_climate(sp_list = climate_data$Z, level = 2, data_fit = climate_data$X,
-                       subset = c("X1 = 1"), correlation = climate_data$correlation,
+                       w = c(1,0,0,0), correlation = climate_data$correlation,
                        mask = climate_data$mask, alpha = 0.1)
 }
 \references{
