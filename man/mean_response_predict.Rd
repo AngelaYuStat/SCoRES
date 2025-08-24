@@ -16,10 +16,11 @@ mean_response_predict(
 }
 \arguments{
 \item{data_df}{A functional data frame that contain both name and values for
-variables including functional outcome, domain (e.g. time) and ID (e.g. subject names).}
+variables including functional outcome, domain (e.g. time) and ID (e.g. subject names)
+used to fit \code{object}.}
 
 \item{object}{A fitted Function-on-Scalar Regression (FoSR) model object
-(e.g., from mgcv::bam()/mgcv::gam()).}
+(e.g., from mgcv::bam()).}
 
 \item{fitted}{Logical. Whether to estimate the simultaneous confidence bands
 for fitted mean function or fitted parameter function
@@ -86,9 +87,6 @@ fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
   method = "fREML", data = pupil_fpca, discrete = TRUE)
 
 results <- mean_response_predict(pupil_fpca, fosr_mod, fitted = TRUE,
-outcome = "percent_change", domain = "seconds", subset = c("use = 1"), id = "id")
-
-results <- mean_response_predict(pupil_fpca, fosr_mod, fitted = FALSE,
 outcome = "percent_change", domain = "seconds", subset = c("use = 1"), id = "id")
 
 }

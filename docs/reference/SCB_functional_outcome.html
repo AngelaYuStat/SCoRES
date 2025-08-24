@@ -54,7 +54,6 @@ bootstrap approaches.</p>
 <span>  object <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">method</span>,</span>
 <span>  fitted <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  est_mean <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  <span class="va">outcome</span>,</span>
 <span>  <span class="va">domain</span>,</span>
@@ -77,7 +76,7 @@ variables including functional outcome, domain (e.g. time) and ID (e.g. subject 
 
 <dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
 <dd><p>A fitted Function-on-Scalar Regression (FoSR) object
-(e.g., from mgcv::bam()/mgcv::gam()). Default is <code>NULL</code></p></dd>
+(e.g., from mgcv::bam()). Default is <code>NULL</code></p></dd>
 
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
@@ -101,23 +100,6 @@ for fitted mean outcome function.</p></li>
 <li><p><code>FALSE</code> - estimate the simultaneous confidence bands
 for fitted parameter function.</p></li>
 </ul><p>Default is <code>TRUE</code>.</p></dd>
-
-
-<dt id="arg-est-mean">est_mean<a class="anchor" aria-label="anchor" href="#arg-est-mean"></a></dt>
-<dd><p>Logical. Whether to use the fitted mean from a functional
-regression model in Multiplier Bootstrap (<code>method = "multiplier"</code>) for
-estimating the quantile.
-This argument can be ignored if choose <code>method = "cma"</code>.
-If <code>TRUE</code>, the function will use:</p><ul><li><p><strong>Fitted mean:</strong> The estimated mean function from a fitted model
-(e.g., <code><a href="https://rdrr.io/pkg/mgcv/man/bam.html" class="external-link">mgcv::bam</a></code>).
-Need to provide a fitted functional outcome regression model object.
-Otherwise, the sample mean will be calculated.</p></li>
-</ul><p>If <code>FALSE</code>, the function will instead use:</p><ul><li><p><strong>Sample mean:</strong> The estimated mean function will be calculated
-as the average of the functional outcome across all IDs.
-For the sample mean option, if missing values (NA) exist in the outcome variable
-in <code>data_df</code>, the function will perform imputation to fill in those
-values before computing the mean.</p></li>
-</ul><p>Default is <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg-alpha">alpha<a class="anchor" aria-label="anchor" href="#arg-alpha"></a></dt>
@@ -197,6 +179,8 @@ Default is "rademacher".</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">fosr_mod</span> <span class="op">&lt;-</span> <span class="fu">mgcv</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/bam.html" class="external-link">bam</a></span><span class="op">(</span><span class="va">percent_change</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">seconds</span>, k<span class="op">=</span><span class="fl">30</span>, bs<span class="op">=</span><span class="st">"cr"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">seconds</span>, by <span class="op">=</span> <span class="va">use</span>, k<span class="op">=</span><span class="fl">30</span>, bs <span class="op">=</span> <span class="st">"cr"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">seconds</span>, by <span class="op">=</span> <span class="va">age</span>, k <span class="op">=</span> <span class="fl">30</span>, bs <span class="op">=</span> <span class="st">"cr"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">seconds</span>, by <span class="op">=</span> <span class="va">gender</span>, k <span class="op">=</span> <span class="fl">30</span>, bs <span class="op">=</span> <span class="st">"cr"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi1</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi2</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span><span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi3</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span> <span class="op">+</span></span></span>
@@ -205,7 +189,7 @@ Default is "rademacher".</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># CMA approach</span></span></span>
 <span class="r-in"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">SCB_functional_outcome</span><span class="op">(</span>data_df <span class="op">=</span> <span class="va">pupil</span>, object <span class="op">=</span> <span class="va">fosr_mod</span>,</span></span>
-<span class="r-in"><span>                                  method <span class="op">=</span> <span class="st">"cma"</span>, fitted <span class="op">=</span> <span class="cn">TRUE</span>, est_mean <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                                  method <span class="op">=</span> <span class="st">"cma"</span>, fitted <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                                  outcome <span class="op">=</span> <span class="st">"percent_change"</span>, domain <span class="op">=</span> <span class="st">"seconds"</span>,</span></span>
 <span class="r-in"><span>                                  subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"use = 1"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -213,13 +197,13 @@ Default is "rademacher".</p></dd>
 <span class="r-in"><span><span class="co"># multiplier bootstrap</span></span></span>
 <span class="r-in"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">SCB_functional_outcome</span><span class="op">(</span>data_df <span class="op">=</span> <span class="va">pupil</span>, object <span class="op">=</span> <span class="va">fosr_mod</span>,</span></span>
 <span class="r-in"><span>                                  method <span class="op">=</span> <span class="st">"multiplier"</span>, fitted <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>                                  est_mean <span class="op">=</span> <span class="cn">TRUE</span>, outcome <span class="op">=</span> <span class="st">"percent_change"</span>,</span></span>
-<span class="r-in"><span>                                  domain <span class="op">=</span> <span class="st">"seconds"</span>, subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"use = 1"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                                  outcome <span class="op">=</span> <span class="st">"percent_change"</span>, domain <span class="op">=</span> <span class="st">"seconds"</span>,</span></span>
+<span class="r-in"><span>                                  subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"use = 1"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">SCB_functional_outcome</span><span class="op">(</span>data_df <span class="op">=</span> <span class="va">pupil</span>, object <span class="op">=</span> <span class="va">fosr_mod</span>,</span></span>
 <span class="r-in"><span>                                  method <span class="op">=</span> <span class="st">"multiplier"</span>, fitted <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>                                  est_mean <span class="op">=</span> <span class="cn">FALSE</span>, outcome <span class="op">=</span> <span class="st">"percent_change"</span>,</span></span>
-<span class="r-in"><span>                                  domain <span class="op">=</span> <span class="st">"seconds"</span>, subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"use = 1"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                                  outcome <span class="op">=</span> <span class="st">"percent_change"</span>, domain <span class="op">=</span> <span class="st">"seconds"</span>,</span></span>
+<span class="r-in"><span>                                  subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"use = 1"</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

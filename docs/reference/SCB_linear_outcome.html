@@ -56,7 +56,6 @@ on a fixed test set design matrix</p>
 <span>  <span class="va">df_fit</span>,</span>
 <span>  <span class="va">model</span>,</span>
 <span>  grid_df <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  fitted <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  n_boot <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  grid_df_boot <span class="op">=</span> <span class="cn">NULL</span></span>
@@ -85,15 +84,6 @@ SCBs are evaluated. Column names should match variables in the fitted model,
 but <code>grid_df</code> may include only the subset of covariates of interest for the SCB
 (it is not required to cover all model variables). Default is <code>NULL</code>, which
 constructs the SCB only for the intercept term.</p></dd>
-
-
-<dt id="arg-fitted">fitted<a class="anchor" aria-label="anchor" href="#arg-fitted"></a></dt>
-<dd><p>Logical. Whether to estimate the simultaneous confidence bands
-for fitted mean outcome or linear combination of fitted regression coefficients.</p><ul><li><p><code>TRUE</code> - Estimate the simultaneous confidence bands
-for fitted mean outcome.</p></li>
-<li><p><code>FALSE</code> - estimate the simultaneous confidence bands
-for fitted regression coefficient.</p></li>
-</ul><p>Default is <code>TRUE</code>.</p></dd>
 
 
 <dt id="arg-n-boot">n_boot<a class="anchor" aria-label="anchor" href="#arg-n-boot"></a></dt>

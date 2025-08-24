@@ -134,6 +134,9 @@ scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL, est_mean = NULL,
     stop("Must provide input for `levels`.")
   }else{
     if(type %in% c("upper", "lower", "two-sided")){
+      if (!is.null(dim(levels)) && length(dim(levels)) == 1) {
+        levels <- as.vector(levels)
+      }
       if(!(is.atomic(levels) && is.null(dim(levels)))) stop("`levels` should be a vector if `type` = upper or lower.")
       if(!is.numeric(levels)) {
         stop("Values of `levels` must be numeric.")

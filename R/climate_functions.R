@@ -276,7 +276,7 @@ SCB_gls_climate =
           norm_est[i, j] <- (mu_hat[i, j] - level)/vabs[i,
                                                         j]
         }
-        first_iter <- FALSE
+        #first_iter <- FALSE
       }
     }
     if (is.null(mask)) {

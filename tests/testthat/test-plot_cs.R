@@ -1,15 +1,15 @@
 # tests/testthat/test-plot_cs.R
 
 testthat::test_that("Input validation: SCB", {
-  expect_error(plot_cs(SCB = matrix(1,1,1), levels = c(0), x = 1:3, mu_hat = 1:3),
+  expect_error(plot_cs(SCB = matrix(1,1,1), levels = 0, x = 1:3, mu_hat = 1:3),
     "`SCB` should be a list\\.") # SCB not a list
-  expect_error(plot_cs(SCB = list(low = 1:3, up = 1:3), levels = c(0), x = 1:3, mu_hat = 1:3),
+  expect_error(plot_cs(SCB = list(low = 1:3, up = 1:3), levels = 0, x = 1:3, mu_hat = 1:3),
     "`SCB` must have elements named 'scb_low' and 'scb_up'\\.") # SCB missing names
   expect_error(plot_cs(SCB = list(scb_low = 1:3, scb_up = 1:4), levels = 0, x = 1:3, mu_hat = 1:3),
     "Dimensions of `SCB\\$scb_up` and `SCB\\$scb_low` must match\\."
   ) # SCB dimension mismatch
   scb_chr <- list(scb_low = as.character(1:3), scb_up = as.character(1:3))
-  expect_error(plot_cs(SCB = scb_chr, levels = c(0), x = 1:3, mu_hat = 1:3),
+  expect_error(plot_cs(SCB = scb_chr, levels = 0, x = 1:3, mu_hat = 1:3),
     "Values of `SCB\\$scb_up` and `SCB\\$scb_low` must be numeric\\."
   ) # SCB non-numeric
 })
@@ -25,17 +25,17 @@ testthat::test_that("Input validation: level", {
   ) # levels not vector
 
   # Unsupported types
-  expect_error(plot_cs(SCB = scb, levels = c(0), type = "interval", x = 1:5, mu_hat = 1:5),
+  expect_error(plot_cs(SCB = scb, levels = 0, type = "interval", x = 1:5, mu_hat = 1:5),
     "'interval' is not avaliable for plotting")
-  expect_error(plot_cs(SCB = scb, levels = c(0), type = "two-sided", x = 1:5, mu_hat = 1:5),
+  expect_error(plot_cs(SCB = scb, levels = 0, type = "two-sided", x = 1:5, mu_hat = 1:5),
     "'two-sided' is not avaliable for plotting")
-  expect_error(plot_cs(SCB = scb, levels = c(0), type = "oops", x = 1:5, mu_hat = 1:5),
+  expect_error(plot_cs(SCB = scb, levels = 0, type = "oops", x = 1:5, mu_hat = 1:5),
     "`type` must be chosen between 'upper' and 'lower'\\.")
 })
 
 testthat::test_that("Input validation: x and y", {
   scb <- list(scb_low = 1:5, scb_up = 2:6)
-  expect_error(plot_cs(SCB = scb, levels = c(0), x = NULL, mu_hat = 1:5),
+  expect_error(plot_cs(SCB = scb, levels = 0, x = NULL, mu_hat = 1:5),
     "Must provide input for `x`\\.")
 
   n <- 50
@@ -47,7 +47,7 @@ testthat::test_that("Input validation: x and y", {
   mu_hat <- sin(seq(0, 2*pi, length.out = n))
   expect_error(plot_cs(SCB = scb, levels = c(-0.5, 0, 0.5), x = as.list(x), mu_hat = mu_hat),
     "For 1D, `x` must be a vector\\.")# Non-vector x
-  expect_error(plot_cs(SCB = scb, levels = c(0), x = x[-1], mu_hat = mu_hat[-1]),
+  expect_error(plot_cs(SCB = scb, levels = 0, x = x[-1], mu_hat = mu_hat[-1]),
     "For 1D, `length\\(x\\)` must match length of `SCB\\$scb_up/scb_low`\\.") # x length mismatch
   expect_error(plot_cs(SCB = scb, levels = c(-0.5, 0, 0.5), x = as.factor(x), mu_hat = mu_hat),
                "`x` must be numeric/character\\.")# x is not numeric/character
@@ -55,24 +55,24 @@ testthat::test_that("Input validation: x and y", {
 
 testthat::test_that("Input validation: mu_hat / mu_true", {
   scb <- list(scb_low = 1:5, scb_up = 2:6)
-  expect_error(plot_cs(SCB = scb, levels = c(0), x = 1:5, mu_hat = letters[1:5]),
+  expect_error(plot_cs(SCB = scb, levels = 0, x = 1:5, mu_hat = letters[1:5]),
     "Input values of `mu_hat` must be numeric\\.")
-  expect_error(plot_cs(SCB = scb, levels = c(0), x = 1:5, mu_hat = 1:4),
+  expect_error(plot_cs(SCB = scb, levels = 0, x = 1:5, mu_hat = 1:4),
     "Dimensions of `SCB\\$scb_up`, `SCB\\$scb_low` and `mu_hat` must match\\.")
-  expect_error(plot_cs(SCB = scb, levels = c(0), x = 1:5, mu_true = as.character(1:5)),
+  expect_error(plot_cs(SCB = scb, levels = 0, x = 1:5, mu_true = as.character(1:5)),
     "Input values of `mu_true` must be numeric\\.")
-  expect_error(plot_cs(SCB = scb, levels = c(0), x = 1:5, mu_true = 1:4),
+  expect_error(plot_cs(SCB = scb, levels = 0, x = 1:5, mu_true = 1:4),
     "Dimensions of `SCB\\$scb_up`, `SCB\\$scb_low` and `mu_true` must match\\.")
-  expect_error(plot_cs(SCB = scb, levels = c(0), x = 1:5),
+  expect_error(plot_cs(SCB = scb, levels = 0, x = 1:5),
     "An input must be provided for either `mu_hat` or `mu_true`\\.")
-  expect_silent(plot_cs(SCB = scb, levels = c(0), x = 1:5, mu_hat = 1:5, mu_true = 1:5))
+  expect_silent(plot_cs(SCB = scb, levels = 0, x = 1:5, mu_hat = 1:5, mu_true = 1:5))
 })
 
 testthat::test_that("palette / color label must be single strings", {
   scb <- list(scb_low = 1:5, scb_up = 2:6)
-  expect_error(plot_cs(SCB = scb, levels = c(0), x = 1:5, mu_hat = 1:5, palette = c("a","b")),
+  expect_error(plot_cs(SCB = scb, levels = 0, x = 1:5, mu_hat = 1:5, palette = c("a","b")),
     "`palette` must be a single character string\\.")
-  expect_error(plot_cs(SCB = scb, levels = c(0), x = 1:5, mu_hat = 1:5, color_level_label = c("black","white")),
+  expect_error(plot_cs(SCB = scb, levels = 0, x = 1:5, mu_hat = 1:5, color_level_label = c("black","white")),
     "`color_level_label` must be a single character string\\.")
 })
 
@@ -127,7 +127,7 @@ testthat::test_that("2D branch: x/y lengths and together flag", {
 testthat::test_that("dims > 2 should error", {
   arr <- array(runif(2*3*4), dim = c(2,3,4))
   scb <- list(scb_low = arr - 0.1, scb_up = arr + 0.1)
-  expect_error(plot_cs(SCB = scb, levels = c(0), x = 1:2, mu_hat = arr[,,1]),
+  expect_error(plot_cs(SCB = scb, levels = 0, x = 1:2, mu_hat = arr[,,1]),
     "The dimension of `SCB\\$scb_up` and `SCB\\$scb_low` exceed 2\\.")
 })
 

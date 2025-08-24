@@ -32,11 +32,11 @@
 <li class="nav-item"><a class="nav-link" href="../articles/SCoRES.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/Functional_Data_Example.html">Functional_Data_Example</a></li>
-    <li><a class="dropdown-item" href="../articles/Geographic_Data_Example.html">Geographic_Data_Example</a></li>
-    <li><a class="dropdown-item" href="../articles/Linear_Model_Example.html">Linear_Model_Example</a></li>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-vignettes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Vignettes</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes">
+<li><a class="dropdown-item" href="../articles/Functional_Data_Example.html">Functional Data Example</a></li>
+    <li><a class="dropdown-item" href="../articles/Geographic_Data_Example.html">Geographic Data Example</a></li>
+    <li><a class="dropdown-item" href="../articles/Linear_Model_Example.html">Linear Model Example</a></li>
     <li><a class="dropdown-item" href="../articles/Methods.html">Methods</a></li>
   </ul>
 </li>
@@ -62,7 +62,7 @@
       <h1>Methods</h1>
                         <h4 data-toc-skip class="author">Angela Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-08-11</h4>
+            <h4 data-toc-skip class="date">2025-08-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Methods.Rmd" class="external-link"><code>vignettes/Methods.Rmd</code></a></small>
       <div class="d-none name"><code>Methods.Rmd</code></div>
@@ -129,7 +129,7 @@ fixed threshold level, which is difficult to determine.</p>
 <p>Ren et al. (2023) proposed a framework that generalizes the
 estimation of such inverse sets to dense and non-dense domains with
 protection against inflated Type I error, and constructs multiple upper,
-lower or interval confidence sets of
+lower or interval confidence region of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>μ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mu^{-1}(U)</annotation></semantics></math>
 over arbitrary chosen thresholds. The coverage probability is achieved
 non-asymptotically and simultaneously through inverting simultaneous
@@ -138,8 +138,8 @@ set
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>μ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mo stretchy="false" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>∞</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mu^{-1}([c,\infty))</annotation></semantics></math>
 for a single value
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>,
-the inverse confidence sets (CSs) are constructed by inverting
-simultaneous confidence intervals (SCIs). Given SCI bounds
+the inverse confidence region are constructed by inverting simultaneous
+confidence intervals (SCIs). Given SCI bounds
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>l</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝐬</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat{B}_{l}(\boldsymbol{s})</annotation></semantics></math>
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝐬</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat{B}_{u}(\boldsymbol{s})</annotation></semantics></math>
@@ -155,8 +155,8 @@ are defined as:<br><math display="block" xmlns="http://www.w3.org/1998/Math/Math
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CS</mtext><mtext mathvariant="normal">out</mtext></msub><mo stretchy="false" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mo stretchy="false" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
 \text{CS}_{\text{out}}[c,\infty) := \hat{B}_u^{-1}[c, \infty)
 </annotation></semantics></math></p>
-<p>The outer and inner confidence sets (CSs) for the inverse lower
-excursion set
+<p>The outer and inner confidence region for the inverse lower excursion
+set
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>μ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>c</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\mu^{-1}\left(-\infty, c\right]</annotation></semantics></math>
 are defined as:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CS</mtext><mtext mathvariant="normal">in</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>c</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>c</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>+</mi><mi>∞</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mi>∁</mi></msup></mrow><annotation encoding="application/x-tex">
@@ -324,25 +324,10 @@ to estimate
 </ol>
 <p>For details of the algorithm, please refer to Telschow et
 al. (2019)</p>
-<p><code>SCoRES</code> provides two options for estimating
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>μ</mi><mo accent="true">̂</mo></mover><mi>N</mi></msub><annotation encoding="application/x-tex">\hat{\mu}_N</annotation></semantics></math>
-in
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>R</mi><mi>n</mi><mi>N</mi></msubsup><annotation encoding="application/x-tex">R_n^N</annotation></semantics></math>.
-If <code>est_mean = TRUE</code>,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>μ</mi><mo accent="true">̂</mo></mover><mi>N</mi></msub><annotation encoding="application/x-tex">\hat{\mu}_N</annotation></semantics></math>
-will be estimated though using the fitted regression object. If
-<code>est_mean = FALSE</code>, sample mean will be calculated. Default
-is <code>FALSE</code>.</p>
-<ol style="list-style-type: decimal">
-<li><p>The <strong>sample mean</strong>
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>μ</mi><mo accent="true">̂</mo></mover><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover><msub><mi>Y</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
-\hat{\mu}_N(s) = \frac{1}{N} \sum_{i=1}^N {Y}_i(s)
-</annotation></semantics></math> , where
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">{Y}_i(s)</annotation></semantics></math>
-is the observed functional response.</p></li>
-<li><p>The <strong>fitted mean value</strong> from a functional
-regression model (e.g., using <code><a href="https://rdrr.io/pkg/mgcv/man/bam.html" class="external-link">mgcv::bam</a></code>).</p></li>
-</ol>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>μ</mi><mo accent="true">̂</mo></mover><mi>N</mi></msub><annotation encoding="application/x-tex">\hat{\mu}_N</annotation></semantics></math>
+will be estimated though using the <strong>fitted mean value</strong>
+from a functional regression model (e.g., using
+<code><a href="https://rdrr.io/pkg/mgcv/man/bam.html" class="external-link">mgcv::bam</a></code>).</p>
 <p>In the multiplier bootstrap procedure, <code>SCoRES</code> supports
 three types of multiplier distributions, which is specified by
 <code>weights</code>:</p>
@@ -389,7 +374,7 @@ nearly equal quantities.</p></li>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Angela Yu, Armin Schwartzman, Julia Wrobel.</p>
+  <p>Developed by Angela Yu, Armin Schwartzman, Junting Ren, Julia Wrobel.</p>
 </div>
 
 <div class="pkgdown-footer-right">

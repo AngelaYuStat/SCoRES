@@ -381,7 +381,7 @@ SCB_regression_coef = function(df_fit, model, n_boot = 5000, alpha = 0.05, type 
   coef_sd <- sum_out$coefficients[,2]
   res_max_v <- rep(0,n_boot)
   for(i in 1:n_boot){
-    df_boot <- df_fit[sample(1:dim(df_fit)[1], replace = T),]
+    df_boot <- df_fit[sample(1:dim(df_fit)[1], replace = T),, drop=F]
     if(type == "linear"){
       fit_boot <- lm(model, df_boot)
     }else if(type == "logistic"){

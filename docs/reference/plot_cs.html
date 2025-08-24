@@ -86,19 +86,18 @@ Dimensions of <code>SCB$scb_up</code> and <code>SCB$scb_low</code> must match.</
 <dt id="arg-levels">levels<a class="anchor" aria-label="anchor" href="#arg-levels"></a></dt>
 <dd><p>A numeric vector or list of scalers for different levels or matrix containing interval sets to construct the confidence sets.
 If <code>type</code> = "upper" or "lower", <code>levels</code> should be a vector.
-"upper" represents upper excursion sets, and "lower" represents lower excursion sets.
-If <code>type = "interval"</code>, then <code>levels</code> should be a <code>list</code> with two named elements:
-<code>low</code> and <code>up</code>, corresponding to the bounds of the interval <code>[low, up]</code>.</p></dd>
+"upper" represents upper excursion sets, and "lower" represents lower excursion sets.</p></dd>
 
 
 <dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
 <dd><p>A character specifying the type of inverse sets to fit.
-Choices are <code>"upper"</code>, <code>"lower"</code> or <code>"interval"</code>. Default is <code>"upper"</code>.</p></dd>
+Choices are <code>"upper"</code> and <code>"lower"</code>. Default is <code>"upper"</code>.</p></dd>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>A numerical vector of x-axis coordinates for 1D and 2D cases.
-For discrete coordinates, use a character vector.</p></dd>
+For discrete coordinates, use a character vector.
+The order of x should correspond to the order of <code>scb_up</code> and <code>scb_low</code> in <code>SCB</code>.</p></dd>
 
 
 <dt id="arg-y">y<a class="anchor" aria-label="anchor" href="#arg-y"></a></dt>
@@ -167,6 +166,8 @@ and simultaneous confidence region of excursion sets corresponding to levels ass
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">fosr_mod</span> <span class="op">&lt;-</span> <span class="fu">mgcv</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/bam.html" class="external-link">bam</a></span><span class="op">(</span><span class="va">percent_change</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">seconds</span>, k<span class="op">=</span><span class="fl">30</span>, bs<span class="op">=</span><span class="st">"cr"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">seconds</span>, by <span class="op">=</span> <span class="va">use</span>, k<span class="op">=</span><span class="fl">30</span>, bs <span class="op">=</span> <span class="st">"cr"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">seconds</span>, by <span class="op">=</span> <span class="va">age</span>, k <span class="op">=</span> <span class="fl">30</span>, bs <span class="op">=</span> <span class="st">"cr"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">seconds</span>, by <span class="op">=</span> <span class="va">gender</span>, k <span class="op">=</span> <span class="fl">30</span>, bs <span class="op">=</span> <span class="st">"cr"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi1</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi2</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span><span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi3</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span> <span class="op">+</span></span></span>
@@ -174,17 +175,20 @@ and simultaneous confidence region of excursion sets corresponding to levels ass
 <span class="r-in"><span>  method <span class="op">=</span> <span class="st">"fREML"</span>, data <span class="op">=</span> <span class="va">pupil_fpca</span>, discrete <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">pupil_cma</span> <span class="op">&lt;-</span> <span class="fu"><a href="SCB_functional_outcome.html">SCB_functional_outcome</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">pupil_fpca</span>, object <span class="op">=</span> <span class="va">fosr_mod</span>, method <span class="op">=</span> <span class="st">"cma"</span>,</span></span>
-<span class="r-in"><span>                                   est_mean <span class="op">=</span> <span class="cn">TRUE</span>, outcome <span class="op">=</span> <span class="st">"percent_change"</span>,</span></span>
+<span class="r-in"><span>                                   outcome <span class="op">=</span> <span class="st">"percent_change"</span>,</span></span>
 <span class="r-in"><span>                                   domain <span class="op">=</span> <span class="st">"seconds"</span>, subset<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"use = 1"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                                   id <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">pupil_cma</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">pupil_cma</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">plot_cs</span><span class="op">(</span><span class="va">pupil_cma</span>,levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">18</span>, <span class="op">-</span><span class="fl">20</span>, <span class="op">-</span><span class="fl">22</span>, <span class="op">-</span><span class="fl">24</span><span class="op">)</span>, x <span class="op">=</span> <span class="va">pupil_cma</span><span class="op">$</span><span class="va">time</span>,</span></span>
-<span class="r-in"><span>        mu_hat <span class="op">=</span> <span class="va">pupil_cma</span><span class="op">$</span><span class="va">yhat</span>, xlab <span class="op">=</span> <span class="st">""</span>, ylab <span class="op">=</span> <span class="st">""</span>,</span></span>
+<span class="r-in"><span><span class="fu">plot_cs</span><span class="op">(</span><span class="va">pupil_cma</span>,levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">18</span>, <span class="op">-</span><span class="fl">20</span>, <span class="op">-</span><span class="fl">22</span>, <span class="op">-</span><span class="fl">24</span><span class="op">)</span>, x <span class="op">=</span> <span class="va">pupil_cma</span><span class="op">$</span><span class="va">domain</span>,</span></span>
+<span class="r-in"><span>        mu_hat <span class="op">=</span> <span class="va">pupil_cma</span><span class="op">$</span><span class="va">mu_hat</span>, xlab <span class="op">=</span> <span class="st">""</span>, ylab <span class="op">=</span> <span class="st">""</span>,</span></span>
 <span class="r-in"><span>        level_label <span class="op">=</span> <span class="cn">T</span>, min.size <span class="op">=</span> <span class="fl">40</span>, palette <span class="op">=</span> <span class="st">"Spectral"</span>,</span></span>
 <span class="r-in"><span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `time`.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plot_cs(pupil_cma, levels = c(-18, -20, -22, -24), x = pupil_cma$time,     mu_hat = pupil_cma$yhat, xlab = "", ylab = "", level_label = T,     min.size = 40, palette = "Spectral", color_level_label = "black"):</span> Must provide input for `x`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 107 rows containing missing values or values outside the scale range</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> (`geom_line()`).</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 108 rows containing missing values or values outside the scale range</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> (`geom_line()`).</span>
+<span class="r-plt img"><img src="plot_cs-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

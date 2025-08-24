@@ -4,9 +4,10 @@
 #' bootstrap approaches.
 #'
 #' @param data_df A functional data frame that contain both name and values for
-#' variables including functional outcome, domain (e.g. time) and ID (e.g. subject names).
+#' variables including functional outcome, domain (e.g. time) and ID (e.g. subject names)
+#' used to fit `object`.
 #' @param object A fitted Function-on-Scalar Regression (FoSR) object
-#' (e.g., from mgcv::bam()/mgcv::gam()). Default is \code{NULL}
+#' (e.g., from mgcv::bam()). Default is \code{NULL}
 #' @param method A character string specifying the approach:
 #'   \itemize{
 #'     \item \code{"cma"} - Correlation and Multiplicity Adjusted (CMA) confidence bands
@@ -142,6 +143,42 @@ SCB_functional_outcome = function(data_df, object = NULL, method, fitted = TRUE,
   if (method == "cma") {
     if (is.null(object)) {
       stop("`object` must be provided when `method = 'cma'`.")
+    }else{
+      model_formula <- formula(object)
+      all_vars <- all.vars(model_formula)
+      if (is.null(domain)) {
+        stop("`domain` must be provided.")
+      }else{
+        if (!(is.character(domain) && length(domain) == 1)) {
+          stop("`domain` must be a single character string.")
+        }
+        if (!(domain %in% colnames(data_df) && domain %in% all_vars)){
+          stop("`domain` should be a variable in both `data_df` and the model formula,
+           but '", domain, "' was not found")
+        }
+      }
+      if (is.null(id)) {
+        stop("`id` must be provided.")
+      }else{
+        if (!(is.character(id) && length(id) == 1)) {
+          stop("`id` must be a single character string.")
+        }
+        if (!(id %in% colnames(data_df))){
+          stop("`id` should be a variable in `data_df`,
+           but '", id, "' was not found")
+        }
+      }
+      if (is.null(outcome)) {
+        stop("`outcome` must be provided.")
+      }else{
+        if (!(is.character(outcome) && length(outcome) == 1)) {
+          stop("`outcome` must be a single character string.")
+        }
+        if (!(outcome %in% names(model.frame(object)) && outcome %in% all_vars)){
+          stop("`outcome` should be a variable in both `data_df` and the model formula,
+           but '", outcome, "' was not found")
+        }
+      }
     }
     return(cma(data_df = data_df, object = object, fitted = fitted, alpha = alpha,
                outcome = outcome, domain = domain, subset = subset, id = id,
@@ -153,28 +190,6 @@ SCB_functional_outcome = function(data_df, object = NULL, method, fitted = TRUE,
   }
 
   # method == "multiplier"
-  if (is.null(outcome)) {
-    stop("`outcome` must be provided for 'multiplier'.")
-  }else{
-    if (!(is.character(outcome) && length(outcome) == 1)) {
-      stop("`outcome` must be a single character string.")
-    }
-  }
-
-  if (is.null(domain)) {
-    stop("`domain` must be provided.")
-  }else{
-    if (!(is.character(domain) && length(domain) == 1)) {
-      stop("`domain` must be a single character string.")
-    }
-  }
-  if (is.null(id)) {
-    stop("`id` must be provided.")
-  }else{
-    if (!(is.character(id) && length(id) == 1)) {
-      stop("`id` must be a single character string.")
-    }
-  }
 
     # if (is.factor(data[[var]])) {
     # stop(paste0("The variable '", var, "' is of type factor. ",
@@ -191,8 +206,52 @@ SCB_functional_outcome = function(data_df, object = NULL, method, fitted = TRUE,
     # }
 
   # Compute SCB
-  if (!is.null(object)) {
 
+  if (is.null(domain)) {
+    stop("`domain` must be provided.")
+  }else{
+    if (!(is.character(domain) && length(domain) == 1)) {
+      stop("`domain` must be a single character string.")
+    }
+    if (!(domain %in% colnames(data_df))){
+      stop("`domain` should be a variable in `data_df`,
+           but '", domain, "' was not found")
+    }
+  }
+  if (is.null(id)) {
+    stop("`id` must be provided.")
+  }else{
+    if (!(is.character(id) && length(id) == 1)) {
+      stop("`id` must be a single character string.")
+    }
+    if (!(id %in% colnames(data_df))){
+      stop("`id` should be a variable in `data_df`,
+           but '", id, "' was not found")
+    }
+  }
+  if (is.null(outcome)) {
+    stop("`outcome` must be provided.")
+  }else{
+    if (!(is.character(outcome) && length(outcome) == 1)) {
+      stop("`outcome` must be a single character string.")
+    }
+    if (!(outcome %in% colnames(data_df))){
+      stop("`outcome` should be a variable in `data_df`,
+           but '", outcome, "' was not found")
+    }
+  }
+
+  if (!is.null(object)) {
+    model_formula <- formula(object)
+    all_vars <- all.vars(model_formula)
+    if (!(domain %in% all_vars)){
+      stop("`domain` should be a variable in the model formula,
+           but '", domain, "' was not found")
+      }
+    if (!(outcome %in% all_vars)){
+      stop("`outcome` should be a variable in the model formula,
+           but '", outcome, "' was not found")
+      }
     df <- mean_response_predict(data_df, object, fitted = fitted, outcome = outcome,
                                 domain = domain, subset = subset, id = id)
     pred_df <- df$pred_df

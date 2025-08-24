@@ -1,5 +1,5 @@
 testthat::test_that("Input validation: scb_low and scb_up", {
-  expect_error(scb_to_cs(scb_low = 1:3, scb_up = 1:4, levels = c(0)),
+  expect_error(scb_to_cs(scb_low = 1:3, scb_up = 1:4, levels = 0),
                "Dimensions of `scb_up` and `scb_low` must match\\.")
   scb_chr <- list(scb_low = as.character(1:3), scb_up = as.character(1:3))
   expect_error(scb_to_cs(scb_low = as.character(1:3), scb_up = as.character(1:3), levels = c(0)),
@@ -21,9 +21,9 @@ testthat::test_that("Input validation: level", {
 })
 
 testthat::test_that("Input validation: true_mean", {
-  expect_error(scb_to_cs(scb_low = 1:5, scb_up = 2:6, levels = c(0), true_mean = letters[1:5]),
+  expect_error(scb_to_cs(scb_low = 1:5, scb_up = 2:6, levels = 0, true_mean = letters[1:5]),
                "Values of `true_mean` must be numeric.")
-  expect_error(scb_to_cs(scb_low = 1:5, scb_up = 2:6, levels = c(0), true_mean = 1:4),
+  expect_error(scb_to_cs(scb_low = 1:5, scb_up = 2:6, levels = 0, true_mean = 1:4),
                "Dimensions of `scb_up`, `scb_low` and `true_mean` must match.")
   nx <- 12
   ny <- 10

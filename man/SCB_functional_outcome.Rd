@@ -21,10 +21,11 @@ SCB_functional_outcome(
 }
 \arguments{
 \item{data_df}{A functional data frame that contain both name and values for
-variables including functional outcome, domain (e.g. time) and ID (e.g. subject names).}
+variables including functional outcome, domain (e.g. time) and ID (e.g. subject names)
+used to fit \code{object}.}
 
 \item{object}{A fitted Function-on-Scalar Regression (FoSR) object
-(e.g., from mgcv::bam()/mgcv::gam()). Default is \code{NULL}}
+(e.g., from mgcv::bam()). Default is \code{NULL}}
 
 \item{method}{A character string specifying the approach:
 \itemize{

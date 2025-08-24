@@ -50,7 +50,7 @@
 <span>  <span class="va">sp_list</span>,</span>
 <span>  level <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  data_fit <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  subset <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  w <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  correlation <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  corpar <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  groups <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -80,21 +80,20 @@ estimated mean surface significantly deviates from it. Default is NULL.</p></dd>
 
 
 <dt id="arg-data-fit">data_fit<a class="anchor" aria-label="anchor" href="#arg-data-fit"></a></dt>
-<dd><p>A named matrix or data frame used to fit the generalized least squares
+<dd><p>A design matrix used to fit the generalized least squares
 (GLS) model. Each row corresponds to an observation, and each column to a covariate
 to be included in the model. Outcome/boservation should not be included.
 The first column is typically an intercept column,
 which will contain only 1s, if an intercept is included in the model.
+Categorical variables in <code>data_fit</code> should be coverted to dummy variables.
 Default is <code>matrix(1, n, 1)</code> (only keep the intercept term)</p></dd>
 
 
-<dt id="arg-subset">subset<a class="anchor" aria-label="anchor" href="#arg-subset"></a></dt>
-<dd><p>An atomic character vector (e.g., c("X1 = 1"))
-specified the target function for constructing the SCB.
-Each element must be of the form <name> = <value>, where <name> is the name
-of a covariate in data_fit and <value> is the desired value.
-Whitespace is ignored. Default is NULL, will only construct the SCB for the
-first covariate in <code>data_fit</code>.</value></name></value></name></p></dd>
+<dt id="arg-w">w<a class="anchor" aria-label="anchor" href="#arg-w"></a></dt>
+<dd><p>A numeric vector specifying the target function for constructing the SCB,
+by giving a linear combination of the regression coefficients in the GLS model.
+Default is <code>matrix(1, 1, 1)</code>, will only construct the SCB for the first regression
+coefficient.</p></dd>
 
 
 <dt id="arg-correlation">correlation<a class="anchor" aria-label="anchor" href="#arg-correlation"></a></dt>
@@ -186,7 +185,7 @@ Confidence regions for spatial excursion sets from repeated random field observa
 <span class="r-in"><span><span class="co"># Construct confidence sets for the increase of the mean temperature (June-August)</span></span></span>
 <span class="r-in"><span><span class="co"># in North America between the 20th and 21st centuries</span></span></span>
 <span class="r-in"><span><span class="va">temp</span> <span class="op">=</span> <span class="fu">SCB_gls_climate</span><span class="op">(</span>sp_list <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">Z</span>, level <span class="op">=</span> <span class="fl">2</span>, data_fit <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">X</span>,</span></span>
-<span class="r-in"><span>                       subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X1 = 1"</span><span class="op">)</span>, correlation <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">correlation</span>,</span></span>
+<span class="r-in"><span>                       w <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0</span>,<span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, correlation <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">correlation</span>,</span></span>
 <span class="r-in"><span>                       mask <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">mask</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>

@@ -62,7 +62,7 @@
       <h1>Linear_Model_Example</h1>
                         <h4 data-toc-skip class="author">Angela Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-08-18</h4>
+            <h4 data-toc-skip class="date">2025-08-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Linear_Model_Example.Rmd" class="external-link"><code>vignettes/Linear_Model_Example.Rmd</code></a></small>
       <div class="d-none name"><code>Linear_Model_Example.Rmd</code></div>
@@ -113,8 +113,8 @@ the outer confidence region.</p>
 <span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.3</span>, <span class="fl">0</span>, <span class="fl">0.3</span><span class="op">)</span>, </span>
 <span>        x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, </span>
 <span>        mu_hat <span class="op">=</span> <span class="va">results</span><span class="op">$</span><span class="va">Mean</span>, </span>
-<span>        xlab <span class="op">=</span> <span class="st">""</span>, </span>
-<span>        ylab <span class="op">=</span> <span class="st">""</span>, </span>
+<span>        xlab <span class="op">=</span> <span class="st">"x1"</span>, </span>
+<span>        ylab <span class="op">=</span> <span class="st">"y"</span>, </span>
 <span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
 <span>        min.size <span class="op">=</span> <span class="fl">40</span>, </span>
 <span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
@@ -128,7 +128,7 @@ with the independent variable
 discretized into 100 equidistant points over the domain
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">[</mo><mi>−</mi><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[-1, 1]</annotation></semantics></math>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCB_linear_outcome.html">SCB_linear_outcome</a></span><span class="op">(</span>df_fit <span class="op">=</span> <span class="va">df</span>, model <span class="op">=</span> <span class="va">model</span>, grid_df <span class="op">=</span> <span class="va">grid</span><span class="op">)</span></span></code></pre></div>
 <p>The <code>levels = c(-1.5, -1.0, -0.5)</code> argument specifies a
 set of thresholds, and <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code> function estimates
@@ -141,49 +141,18 @@ the outer confidence region.</p>
 <span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.5</span>, <span class="op">-</span><span class="fl">1.0</span>, <span class="op">-</span><span class="fl">0.5</span><span class="op">)</span>, </span>
 <span>        x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, </span>
 <span>        mu_hat <span class="op">=</span> <span class="va">results</span><span class="op">$</span><span class="va">Mean</span>, </span>
-<span>        xlab <span class="op">=</span> <span class="st">""</span>, </span>
-<span>        ylab <span class="op">=</span> <span class="st">""</span>, </span>
+<span>        xlab <span class="op">=</span> <span class="st">"x2"</span>, </span>
+<span>        ylab <span class="op">=</span> <span class="st">"y"</span>, </span>
 <span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
 <span>        min.size <span class="op">=</span> <span class="fl">40</span>, </span>
 <span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
 <span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Linear_Model_Example_files/figure-html/simulate_plot_cs_linear_2-1.png" width="576"></p>
-<p>Plotting for linear combinations of regression coefficients is also
-avaliable, by specifying <code>fitted = FALSE</code>. In the following
-example, we establishes simultaneous confidence bands for the expected
-response surface
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>β</mi><mn>1</mn></msub><msub><mi>X</mi><mn>1</mn></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msubsup><mi>X</mi><mn>1</mn><mn>2</mn></msubsup><mo>+</mo><msub><mi>β</mi><mn>3</mn></msub><msubsup><mi>X</mi><mn>1</mn><mn>3</mn></msubsup></mrow><annotation encoding="application/x-tex">\beta_1X_1+\beta_2X^2_1+\beta_3X^3_1</annotation></semantics></math>,
-with the independent variable
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mn>1</mn></msub><annotation encoding="application/x-tex">X_1</annotation></semantics></math>
-discretized into 100 equidistant points over the domain
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">[</mo><mi>−</mi><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[-1, 1]</annotation></semantics></math>.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCB_linear_outcome.html">SCB_linear_outcome</a></span><span class="op">(</span>df_fit <span class="op">=</span> <span class="va">df</span>, model <span class="op">=</span> <span class="va">model</span>, grid_df <span class="op">=</span> <span class="va">grid</span>, </span>
-<span>                              fitted <span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p>The <code>levels = c(0, 0.3, 0.6)</code> argument specifies a set of
-thresholds, and <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code> function estimates
-multiple inverse upper excursion sets corresponding to these thresholds,
-and plot the estimated inverse region, the inner confidence region, and
-the outer confidence region.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results</span>,</span>
-<span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.3</span>, <span class="fl">0.6</span><span class="op">)</span>, </span>
-<span>        x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, </span>
-<span>        mu_hat <span class="op">=</span> <span class="va">results</span><span class="op">$</span><span class="va">Mean</span>, </span>
-<span>        xlab <span class="op">=</span> <span class="st">""</span>, </span>
-<span>        ylab <span class="op">=</span> <span class="st">""</span>, </span>
-<span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
-<span>        min.size <span class="op">=</span> <span class="fl">40</span>, </span>
-<span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
-<span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Linear_Model_Example_files/figure-html/simulate_plot_cs_linear_3-1.png" width="576"></p>
 <p>In addition to linear regression, <code>SCoRES</code> also
 provides<code><a href="../reference/SCB_logistic_outcome.html">SCoRES::SCB_logistic_outcome()</a></code> for estimating the
 SCB for outcome of logistic regression. The mean outcome here for
 establishing the SCB stays the same.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># generate simulated data</span></span>
 <span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
@@ -200,14 +169,14 @@ specifies a set of thresholds, and <code><a href="../reference/plot_cs.html">SCo
 function estimates multiple inverse upper excursion sets corresponding
 to these thresholds, and plot the estimated inverse region, the inner
 confidence region, and the outer confidence region.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results</span>,</span>
 <span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.4</span>, <span class="fl">0.5</span><span class="op">)</span>, </span>
 <span>        x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, </span>
 <span>        mu_hat <span class="op">=</span> <span class="va">results</span><span class="op">$</span><span class="va">Mean</span>, </span>
-<span>        xlab <span class="op">=</span> <span class="st">""</span>, </span>
-<span>        ylab <span class="op">=</span> <span class="st">""</span>, </span>
+<span>        xlab <span class="op">=</span> <span class="st">"x1"</span>, </span>
+<span>        ylab <span class="op">=</span> <span class="st">"y"</span>, </span>
 <span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
 <span>        min.size <span class="op">=</span> <span class="fl">40</span>, </span>
 <span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
@@ -220,22 +189,22 @@ with the independent variable
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mn>1</mn></msub><annotation encoding="application/x-tex">X_1</annotation></semantics></math>
 discretized into 100 equidistant points over the domain
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">[</mo><mi>−</mi><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[-1, 1]</annotation></semantics></math>.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCB_logistic_outcome.html">SCB_logistic_outcome</a></span><span class="op">(</span>df_fit <span class="op">=</span> <span class="va">df</span>, model <span class="op">=</span> <span class="va">model</span>, grid_df <span class="op">=</span> <span class="va">grid</span><span class="op">)</span></span></code></pre></div>
 <p>The <code>levels = c(0.3, 0.4, 0.5)</code> argument specifies a set
 of thresholds, and <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code> function estimates
 multiple inverse upper excursion sets corresponding to these thresholds,
 and plot the estimated inverse region, the inner confidence region, and
 the outer confidence region.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results</span>,</span>
 <span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.4</span>, <span class="fl">0.5</span><span class="op">)</span>, </span>
 <span>        x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, </span>
 <span>        mu_hat <span class="op">=</span> <span class="va">results</span><span class="op">$</span><span class="va">Mean</span>, </span>
-<span>        xlab <span class="op">=</span> <span class="st">""</span>, </span>
-<span>        ylab <span class="op">=</span> <span class="st">""</span>, </span>
+<span>        xlab <span class="op">=</span> <span class="st">"x2"</span>, </span>
+<span>        ylab <span class="op">=</span> <span class="st">"y"</span>, </span>
 <span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
 <span>        min.size <span class="op">=</span> <span class="fl">40</span>, </span>
 <span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
@@ -244,7 +213,7 @@ the outer confidence region.</p>
 <p>Besides, <code><a href="../reference/SCB_regression_coef.html">SCoRES::SCB_regression_coef</a></code> can estimate the
 SCB for every coefficient (50 in total) in the linear/logistic
 model.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">MASS</a></span><span class="op">)</span></span>
 <span><span class="co"># generate simulated data</span></span>
 <span><span class="va">M</span> <span class="op">&lt;-</span> <span class="fl">50</span></span>
@@ -266,19 +235,95 @@ specifies a set of thresholds, and <code><a href="../reference/plot_cs.html">SCo
 function estimates multiple inverse upper excursion sets corresponding
 to these thresholds, and plot the estimated inverse region, the inner
 confidence region, and the outer confidence region.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results</span>,</span>
 <span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="op">-</span><span class="fl">0.5</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.2</span><span class="op">)</span>, </span>
 <span>        x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>, </span>
+<span>        mu_hat <span class="op">=</span> <span class="va">results</span><span class="op">$</span><span class="va">Mean</span>, </span>
+<span>        xlab <span class="op">=</span> <span class="st">"Coefficients"</span>, </span>
+<span>        ylab <span class="op">=</span> <span class="st">"SCBs for Coefficients"</span>, </span>
+<span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
+<span>        min.size <span class="op">=</span> <span class="fl">40</span>, </span>
+<span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
+<span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="Linear_Model_Example_files/figure-html/simulate_plot_cs_coef-1.png" width="576"></p>
+<p>Users can also utilize the SCB contained in <code>results</code> to
+calculate the SCB for any linear combination of these regression
+coefficients.</p>
+<p>In the following example, we load <code>mtcars</code>, a popular
+dataset from base R, and establishes simultaneous confidence bands for
+the expected response surface
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>m</mi><mi>p</mi><mi>g</mi><mo stretchy="false" form="prefix">|</mo><mi>w</mi><mi>t</mi><mo>,</mo><mi>a</mi><mi>m</mi><mo>=</mo><mn>0</mn><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">E[mpg|wt,am=0]</annotation></semantics></math></p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://angelayustat.github.io/SCoRES">SCoRES</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">262</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">wt</span>, <span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>am <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">am</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">grid</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">wt</span>, <span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>am <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>am <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">am</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># fit the linear regression model and obtain the SCB for y</span></span>
+<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">"mpg ~ ."</span></span>
+<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCB_linear_outcome.html">SCB_linear_outcome</a></span><span class="op">(</span>df_fit <span class="op">=</span> <span class="va">df</span>, model <span class="op">=</span> <span class="va">model</span>, grid_df <span class="op">=</span> <span class="va">grid</span><span class="op">)</span></span></code></pre></div>
+<p>The <code>levels = c(-25, 20, 15)</code> argument specifies a set of
+thresholds, and <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code> function estimates
+multiple inverse upper excursion sets corresponding to these thresholds,
+and plot the estimated inverse region, the inner confidence region, and
+the outer confidence region.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results</span>,</span>
+<span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">20</span>, <span class="fl">15</span><span class="op">)</span>, </span>
+<span>        x <span class="op">=</span> <span class="va">grid</span><span class="op">$</span><span class="va">wt</span>, </span>
+<span>        mu_hat <span class="op">=</span> <span class="va">results</span><span class="op">$</span><span class="va">Mean</span>, </span>
+<span>        xlab <span class="op">=</span> <span class="st">"wt"</span>, </span>
+<span>        ylab <span class="op">=</span> <span class="st">"mpg"</span>, </span>
+<span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
+<span>        min.size <span class="op">=</span> <span class="fl">40</span>, </span>
+<span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
+<span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="Linear_Model_Example_files/figure-html/mtcars_plot_cs_linear-1.png" width="576"></p>
+<p>In the following example, we load <code>ipad</code> dataset, and
+establishes simultaneous confidence bands for the expected response
+surface
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mi>_</mi><mi>c</mi><mi>o</mi><mi>m</mi><mi>p</mi><mi>o</mi><mi>s</mi><mi>i</mi><mi>t</mi><mi>e</mi><mi>_</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>r</mi><mi>e</mi><mo stretchy="false" form="prefix">|</mo><mi>u</mi><mi>s</mi><mi>e</mi><mi>_</mi><mi>g</mi><mi>r</mi><mi>o</mi><mi>u</mi><mi>p</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">E[i\_composite\_score|use\_group]</annotation></semantics></math></p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://angelayustat.github.io/SCoRES">SCoRES</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">262</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ipad</span><span class="op">)</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">ipad</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>use_group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">use_group</span>,</span>
+<span>                       levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                       labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"No Use"</span>, <span class="st">"Occasional"</span>, <span class="st">"Daily"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">grid</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">use_group</span><span class="op">)</span></span>
+<span><span class="co"># fit the linear regression model and obtain the SCB for y</span></span>
+<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">"i_composite_score ~ use_group"</span></span>
+<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCB_linear_outcome.html">SCB_linear_outcome</a></span><span class="op">(</span>df_fit <span class="op">=</span> <span class="va">df</span>, model <span class="op">=</span> <span class="va">model</span>, grid_df <span class="op">=</span> <span class="va">grid</span><span class="op">)</span></span></code></pre></div>
+<p>The <code>levels = c(-25, 20, 15)</code> argument specifies a set of
+thresholds, and <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code> function estimates
+multiple inverse upper excursion sets corresponding to these thresholds,
+and plot the estimated inverse region, the inner confidence region, and
+the outer confidence region.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results</span>,</span>
+<span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="fl">0.4</span><span class="op">)</span>, </span>
+<span>        x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">grid</span><span class="op">$</span><span class="va">use_group</span><span class="op">)</span>, </span>
 <span>        mu_hat <span class="op">=</span> <span class="va">results</span><span class="op">$</span><span class="va">Mean</span>, </span>
 <span>        xlab <span class="op">=</span> <span class="st">""</span>, </span>
 <span>        ylab <span class="op">=</span> <span class="st">""</span>, </span>
 <span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
 <span>        min.size <span class="op">=</span> <span class="fl">40</span>, </span>
 <span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
-<span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Linear_Model_Example_files/figure-html/simulate_plot_cs_coef-1.png" width="576"></p>
+<span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="Linear_Model_Example_files/figure-html/ipad_plot_cs_linear-1.png" width="576"></p>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>

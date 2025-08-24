@@ -96,6 +96,9 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
     stop("Must provide input for `levels`.")
   }else{
     if(type %in% c("upper", "lower")){
+      if (!is.null(dim(levels)) && length(dim(levels)) == 1) {
+        levels <- as.vector(levels)
+      }
       if(!(is.atomic(levels) && is.null(dim(levels)))) stop("`levels` should be a vector if `type` = upper or lower.")
       if(!is.numeric(levels)) {
         stop("Values of `levels` must be numeric.")
@@ -138,6 +141,9 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
       warning("Found entries where `scb_low > scb_up`. Please check your inputs.")
     }
     # x must be provided as vector
+    if (!is.null(dim(x)) && length(dim(x)) == 1) {
+      x <- as.vector(x)
+    }
     if (!(is.atomic(x) && is.null(dim(x)))) stop("For 1D, `x` must be a vector.")
     if(!(is.numeric(x)||is.character(x))){
       stop("`x` must be numeric/character.")
@@ -177,9 +183,15 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
     if(!(is.numeric(x))){
       stop("`x` must be numeric.")
     }
+    if (!is.null(dim(x)) && length(dim(x)) == 1) {
+      x <- as.vector(x)
+    }
     if (!(is.atomic(x) && is.null(dim(x)))) stop("For 2D, `x` must be a vector.")
     if(!(is.numeric(y))){
       stop("`y` must be numeric.")
+    }
+    if (!is.null(dim(y)) && length(dim(y)) == 1) {
+      y <- as.vector(y)
     }
     if (!(is.atomic(y) && is.null(dim(y)))) stop("For 2D, `y` must be a vector.")
     if (length(x) != nrow(SCB$scb_up)) {

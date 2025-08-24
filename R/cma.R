@@ -3,9 +3,10 @@
 #' This function is an internal function for constructing SCBs for functional data.
 #'
 #' @param data_df A functional data frame that contain both name and values for
-#' variables including functional outcome, domain (e.g. time) and ID (e.g. subject names).
+#' variables including functional outcome, domain (e.g. time) and ID (e.g. subject names)
+#' used to fit `object`.
 #' @param object A fitted Function-on-Scalar Regression (FoSR) model object
-#' (e.g., from mgcv::bam()/mgcv::gam()).
+#' (e.g., from mgcv::bam()).
 #' @param fitted Logical. Whether to estimate the simultaneous confidence bands
 #' for fitted mean function or fitted parameter function
 #'   \itemize{
@@ -71,10 +72,8 @@
 #' results <- mean_response_predict(pupil_fpca, fosr_mod, fitted = TRUE,
 #' outcome = "percent_change", domain = "seconds", subset = c("use = 1"), id = "id")
 #'
-#' results <- mean_response_predict(pupil_fpca, fosr_mod, fitted = FALSE,
-#' outcome = "percent_change", domain = "seconds", subset = c("use = 1"), id = "id")
-#'
 #' @export
+#'
 mean_response_predict = function(data_df, object, fitted = TRUE, outcome, domain, subset = NULL, id){
 
   mod_coef <- object$coefficients
@@ -142,6 +141,7 @@ mean_response_predict = function(data_df, object, fitted = TRUE, outcome, domain
           #if (!(val %in% unique_vals)) {
             #stop(paste0("Value '", val, "' not found in numeric variable '", var, "'. "))
           #}
+          if(!is.numeric(val)) stop("Value '", val, "' is not numeric.")
           df_pred[[var]] <- val
         }else{
           stop(paste0("The variable '", var, "' is not of type numeric. ",
@@ -210,9 +210,10 @@ mean_response_predict = function(data_df, object, fitted = TRUE, outcome, domain
 #' using parameter simulations approach with Gaussian multiplier bootstrap.
 #'
 #' @param data_df A functional data frame that contain both name and values for
-#' variables including functional outcome, domain (e.g. time) and ID (e.g. subject names).
+#' variables including functional outcome, domain (e.g. time) and ID (e.g. subject names)
+#' used to fit `object`.
 #' @param object A fitted Function-on-Scalar Regression (FoSR) object
-#' (e.g., from mgcv::bam()/mgcv::gam()).
+#' (e.g., from mgcv::bam()).
 #' @param fitted Logical. Whether to estimate the simultaneous confidence bands
 #' for fitted mean function or fitted parameter function
 #'   \itemize{
@@ -273,19 +274,8 @@ mean_response_predict = function(data_df, object, fitted = TRUE, outcome, domain
 #' results <- cma(pupil_fpca, fosr_mod, fitted = TRUE, outcome = "percent_change",
 #'                domain = "seconds", subset = c("use = 1"), id = "id")
 #'
-#' results <- cma(pupil_fpca, fosr_mod, fitted = FALSE, outcome = "percent_change",
-#'                domain = "seconds", subset = c("use = 1"), id = "id")
-#'
 cma = function(data_df, object, fitted = TRUE, alpha = 0.05, outcome, domain,
                subset = NULL, id, nboot = NULL){
-
-  if (is.null(data_df)) {
-    stop("`data_df` must be provided.")
-  }
-
-  if (!is.numeric(alpha) || alpha <= 0 || alpha >= 1){
-    stop("`alpha` must be in (0, 1).")
-  }
 
   # ---- Ensure 'data' is a named data frame ----
   if(!is.data.frame(data_df)){
@@ -293,26 +283,6 @@ cma = function(data_df, object, fitted = TRUE, alpha = 0.05, outcome, domain,
       as.data.frame(data_df),
       error = function(e) stop("`data_df` must be a data.frame or coercible to a data.frame.")
     )
-  }
-
-  # Check the existance of column names
-  if (is.null(colnames(data_df))) {
-    stop("`data_df` must have column names.")
-  }
-
-  if (is.null(domain)) {
-    stop("`domain` must be provided.")
-  }else{
-    if (!(is.character(domain) && length(domain) == 1)) {
-      stop("`domain` must be a single character string.")
-    }
-  }
-  if (is.null(id)) {
-    stop("`id` must be provided.")
-  }else{
-    if (!(is.character(id) && length(id) == 1)) {
-      stop("`id` must be a single character string.")
-    }
   }
 
   # Number of bootstrap samples (B)
