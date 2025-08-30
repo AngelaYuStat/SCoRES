@@ -176,7 +176,17 @@ plot_cs(results,
         color_level_label = "black")
 ```
 
-Users can also utilize the SCB contained in `results` to calculate the SCB for any linear combination of these regression coefficients.
+Users can also compute the SCB for any linear combination of these coefficients by specifying a weight vector of the same length as the coefficient vector. For example, suppose we want to calculate the SCB for the linear combination $\beta_0+\beta_1+\beta_2$:
+
+```{r SCB_coef_comb, echo = TRUE}
+# define the weight vector: (1,1,1,0,0,...,0)
+w <- c(1, 1, 1, rep(0, 48))
+
+# linear combination estimate
+c(Mean = sum(w * results$Mean),
+  scb_low = sum(w * results$scb_low),
+  scb_up = sum(w * results$scb_up))
+```
 
 In the following example, we load `mtcars`, a popular dataset from base R, and establishes simultaneous confidence bands for the expected response surface  $E[mpg|wt,am=0]$
 
