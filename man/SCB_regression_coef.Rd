@@ -26,9 +26,11 @@ SCB_regression_coef(
 \value{
 A data frame with the following columns:
 \describe{
-\item{scb_low}{Lower bound of the simultaneous confidence band for each coefficient.}
-\item{Mean}{Estimated value of each coefficient from the fitted model.}
-\item{scb_up}{Upper bound of the simultaneous confidence band for each coefficient.}
+\item{scb_low}{Lower bound of the simultaneous confidence band.
+The first row corresponds to the intercept, and subsequent rows correspond to regression coefficients.}
+\item{Mean}{Estimated values. The first element is the intercept estimate, and the remaining are coefficient estimates.}
+\item{scb_up}{Upper bound of the simultaneous confidence band.
+The first row corresponds to the intercept, and subsequent rows correspond to regression coefficients.}
 }
 }
 \description{
