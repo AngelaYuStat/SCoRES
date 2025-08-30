@@ -313,7 +313,7 @@ SCB_functional_outcome = function(data_df, object = NULL, method, fitted = TRUE,
     # Y_mat <- Y_mat[!zero_rows, ]
     zero_rows <- rowSums(Y_mat == 0) == ncol(Y_mat)
     if(any(zero_rows)){
-      warnings(paste0("Expected no rows where all entries are zero in `data_df`."))
+      stop(paste0("Expected no rows where all entries are zero in `data_df`."))
     }
     thres <- SCB_dense(A = Y_mat, mean_A = pred_df$mean, alpha = alpha,
             Mboots = nboot, method = method_SD, weights = weights, SCB = FALSE)
@@ -321,12 +321,12 @@ SCB_functional_outcome = function(data_df, object = NULL, method, fitted = TRUE,
     scb_low = yhat - thres*se_hat
     # return index, scb_up, scb_low
     results <- list(
-      domain = s_pred,
       mu_hat = yhat,
+      domain = s_pred,
       se_hat = se_hat,
       scb_low = scb_low,
       scb_up = scb_up,
-      type = "Dense Confidence Interval"
+      type = "Multiplier Bootstrap Confidence Interval"
     )
     return(results)
   }else{

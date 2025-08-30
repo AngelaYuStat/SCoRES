@@ -1,16 +1,18 @@
+# Load data
+data(pupil)
+library(mgcv)
+pupil_fpca <- SCoRES::prepare_pupil_fpca(pupil)
+fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
+                        s(seconds, by = use, k=30, bs = "cr") +
+                        s(seconds, by = age, k = 30, bs = "cr") +
+                        s(seconds, by = gender, k = 30, bs = "cr") +
+                        s(id, by = Phi1, bs="re") +
+                        s(id, by = Phi2, bs="re") +
+                        s(id, by = Phi3, bs="re") +
+                        s(id, by = Phi4, bs="re"),
+                      method = "fREML", data = pupil_fpca, discrete = TRUE)
+
 test_that("Function works well", {
-  # Load data
-  data(pupil)
-  pupil_fpca <- SCoRES::prepare_pupil_fpca(pupil)
-  fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
-                          s(seconds, by = use, k=30, bs = "cr") +
-                          s(seconds, by = age, k = 30, bs = "cr") +
-                          s(seconds, by = gender, k = 30, bs = "cr") +
-                          s(id, by = Phi1, bs="re") +
-                          s(id, by = Phi2, bs="re") +
-                          s(id, by = Phi3, bs="re") +
-                          s(id, by = Phi4, bs="re"),
-                        method = "fREML", data = pupil_fpca, discrete = TRUE)
 
   # Call the function
   results <- cma(pupil_fpca, fosr_mod, outcome = "percent_change", domain = "seconds",

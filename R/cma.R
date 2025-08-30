@@ -99,7 +99,7 @@ mean_response_predict = function(data_df, object, fitted = TRUE, outcome, domain
 
   if (!is.null(subset)){
     # Identify covariates
-    vars <- c(outcome, domain, id)
+    #vars <- c(outcome, domain, id)
 
     m <- regexec("^\\s*([^=]+?)\\s*=\\s*(.+)$", subset)
     res <- regmatches(subset, m)
@@ -277,25 +277,12 @@ mean_response_predict = function(data_df, object, fitted = TRUE, outcome, domain
 cma = function(data_df, object, fitted = TRUE, alpha = 0.05, outcome, domain,
                subset = NULL, id, nboot = NULL){
 
-  # ---- Ensure 'data' is a named data frame ----
-  if(!is.data.frame(data_df)){
-    data_df <- tryCatch(
-      as.data.frame(data_df),
-      error = function(e) stop("`data_df` must be a data.frame or coercible to a data.frame.")
-    )
-  }
-
-  # Number of bootstrap samples (B)
-  if(is.null(nboot)){
-    nboot <- 1e4
-  }else{
-    if (!is.numeric(nboot) || nboot <= 0 || nboot %% 1 != 0){
-      stop("`nboot` must be a positive integer.")
-    }
-  }
-
   results <- mean_response_predict(data_df, object, fitted, outcome = outcome,
                                    domain = domain, subset = subset, id = id)
+
+  if(is.null(nboot)){
+    nboot <- 1e4
+  }
 
   # Set up container for bootstrap
   yhat_boot <- matrix(NA, nboot, length(results$s_pred))
@@ -320,7 +307,7 @@ cma = function(data_df, object, fitted = TRUE, alpha = 0.05, outcome, domain,
     se_hat = pred_df$se,
     scb_low = y_hat_LB_global,
     scb_up = y_hat_UB_global,
-    type = "Global Confidence Interval (CMA)"
+    type = "CMA Confidence Band"
   ))
 
 }

@@ -50,7 +50,7 @@ SCB_dense = function(A, mean_A = NULL, alpha = 0.05, Mboots  = NULL,
       se_hat = sd_A,
       scb_low = scb_low,
       scb_up = scb_up,
-      type = "Dense Confidence Interval"
+      type = "Multiplier Bootstrap Confidence Interval"
     )
     return(dense_df)
   }else{
