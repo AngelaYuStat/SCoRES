@@ -82,8 +82,9 @@ mean outcome for which simultaneous confidence bands (SCB) are constructed.
 Each row represents one covariate combination at which predictions and
 SCBs are evaluated. Column names should match variables in the fitted model,
 but <code>grid_df</code> may include only the subset of covariates of interest for the SCB
-(it is not required to cover all model variables). Default is <code>NULL</code>, which
-constructs the SCB only for the intercept term.</p></dd>
+(it is not required to cover all model variables).
+Default is <code>NULL</code>, in which case the SCB is constructed over the fitted values
+based on 'df_fit`.</p></dd>
 
 
 <dt id="arg-n-boot">n_boot<a class="anchor" aria-label="anchor" href="#arg-n-boot"></a></dt>
@@ -100,7 +101,8 @@ procedure to generate the empirical distribution. Default is 1000.</p></dd>
 <dd><p>An optional data frame specifying the input grid at which
 predictions are evaluated during bootstrap resampling.
 This allows SCBs to be constructed on a denser set of covariate values
-if desired. If NULL, uses <code>grid_df</code>.</p></dd>
+if desired. If NULL, uses <code>grid_df</code>.
+If <code>grid_df</code> is set to NULL, <code>grid_df_boot</code> will also be set to <code>NULL</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
