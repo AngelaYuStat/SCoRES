@@ -10,3 +10,5 @@ data-raw/ccds_load.R
 data/ccds.rda
 _pkgdown.yml
 SCoRES.pdf
+Simulation.R
+Simulation.Rmd

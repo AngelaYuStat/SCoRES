@@ -6,7 +6,7 @@
 #' variables including functional outcome, domain (e.g. time) and ID (e.g. subject names)
 #' used to fit `object`.
 #' @param object A fitted Function-on-Scalar Regression (FoSR) model object
-#' (e.g., from mgcv::bam()).
+#' (e.g., from mgcv::gam()/mgcv::bam()).
 #' @param fitted Logical. Whether to estimate the simultaneous confidence bands
 #' for fitted mean function or fitted parameter function
 #'   \itemize{
@@ -213,7 +213,7 @@ mean_response_predict = function(data_df, object, fitted = TRUE, outcome, domain
 #' variables including functional outcome, domain (e.g. time) and ID (e.g. subject names)
 #' used to fit `object`.
 #' @param object A fitted Function-on-Scalar Regression (FoSR) object
-#' (e.g., from mgcv::bam()).
+#' (e.g., from mgcv::gam()/mgcv::bam()).
 #' @param fitted Logical. Whether to estimate the simultaneous confidence bands
 #' for fitted mean function or fitted parameter function
 #'   \itemize{

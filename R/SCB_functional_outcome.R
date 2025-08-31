@@ -7,7 +7,7 @@
 #' variables including functional outcome, domain (e.g. time) and ID (e.g. subject names)
 #' used to fit `object`.
 #' @param object A fitted Function-on-Scalar Regression (FoSR) object
-#' (e.g., from mgcv::bam()). Default is \code{NULL}
+#' (e.g., from mgcv::gam()/mgcv::bam()). Default is \code{NULL}
 #' @param method A character string specifying the approach:
 #'   \itemize{
 #'     \item \code{"cma"} - Correlation and Multiplicity Adjusted (CMA) confidence bands

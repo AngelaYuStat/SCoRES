@@ -116,7 +116,7 @@ t = seq(0, 1, length.out = D)
 
 ## define covariate (I'm using a binary one)
 
-n_simulations = 30 # 模拟次数
+n_simulations = 50 # 模拟次数
 
 cover_matrix <- matrix(NA, nrow = n_simulations, ncol = D)
 
@@ -165,8 +165,8 @@ simdat = tibble(id = rep(1:I, each = D),
 # subject_id: 个体ID
 
 mean_mod <- mgcv::gam(
-  Y ~ s(t, k = 7, bs = "cr") +
-    s(t, by = X, k = 7, bs = "cr"),
+  Y ~ s(t, k = 9, bs = "cr") +
+    s(t, by = X, k = 9, bs = "cr"),
   data = simdat, method = "REML"
 )
 
@@ -202,13 +202,14 @@ simdat <- simdat %>%
   arrange(id, t) %>%
   mutate(id = factor(id))
 
-model <- mgcv::bam(Y ~ s(t, k=7, bs="cr") +
-                       s(t, by = X, k=7, bs = "cr") +
+model <- mgcv::bam(Y ~ s(t, k=9, bs="cr") +
+                       s(t, by = X, k=9, bs = "cr") +
                        s(id, by = Phi1, bs="re") +
                        s(id, by = Phi2, bs="re")+
                        s(id, by = Phi3, bs="re") +
                        s(id, by = Phi4, bs="re"),
                        method = "fREML", data = simdat, discrete = TRUE)
+# multiplier
 scb <- SCB_functional_outcome(
   simdat,
   object = model,
@@ -228,6 +229,64 @@ coverage_by_time <- colMeans(cover_matrix, na.rm = TRUE)
 coverage_by_time
 final_coverage <- mean(coverage_by_time)
 final_coverage
+
+
+k_grid <- 6:12   # 自己改范围
+X = rbinom(I, 1, 0.6)
+
+## set fixed effects
+## I decided to let beta0 = 0, you can look at coverage of beta1
+beta0 = 0
+beta1 <- sin(6 * pi * t)
+
+
+#plot(t, beta1)
+
+## set random elements
+t_basis = bs(t, df = 5)
+bi_coef = matrix(rnorm(5 * I), nrow = I, ncol = 5)
+
+bi = bi_coef %*% t(t_basis) # random effects
+
+
+epsilon = matrix(rnorm(I * D, sd = 0.5), nrow = I, ncol = D)
+
+
+## define Y
+xb = matrix(NA, nrow = I, ncol = D)
+for(i in 1:I){
+  xb[i,] = beta0 + X[i] * beta1
+}
+
+
+Y = xb + bi + epsilon
+
+
+
+# store outcome and covariates as dataframe
+simdat = tibble(id = rep(1:I, each = D),
+                t = rep(1:D, times = I),
+                Y = as.vector(t(Y)),
+                X = rep(X, each = D))
+
+# 1) 先在“均值模型”上试 k
+res1 <- do.call(rbind, lapply(k_grid, function(k) {
+  fit <- mgcv::gam(
+    Y ~ s(t, k = k, bs = "cr") +
+      s(t, by = X, k = k, bs = "cr"),
+    data = simdat, method = "REML"
+  )
+  gc <- suppressWarnings(mgcv::gam.check(fit))
+  kt <- gc$k.check  # 两行：对应 s(t,.) 与 s(t,by=.)
+}))
+res1
+# 推荐：取第一个 pass==TRUE 的最小 k；若都不通过，取 p 值较大的那个
+k_reco1 <- if (any(res1$pass)) min(res1$k[res1$pass]) else res1$k[which.max(pmin(res1$p_t, res1$p_t_byX))]
+k_reco1
+
+
+
+
 
 # 快速诊断k=5和k=10模型的区别
 model_k5 <- bam(Y ~ s(t, k = 5, bs = "cr") +

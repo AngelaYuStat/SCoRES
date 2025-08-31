@@ -20,7 +20,7 @@ variables including functional outcome, domain (e.g. time) and ID (e.g. subject 
 used to fit \code{object}.}
 
 \item{object}{A fitted Function-on-Scalar Regression (FoSR) model object
-(e.g., from mgcv::bam()).}
+(e.g., from mgcv::gam()/mgcv::bam()).}
 
 \item{fitted}{Logical. Whether to estimate the simultaneous confidence bands
 for fitted mean function or fitted parameter function

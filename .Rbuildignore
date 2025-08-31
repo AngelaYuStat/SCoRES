@@ -13,3 +13,5 @@
 ^R/data_ccds\.R$
 ^data/ccds\.rda$
 ^_pkgdown\.yml$
+^Simulation\.R$
+^Simulation\.Rmd$

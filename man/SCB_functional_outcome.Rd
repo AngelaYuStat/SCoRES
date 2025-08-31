@@ -25,7 +25,7 @@ variables including functional outcome, domain (e.g. time) and ID (e.g. subject 
 used to fit \code{object}.}
 
 \item{object}{A fitted Function-on-Scalar Regression (FoSR) object
-(e.g., from mgcv::bam()). Default is \code{NULL}}
+(e.g., from mgcv::gam()/mgcv::bam()). Default is \code{NULL}}
 
 \item{method}{A character string specifying the approach:
 \itemize{

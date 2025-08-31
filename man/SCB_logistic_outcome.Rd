@@ -4,7 +4,13 @@
 \alias{SCB_logistic_outcome}
 \title{Construct Simultaneous Confidence Bands for a Logistic Regression Model}
 \usage{
-SCB_logistic_outcome(df_fit, model, grid_df, n_boot = 1000, alpha = 0.05)
+SCB_logistic_outcome(
+  df_fit,
+  model,
+  grid_df = NULL,
+  n_boot = 1000,
+  alpha = 0.05
+)
 }
 \arguments{
 \item{df_fit}{A data frame containing the training design matrix used to fit the logistic model.}
