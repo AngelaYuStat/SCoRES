@@ -187,13 +187,13 @@ SCB_linear_outcome = function(df_fit, model, grid_df = NULL, n_boot = 1000, alph
   }
   thres <- quantile(res_max_v, probs = 1 - alpha)
   if(!is.null(grid_df)){
-    sim_CB <- data.frame(scb_low = expit(y_hat$fit - thres*y_hat$se.fit),
-                         Mean = expit(y_hat$fit),
-                         scb_up = expit(y_hat$fit + thres*y_hat$se.fit), grid_df)
+    sim_CB <- data.frame(scb_low = y_hat$fit - thres*y_hat$se.fit,
+                         Mean = y_hat$fit,
+                         scb_up = y_hat$fit + thres*y_hat$se.fit, grid_df)
   }else{
-    sim_CB <- data.frame(scb_low = expit(y_hat$fit - thres*y_hat$se.fit),
-                         Mean = expit(y_hat$fit),
-                         scb_up = expit(y_hat$fit + thres*y_hat$se.fit), df_fit)
+    sim_CB <- data.frame(scb_low = y_hat$fit - thres*y_hat$se.fit,
+                         Mean = y_hat$fit,
+                         scb_up = y_hat$fit + thres*y_hat$se.fit, df_fit)
   }
   return(sim_CB)
 }

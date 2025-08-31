@@ -188,41 +188,6 @@ c(Mean = sum(w * results$Mean),
   scb_up = sum(w * results$scb_up))
 ```
 
-In the following example, we load `mtcars`, a popular dataset from base R, and establishes simultaneous confidence bands for the expected response surface  $E[mpg|wt,am=0]$
-
-```{r mtcars_estimate SCI_linear, echo = TRUE}
-library(SCoRES)
-library(dplyr)
-set.seed(262)
-data(mtcars)
-df <- mtcars %>%
-      dplyr::select(mpg, wt, am) %>%
-      dplyr::mutate(am = as.factor(am))
-grid <- df %>%
-      dplyr::select(wt, am) %>%
-      dplyr::mutate(am = 0) %>%
-      dplyr::mutate(am = as.factor(am))
-# fit the linear regression model and obtain the SCB for y
-model <- "mpg ~ ."
-results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
-```
-
-The `levels = c(-25, 20, 15)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse region, the inner confidence region, and the outer confidence region.
-
-```{r mtcars_plot_cs_linear, echo = TRUE}
-results <- tibble::as_tibble(results)
-suppressWarnings(plot_cs(results,
-        levels = c(25, 20, 15), 
-        x = grid$wt, 
-        mu_hat = results$Mean, 
-        xlab = "wt", 
-        ylab = "mpg", 
-        level_label = T, 
-        min.size = 40, 
-        palette = "Spectral", 
-        color_level_label = "black"))
-```
-
 In the following example, we load `ipad` dataset, and establishes simultaneous confidence bands for the expected response surface  $E[i\_composite\_score|use\_group]$
 
 ```{r ipad_estimate SCI_linear, echo = TRUE}
