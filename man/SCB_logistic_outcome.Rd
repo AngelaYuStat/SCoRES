@@ -16,12 +16,15 @@ mean outcome for which simultaneous confidence bands (SCB) are constructed.
 Each row represents one covariate combination at which predictions and
 SCBs are evaluated. Column names should match variables in the fitted model,
 but \code{grid_df} may include only the subset of covariates of interest for the SCB
-(it is not required to cover all model variables). Default is \code{NULL}, which
-constructs the SCB only for the intercept term.}
+(it is not required to cover all model variables).
+Default is \code{NULL}, in which case the SCB is constructed over the fitted values
+based on 'df_fit`.}
 
-\item{n_boot}{Number of bootstrap samples used in the non-parametric bootstrap procedure to generate the empirical distribution. Default is 1000.}
+\item{n_boot}{Number of bootstrap samples used in the non-parametric bootstrap
+procedure to generate the empirical distribution. Default is 1000.}
 
-\item{alpha}{Significance level for the confidence band (e.g., 0.05 for 95\% confidence). Default is 0.05.}
+\item{alpha}{Significance level for the confidence band (e.g., 0.05 for 95\% confidence).
+Default is 0.05.}
 }
 \value{
 A data frame with the following columns:
