@@ -12,3 +12,6 @@ _pkgdown.yml
 SCoRES.pdf
 Simulation.R
 Simulation.Rmd
+Simulation.html
+coverage.html
+lib/
