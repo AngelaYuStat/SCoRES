@@ -2,7 +2,7 @@
 % Please edit documentation in R/regression_outcome_scb.R
 \name{SCB_logistic_outcome}
 \alias{SCB_logistic_outcome}
-\title{Construct Simultaneous Confidence Bands for a Logistic Regression Model}
+\title{Construct Simultaneous Confidence Bands for a Logistic Regression Outcome}
 \usage{
 SCB_logistic_outcome(
   df_fit,
@@ -38,7 +38,7 @@ A data frame with the following columns:
 \item{scb_low}{Lower bound of the simultaneous confidence band.}
 \item{Mean}{Predicted mean response from the fitted model.}
 \item{scb_up}{Upper bound of the simultaneous confidence band.}
-\item{grid_df}{All columns from \code{grid_df}, representing the prediction grid.}
+\item{...}{All columns from \code{grid_df}, representing the prediction grid.}
 }
 }
 \description{

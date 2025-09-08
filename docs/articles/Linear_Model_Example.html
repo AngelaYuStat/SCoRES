@@ -62,7 +62,7 @@
       <h1>Linear_Model_Example</h1>
                         <h4 data-toc-skip class="author">Angela Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-08-30</h4>
+            <h4 data-toc-skip class="date">2025-09-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Linear_Model_Example.Rmd" class="external-link"><code>vignettes/Linear_Model_Example.Rmd</code></a></small>
       <div class="d-none name"><code>Linear_Model_Example.Rmd</code></div>
@@ -250,47 +250,65 @@ confidence region, and the outer confidence region.</p>
 <p><img src="Linear_Model_Example_files/figure-html/simulate_plot_cs_coef-1.png" width="576"></p>
 <p>Users can also compute the SCB for any linear combination of these
 coefficients by specifying a weight vector of the same length as the
-coefficient vector. For example, suppose we want to calculate the SCB
-for the linear combination
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\beta_0+\beta_1+\beta_2</annotation></semantics></math>:</p>
+coefficient vector. This can be done by using
+<code><a href="../reference/SCB_regression_outcome.html">SCoRES::SCB_regression_outcome()</a></code>, and specify the linear
+combination through <code>w</code>. For example, suppose we want to
+calculate the SCB for the linear combination
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>β</mi><mn>1</mn></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><mo>+</mo><msub><mi>β</mi><mn>3</mn></msub></mrow><annotation encoding="application/x-tex">\beta_1+\beta_2+\beta_3</annotation></semantics></math>
+for model:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>X</mi><mn>1</mn></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msubsup><mi>X</mi><mn>1</mn><mn>2</mn></msubsup><mo>+</mo><msub><mi>β</mi><mn>3</mn></msub><msubsup><mi>X</mi><mn>1</mn><mn>3</mn></msubsup><mo>+</mo><msub><mi>β</mi><mn>4</mn></msub><msub><mi>X</mi><mn>2</mn></msub><mo>+</mo><msub><mi>β</mi><mn>5</mn></msub><msubsup><mi>X</mi><mn>2</mn><mn>2</mn></msubsup><mo>+</mo><msub><mi>β</mi><mn>6</mn></msub><msubsup><mi>X</mi><mn>3</mn><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">y=\beta_0+\beta_1 X_1 +\beta_2X^2_1+\beta_3X^3_1+\beta_4X_2+\beta_5X^2_2+\beta_6X^2_3</annotation></semantics></math>:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># define the weight vector: (1,1,1,0,0,...,0)</span></span>
-<span><span class="va">w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">48</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
+<span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
+<span><span class="va">epsilon</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span>,<span class="fl">0</span>,<span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="va">x1</span><span class="op">^</span><span class="fl">2</span> <span class="op">-</span> <span class="fl">1.1</span> <span class="op">*</span> <span class="va">x1</span><span class="op">^</span><span class="fl">3</span> <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="va">x2</span> <span class="op">+</span> <span class="fl">0.8</span> <span class="op">*</span> <span class="va">x2</span><span class="op">^</span><span class="fl">2</span> <span class="op">-</span> <span class="fl">1.1</span> <span class="op">*</span> <span class="va">x2</span><span class="op">^</span><span class="fl">3</span> <span class="op">+</span> <span class="va">epsilon</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="va">x1</span>, x2 <span class="op">=</span> <span class="va">x2</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span></span>
+<span><span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># fit the linear regression model and obtain the SCB for y</span></span>
+<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">"y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"</span></span>
+<span><span class="va">w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># linear combination estimate</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">w</span> <span class="op">*</span> <span class="va">results</span><span class="op">$</span><span class="va">Mean</span><span class="op">)</span>,</span>
-<span>  scb_low <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">w</span> <span class="op">*</span> <span class="va">results</span><span class="op">$</span><span class="va">scb_low</span><span class="op">)</span>,</span>
-<span>  scb_up <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">w</span> <span class="op">*</span> <span class="va">results</span><span class="op">$</span><span class="va">scb_up</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      Mean   scb_low    scb_up </span></span>
-<span><span class="co">#&gt; 1.3703479 0.8657867 1.8749091</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/SCB_regression_outcome.html">SCB_regression_outcome</a></span><span class="op">(</span>df_fit <span class="op">=</span> <span class="va">df</span>, model <span class="op">=</span> <span class="va">model</span>,</span>
+<span>                       grid_df <span class="op">=</span> <span class="va">grid</span>, n_boot <span class="op">=</span> <span class="fl">50</span>, alpha <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>                       fitted <span class="op">=</span> <span class="cn">FALSE</span>, w <span class="op">=</span> <span class="va">w</span><span class="op">)</span></span>
+<span><span class="co">#&gt;           scb_low      Mean   scb_up</span></span>
+<span><span class="co">#&gt; scb_low -1.139088 0.4610077 2.061104</span></span></code></pre></div>
 <p>In the following example, we load <code>ipad</code> dataset, and
-establishes simultaneous confidence bands for the expected response
-surface
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mi>_</mi><mi>c</mi><mi>o</mi><mi>m</mi><mi>p</mi><mi>o</mi><mi>s</mi><mi>i</mi><mi>t</mi><mi>e</mi><mi>_</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>r</mi><mi>e</mi><mo stretchy="false" form="prefix">|</mo><mi>u</mi><mi>s</mi><mi>e</mi><mi>_</mi><mi>g</mi><mi>r</mi><mi>o</mi><mi>u</mi><mi>p</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">E[i\_composite\_score|use\_group]</annotation></semantics></math></p>
+establishes simultaneous confidence bands for all the coefficients and
+the intercept in the model fitted.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://angelayustat.github.io/SCoRES">SCoRES</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">262</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ipad</span><span class="op">)</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">ipad</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>use_group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">use_group</span>,</span>
-<span>                       levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>                       labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"No Use"</span>, <span class="st">"Occasional"</span>, <span class="st">"Daily"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">grid</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">use_group</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">t_mmr1</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">p_fpc1</span>, <span class="va">p_fpc2</span>, <span class="va">p_fpc3</span>, <span class="va">p_fpc4</span>, <span class="va">p_fpc5</span>, <span class="va">p_fpc6</span>,</span>
+<span>         <span class="va">p_PMC_pctChg</span>, <span class="va">p_auc</span>, <span class="va">t_mmr1</span>,</span>
+<span>         <span class="va">i_prop_false_timeout</span>, <span class="va">i_prop_failed1</span>, <span class="va">i_prop_failed2</span>, </span>
+<span>         <span class="va">i_judgement_time1</span>, <span class="va">i_judgement_time2</span>, <span class="va">i_time_outside_reticle</span>, </span>
+<span>         <span class="va">i_time_on_edge</span>, <span class="va">i_prop_hit</span>, <span class="va">i_correct_reaction2</span>, </span>
+<span>         <span class="va">i_reaction_time_max2</span>, <span class="va">i_reaction_time2</span>, <span class="va">i_rep_shapes12</span>, </span>
+<span>         <span class="va">i_rep_shapes34</span>, <span class="va">i_memory_time12</span>, <span class="va">i_memory_time34</span>, </span>
+<span>         <span class="va">i_composite_score</span>, <span class="va">h_hr</span>, <span class="va">h_dbp</span>, <span class="va">h_sbp</span>, <span class="va">recent_smoke</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>log_tmmr1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">t_mmr1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">df_lin</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">recent_smoke</span>, <span class="op">-</span><span class="va">t_mmr1</span><span class="op">)</span></span>
 <span><span class="co"># fit the linear regression model and obtain the SCB for y</span></span>
-<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">"i_composite_score ~ use_group"</span></span>
-<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCB_linear_outcome.html">SCB_linear_outcome</a></span><span class="op">(</span>df_fit <span class="op">=</span> <span class="va">df</span>, model <span class="op">=</span> <span class="va">model</span>, grid_df <span class="op">=</span> <span class="va">grid</span><span class="op">)</span></span></code></pre></div>
-<p>The <code>levels = c(-25, 20, 15)</code> argument specifies a set of
-thresholds, and <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code> function estimates
+<span><span class="va">model_lin</span> <span class="op">&lt;-</span> <span class="st">"log_tmmr1 ~ ."</span></span>
+<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCB_regression_coef.html">SCB_regression_coef</a></span><span class="op">(</span>df_fit <span class="op">=</span> <span class="va">df_lin</span>, model <span class="op">=</span> <span class="va">model_lin</span><span class="op">)</span></span></code></pre></div>
+<p>The <code>levels = c(0.2, 0.3, 0.4)</code> argument specifies a set
+of thresholds, and <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code> function estimates
 multiple inverse upper excursion sets corresponding to these thresholds,
 and plot the estimated inverse region, the inner confidence region, and
-the outer confidence region.</p>
+the outer confidence region. Here, for illustration, we filter out the
+SCB for intercept.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results</span>,</span>
 <span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="fl">0.4</span><span class="op">)</span>, </span>
-<span>        x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">grid</span><span class="op">$</span><span class="va">use_group</span><span class="op">)</span>, </span>
+<span>        x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Intercept"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df_lin</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df_lin</span><span class="op">)</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>, </span>
 <span>        mu_hat <span class="op">=</span> <span class="va">results</span><span class="op">$</span><span class="va">Mean</span>, </span>
 <span>        xlab <span class="op">=</span> <span class="st">""</span>, </span>
 <span>        ylab <span class="op">=</span> <span class="st">""</span>, </span>
@@ -299,6 +317,63 @@ the outer confidence region.</p>
 <span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
 <span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Linear_Model_Example_files/figure-html/ipad_plot_cs_linear-1.png" width="576"></p>
+<p>We fit a logistic model with the same equation, and obtain SCBs for
+all coefficients and the intercept.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df_log</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">t_mmr1</span>, <span class="op">-</span><span class="va">log_tmmr1</span><span class="op">)</span></span>
+<span><span class="co"># fit the logistic regression model and obtain the SCB for y</span></span>
+<span><span class="va">model_log</span> <span class="op">&lt;-</span> <span class="st">"recent_smoke ~ ."</span></span>
+<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCB_regression_coef.html">SCB_regression_coef</a></span><span class="op">(</span>df_fit <span class="op">=</span> <span class="va">df_log</span>, model <span class="op">=</span> <span class="va">model_log</span>, type <span class="op">=</span> <span class="st">"logistic"</span><span class="op">)</span></span></code></pre></div>
+<p>The <code>levels = c(2e-07, 3e-07, 4e-07)</code> argument specifies a
+set of thresholds, and <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code> function estimates
+multiple inverse upper excursion sets corresponding to these thresholds,
+and plot the estimated inverse region, the inner confidence region, and
+the outer confidence region. Here, for illustration, we filter out the
+SCB for intercept.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results</span>,</span>
+<span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2e-07</span>, <span class="fl">3e-07</span>, <span class="fl">4e-07</span><span class="op">)</span>, </span>
+<span>        x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df_log</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df_log</span><span class="op">)</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>, </span>
+<span>        mu_hat <span class="op">=</span> <span class="va">results</span><span class="op">$</span><span class="va">Mean</span>, </span>
+<span>        xlab <span class="op">=</span> <span class="st">""</span>, </span>
+<span>        ylab <span class="op">=</span> <span class="st">""</span>, </span>
+<span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
+<span>        min.size <span class="op">=</span> <span class="fl">40</span>, </span>
+<span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
+<span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="Linear_Model_Example_files/figure-html/ipad_plot_cs_logistic-1.png" width="576"></p>
+<p>In the following example, we illustrate the usge of
+<code>grid_df</code> for <code>ipad</code> data.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">grid_lin</span> <span class="op">&lt;-</span> <span class="va">df_lin</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">i_prop_false_timeout</span>, <span class="va">i_prop_failed1</span>, <span class="va">i_prop_failed2</span>, </span>
+<span>         <span class="va">i_judgement_time1</span>, <span class="va">i_judgement_time2</span>, <span class="va">i_time_outside_reticle</span>, </span>
+<span>         <span class="va">i_time_on_edge</span>, <span class="va">i_prop_hit</span>, <span class="va">i_correct_reaction2</span>, </span>
+<span>         <span class="va">i_reaction_time_max2</span>, <span class="va">i_reaction_time2</span>, <span class="va">i_rep_shapes12</span>, </span>
+<span>         <span class="va">i_rep_shapes34</span>, <span class="va">i_memory_time12</span>, <span class="va">i_memory_time34</span>, </span>
+<span>         <span class="va">i_composite_score</span><span class="op">)</span></span>
+<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCB_linear_outcome.html">SCB_linear_outcome</a></span><span class="op">(</span>df_fit <span class="op">=</span> <span class="va">df_lin</span>, model <span class="op">=</span> <span class="va">model_lin</span>, grid_df <span class="op">=</span> <span class="va">grid_lin</span><span class="op">)</span></span></code></pre></div>
+<p>The <code>levels = c(-3, 0, 3)</code> argument specifies a set of
+thresholds, and <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code> function estimates
+multiple inverse upper excursion sets corresponding to these thresholds,
+and plot the estimated inverse region, the inner confidence region, and
+the outer confidence region.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results</span>,</span>
+<span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">3</span>, <span class="fl">0</span>, <span class="fl">3</span><span class="op">)</span>, </span>
+<span>        x <span class="op">=</span> <span class="va">grid_lin</span><span class="op">$</span><span class="va">i_composite_score</span>, </span>
+<span>        mu_hat <span class="op">=</span> <span class="va">results</span><span class="op">$</span><span class="va">Mean</span>, </span>
+<span>        xlab <span class="op">=</span> <span class="st">""</span>, </span>
+<span>        ylab <span class="op">=</span> <span class="st">""</span>, </span>
+<span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
+<span>        min.size <span class="op">=</span> <span class="fl">40</span>, </span>
+<span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
+<span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">ylim</a></span><span class="op">(</span><span class="op">-</span><span class="fl">10</span>, <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<p><img src="Linear_Model_Example_files/figure-html/ipad_estimate_outcome_SCI_linear_plot_cs-1.png" width="576"></p>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
@@ -306,7 +381,7 @@ the outer confidence region.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Angela Yu, Armin Schwartzman, Junting Ren, Julia Wrobel.</p>
+  <p>Developed by Zhuoran Yu, Armin Schwartzman, Junting Ren, Julia Wrobel.</p>
 </div>
 
 <div class="pkgdown-footer-right">

@@ -1,4 +1,111 @@
-#' Construct Simultaneous Confidence Bands for a Linear Regression Model
+#' Simultaneous Confidence Bands for Regression Outcomes or Coefficients
+#'
+#' This function fits a user-specified regression model (linear or logistic),
+#' and constructs simultaneous confidence bands (SCBs) for either the mean outcome
+#' or the regression coefficients. SCBs are obtained using a nonparametric bootstrap
+#' procedure evaluated on a fixed test design matrix, providing simultaneous
+#' inference across the entire range of covariates or parameters of interest.
+#'
+#' @param df_fit A data frame containing the training design matrix used
+#' to fit the linear model. Acceptable input format includes numeric and factor.
+#' @param model A character string representing the formula for the linear model
+#' (e.g., \code{"y ~ x1 + x2"}).
+#' @param grid_df A data frame specifying the covariate settings that define the
+#' mean outcome or linear combination for which simultaneous confidence bands (SCB)
+#' are constructed.
+#' Each row represents one covariate combination at which predictions and
+#' SCBs are evaluated. Column names should match variables in the fitted model,
+#' but `grid_df` may include only the subset of covariates of interest for the SCB
+#' (it is not required to cover all model variables).
+#' Default is `NULL`, in which case the SCB is constructed over the fitted values
+#' based on 'df_fit`.
+#' @param n_boot Number of bootstrap samples used in the non-parametric bootstrap
+#' procedure to generate the empirical distribution. Default is 1000.
+#' @param alpha Significance level for the confidence band
+#' (e.g., 0.05 for 95% confidence). Default is 0.05.
+#' @param grid_df_boot An optional data frame specifying the input grid at which
+#' predictions are evaluated during bootstrap resampling.
+#' This allows SCBs to be constructed on a denser set of covariate values
+#' if desired. If NULL, uses \code{grid_df}.
+#' If `grid_df` is set to NULL, `grid_df_boot` will also be set to `NULL`.
+#' This argument is only for `type` = `linear`.
+#' @param type A character string specifying the model type. Either \code{"linear"}
+#' (default) or \code{"logistic"}.
+#' @param fitted Logical. Whether to estimate the simultaneous confidence bands
+#' for regression outcomes or coefficients.
+#'   \itemize{
+#'     \item \code{TRUE} - Estimate the simultaneous confidence bands
+#'     for regression outcomes.
+#'     \item \code{FALSE} - estimate the simultaneous confidence bands
+#'     for regression coefficients.
+#'     }
+#'   Default is \code{TRUE}.
+#' @param w A numeric matrix that specifies the linear combinations of regression coefficients
+#' for which simultaneous confidence bands (SCBs) are to be constructed.
+#' The number of columns should be equal to the number of coefficients in the
+#' regression model fitted.
+#' Default is NULL, will return SCBs for all coefficients and the intercept.
+#' This argument is only for `fitted` = `FALSE`.
+#'
+#' @return A data frame with the following columns:
+#' \describe{
+#'   \item{scb_low}{Lower bound of the simultaneous confidence band.}
+#'   \item{Mean}{Predicted mean response from the fitted model.}
+#'   \item{scb_up}{Upper bound of the simultaneous confidence band.}
+#'   \item{...}{All columns from \code{grid_df}, representing the prediction grid.
+#'              Optional, if `fitted` = \code{TRUE}}
+#' }
+#'
+#' @export
+#'
+#' @examples
+#' set.seed(262)
+#' x1 <- rnorm(100)
+#' x2 <- rnorm(100)
+#' epsilon <- rnorm(100,0,sqrt(2))
+#' y <- -1 + x1 + 0.5 * x1^2 - 1.1 * x1^3 - 0.5 * x2 + 0.8 * x2^2 - 1.1 * x2^3 + epsilon
+#' df <- data.frame(x1 = x1, x2 = x2, y = y)
+#' grid <- data.frame(x1 = seq(-1, 1, length.out = 100),
+#'                    x2 = seq(-1, 1, length.out = 100))
+#' model <- "y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"
+#' w <- matrix(c(0, 0, 1, 0, 0, 1, 0), ncol = 7)
+#' results <- SCB_regression_outcome(df_fit = df, model = model, grid_df = grid, w   = w)
+#'
+SCB_regression_outcome = function(df_fit, model, grid_df = NULL, n_boot = 1000,
+                                  alpha = 0.05, grid_df_boot = NULL, type = "linear",
+                                  fitted = TRUE, w = NULL){
+  if(fitted == TRUE){
+    if(type == "linear"){
+      return(SCB_linear_outcome(df_fit, model, grid_df, n_boot,
+                                alpha, grid_df_boot))
+    }else if(type == "logistic"){
+      return(SCB_logistic_outcome(df_fit, model, grid_df, n_boot,
+                                alpha))
+    }else{
+      stop("`type` must be either 'linear' or 'logistic'.")
+    }
+  }else{
+    SCB <- SCB_regression_coef(df_fit, model, n_boot, alpha, type)
+    if (is.null(w)) {
+      return(SCB)
+    }else{
+      if(!(is.matrix(w)||is.array(w)) || !is.numeric(w)){
+        stop("`w` should be a numeric matrix or array.")
+      }
+      if(nrow(SCB) != ncol(w)) {
+        stop("The number of columns in `w` must be equal to the number of
+             the coefficients in the model.")
+      }else{
+        SCB_coefs <- as.matrix(SCB)
+        results <- w %*% SCB_coefs
+        return(data.frame(scb_low = results[, 1], Mean = results[, 2], scb_up = results[, 3]))
+      }
+    }
+
+  }
+
+}
+#' Construct Simultaneous Confidence Bands for Linear Regression Outcome
 #'
 #' This function fits a linear model and constructs simultaneous confidence bands (SCB)
 #' using a non-parametric bootstrap method for the mean outcome of regression
@@ -39,7 +146,6 @@
 #'
 #' @examples
 #' set.seed(262)
-
 #' x1 <- rnorm(100)
 #' x2 <- rnorm(100)
 #' epsilon <- rnorm(100,0,sqrt(2))
@@ -50,7 +156,8 @@
 #' model <- "y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"
 #' results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
 #'
-SCB_linear_outcome = function(df_fit, model, grid_df = NULL, n_boot = 1000, alpha = 0.05, grid_df_boot = NULL){
+SCB_linear_outcome = function(df_fit, model, grid_df = NULL, n_boot = 1000,
+                              alpha = 0.05, grid_df_boot = NULL){
 
   if(is.null(df_fit)) stop("`df_fit` must be provided.")
   if(is.null(model)) stop("`model` must be provided.")
@@ -142,7 +249,7 @@ SCB_linear_outcome = function(df_fit, model, grid_df = NULL, n_boot = 1000, alph
       # for muneric variable, can be denser
       # for factor/character variable, must be included in grid_df
         if(!is.null(grid_df)){
-          grid_df_boot <- check_and_align_vars(grid_df, grid_df_boot, model_vars[-1])
+          grid_df_boot <- check_and_align_vars(grid_df, grid_df_boot, model_vars[-1], grid_boot = TRUE)
       # fill missing variables in grid_df_boot that are included in model_vars
           grid_df_boot <- fill_missing_with_reference(grid_df, grid_df_boot, model_vars[-1])
         }else{
@@ -155,7 +262,7 @@ SCB_linear_outcome = function(df_fit, model, grid_df = NULL, n_boot = 1000, alph
       # make sure that the included vars match the format in grid_df
       if (ncol(df_fit_no_outcome) != 0){
         if(!is.null(grid_df)){
-          grid_df_boot <- check_and_align_vars(grid_df, grid_df_boot)
+          grid_df_boot <- check_and_align_vars(grid_df, grid_df_boot, grid_boot = TRUE)
       # fill missing variables in grid_df_boot that are included in grid_df
           grid_df_boot <- fill_missing_with_reference(grid_df, grid_df_boot)
         }else{
@@ -213,7 +320,7 @@ expit = function(x){
   1/(1+exp(-x))
 }
 
-#' Construct Simultaneous Confidence Bands for a Logistic Regression Model
+#' Construct Simultaneous Confidence Bands for a Logistic Regression Outcome
 #'
 #' This function fits a logistic regression model and constructs simultaneous confidence bands (SCB)
 #' using a non-parametric bootstrap method for the mean outcome of regression on a fixed test set design matrix
@@ -238,7 +345,7 @@ expit = function(x){
 #'   \item{scb_low}{Lower bound of the simultaneous confidence band.}
 #'   \item{Mean}{Predicted mean response from the fitted model.}
 #'   \item{scb_up}{Upper bound of the simultaneous confidence band.}
-#'   \item{grid_df}{All columns from \code{grid_df}, representing the prediction grid.}
+#'   \item{...}{All columns from \code{grid_df}, representing the prediction grid.}
 #' }
 #'
 #' @importFrom stats quantile as.formula glm predict
@@ -476,6 +583,8 @@ SCB_regression_coef = function(df_fit, model, n_boot = 5000, alpha = 0.05, type 
 #' @param model_vars A vector contained all the interested columns that appear
 #' in `df_fit`. Only those variables are aligned in `grid_df`;
 #' other columns are left unchanged. Default is NULL.
+#' @param grid_boot A logic value for whether the function is for constructing
+#' `grid_df_boot` or not.
 #' @return \item{grid_df}{The prediction grid with variables aligned to `df_fit`.}
 #'
 #' @keywords internal
@@ -483,7 +592,7 @@ SCB_regression_coef = function(df_fit, model, n_boot = 5000, alpha = 0.05, type 
 #' @examples
 #' # Used internally by SCB_linear_outcome, SCB_logistic_outcome
 #'
-check_and_align_vars <- function(df_fit, grid_df, model_vars = NULL) {
+check_and_align_vars <- function(df_fit, grid_df, model_vars = NULL, grid_boot = FALSE) {
 
   # find common vars
   if(is.null(model_vars)){
@@ -528,11 +637,21 @@ check_and_align_vars <- function(df_fit, grid_df, model_vars = NULL) {
         present1 <- unique(as.character(x_fit[!is.na(x_fit)]))
         present2 <- unique(as.character(x_new[!is.na(x_new)]))
         missing_in_new <- setdiff(present2, present1)
-        if (length(missing_in_new) > 0) {
-          stop(sprintf(
-            "Check input for `%s`: contains extra value(s) not present in training/testing data -> %s",
-            var, paste(missing_in_new, collapse = ", ")
-          ))
+        if(grid_boot == FALSE){
+          if (length(missing_in_new) > 0) {
+            stop(sprintf(
+              "Check input for `%s`: contains extra value(s) not present in training/testing data -> %s",
+              var, paste(missing_in_new, collapse = ", ")
+            ))
+          }
+        }else{
+          missing_in_fit <- setdiff(present1, present2)
+          if (length(missing_in_new) > 0 || length(missing_in_fit) > 0) {
+            stop(sprintf(
+              "Check input for `%s`: contains extra value(s) not present in training/testing data -> %s",
+              var, paste(missing_in_new, collapse = ", ")
+            ))
+          }
         }
         grid_df[[nm]] <- factor(as.character(x_new), levels = lv, ordered = is_ord)
       } else {

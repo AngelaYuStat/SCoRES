@@ -4,7 +4,7 @@
 \alias{check_and_align_vars}
 \title{Validate and align types/levels between training data and prediction grid}
 \usage{
-check_and_align_vars(df_fit, grid_df, model_vars = NULL)
+check_and_align_vars(df_fit, grid_df, model_vars = NULL, grid_boot = FALSE)
 }
 \arguments{
 \item{df_fit}{A data frame used for model fitting. Character columns will be
@@ -16,6 +16,9 @@ predictions/SCBs are to be evaluated.}
 \item{model_vars}{A vector contained all the interested columns that appear
 in \code{df_fit}. Only those variables are aligned in \code{grid_df};
 other columns are left unchanged. Default is NULL.}
+
+\item{grid_boot}{A logic value for whether the function is for constructing
+\code{grid_df_boot} or not.}
 }
 \value{
 \item{grid_df}{The prediction grid with variables aligned to \code{df_fit}.}

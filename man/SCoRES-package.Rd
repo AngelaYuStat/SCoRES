@@ -6,7 +6,7 @@
 \alias{SCoRES-package}
 \title{SCoRES: Simultaneous Confidence Region Excursion Sets}
 \description{
-This package provides useful statistical tools for both the estimation of the inverse set and the corresponding simultaneous outer and inner confidence region. Acceptable forms of input includes both 1D and 2D data for linear regression, logistic regression, functional regression and spatial generalized least square regression. Useful functions are also provided for constructing simultaneous confidence bands (SCB) for these models.
+This package provides useful statistical tools for both the estimation of the inverse region and the corresponding simultaneous outer and inner confidence region. Acceptable forms of input includes both 1D and 2D data for linear regression, logistic regression, functional regression and spatial generalized least square regression. Useful functions are also provided for constructing simultaneous confidence bands (SCB) for these models.
 }
 \seealso{
 Useful links:
@@ -17,7 +17,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Angela Yu \email{angela.yu@emory.edu}
+\strong{Maintainer}: Zhuoran Yu \email{angela.yu@emory.edu}
 
 Authors:
 \itemize{

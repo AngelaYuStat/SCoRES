@@ -176,43 +176,57 @@ plot_cs(results,
         color_level_label = "black")
 ```
 
-Users can also compute the SCB for any linear combination of these coefficients by specifying a weight vector of the same length as the coefficient vector. For example, suppose we want to calculate the SCB for the linear combination $\beta_0+\beta_1+\beta_2$:
+Users can also compute the SCB for any linear combination of these coefficients by specifying a weight vector of the same length as the coefficient vector. This can be done by using `SCoRES::SCB_regression_outcome()`, and specify the linear combination through `w`. For example, suppose we want to calculate the SCB for the linear combination $\beta_1+\beta_2+\beta_3$ for model: $y=\beta_0+\beta_1 X_1 +\beta_2X^2_1+\beta_3X^3_1+\beta_4X_2+\beta_5X^2_2+\beta_6X^2_3$:
 
-```{r SCB_coef_comb, echo = TRUE}
-# define the weight vector: (1,1,1,0,0,...,0)
-w <- c(1, 1, 1, rep(0, 48))
+```{r SCB_reg_outcome, echo = TRUE}
+x1 <- rnorm(100)
+x2 <- rnorm(100)
+epsilon <- rnorm(100,0,sqrt(2))
+y <- -1 + x1 + 0.5 * x1^2 - 1.1 * x1^3 - 0.5 * x2 + 0.8 * x2^2 - 1.1 * x2^3 + epsilon
+df <- data.frame(x1 = x1, x2 = x2, y = y)
+grid <- data.frame(x1 = seq(-1, 1, length.out = 100), x2 = seq(-1, 1, length.out = 100))
+# fit the linear regression model and obtain the SCB for y
+model <- "y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"
+w <- matrix(c(0, 1, 1, 1, 0, 0, 0), ncol = 7)
 
-# linear combination estimate
-c(Mean = sum(w * results$Mean),
-  scb_low = sum(w * results$scb_low),
-  scb_up = sum(w * results$scb_up))
+SCB_regression_outcome(df_fit = df, model = model,
+                       grid_df = grid, n_boot = 50, alpha = 0.1,
+                       fitted = FALSE, w = w)
 ```
 
-In the following example, we load `ipad` dataset, and establishes simultaneous confidence bands for the expected response surface  $E[i\_composite\_score|use\_group]$
+In the following example, we load `ipad` dataset, and establishes simultaneous confidence bands for all the coefficients and the intercept in the model fitted.
 
-```{r ipad_estimate SCI_linear, echo = TRUE}
+```{r ipad_estimate_coef SCI_linear, echo = TRUE}
 library(SCoRES)
 library(dplyr)
+library(ggplot2)
 set.seed(262)
 data(ipad)
 df <- ipad %>%
-  mutate(use_group = factor(use_group,
-                       levels = c(3, 2, 1),
-                       labels = c("No Use", "Occasional", "Daily")))
-grid <- df %>% 
-  select(use_group)
+  filter(t_mmr1 > 0) %>%
+  select(p_fpc1, p_fpc2, p_fpc3, p_fpc4, p_fpc5, p_fpc6,
+         p_PMC_pctChg, p_auc, t_mmr1,
+         i_prop_false_timeout, i_prop_failed1, i_prop_failed2, 
+         i_judgement_time1, i_judgement_time2, i_time_outside_reticle, 
+         i_time_on_edge, i_prop_hit, i_correct_reaction2, 
+         i_reaction_time_max2, i_reaction_time2, i_rep_shapes12, 
+         i_rep_shapes34, i_memory_time12, i_memory_time34, 
+         i_composite_score, h_hr, h_dbp, h_sbp, recent_smoke) %>%
+  mutate(log_tmmr1 = log(t_mmr1))
+df_lin <- df %>%
+  select(-recent_smoke, -t_mmr1)
 # fit the linear regression model and obtain the SCB for y
-model <- "i_composite_score ~ use_group"
-results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
+model_lin <- "log_tmmr1 ~ ."
+results <- SCB_regression_coef(df_fit = df_lin, model = model_lin)
 ```
 
-The `levels = c(-25, 20, 15)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse region, the inner confidence region, and the outer confidence region.
+The `levels = c(0.2, 0.3, 0.4)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse region, the inner confidence region, and the outer confidence region. Here, for illustration, we filter out the SCB for intercept.
 
 ```{r ipad_plot_cs_linear, echo = TRUE}
 results <- tibble::as_tibble(results)
 suppressWarnings(plot_cs(results,
         levels = c(0.2, 0.3, 0.4), 
-        x = as.character(grid$use_group), 
+        x = c("Intercept", names(df_lin)[1:(length(names(df_lin))-1)]), 
         mu_hat = results$Mean, 
         xlab = "", 
         ylab = "", 
@@ -220,4 +234,60 @@ suppressWarnings(plot_cs(results,
         min.size = 40, 
         palette = "Spectral", 
         color_level_label = "black"))
+```
+
+We fit a logistic model with the same equation, and obtain SCBs for all coefficients and the intercept.
+
+```{r ipad_estimate_coef SCI_logistic, echo = TRUE}
+df_log <- df %>%
+  select(-t_mmr1, -log_tmmr1)
+# fit the logistic regression model and obtain the SCB for y
+model_log <- "recent_smoke ~ ."
+results <- SCB_regression_coef(df_fit = df_log, model = model_log, type = "logistic")
+```
+
+The `levels = c(2e-07, 3e-07, 4e-07)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse region, the inner confidence region, and the outer confidence region. Here, for illustration, we filter out the SCB for intercept.
+
+```{r ipad_plot_cs_logistic, echo = TRUE}
+results <- tibble::as_tibble(results[-1, ])
+suppressWarnings(plot_cs(results,
+        levels = c(2e-07, 3e-07, 4e-07), 
+        x = c(names(df_log)[1:(length(names(df_log))-1)]), 
+        mu_hat = results$Mean, 
+        xlab = "", 
+        ylab = "", 
+        level_label = T, 
+        min.size = 40, 
+        palette = "Spectral", 
+        color_level_label = "black"))
+```
+
+In the following example, we illustrate the usge of `grid_df` for `ipad` data.
+
+```{r ipad_estimate_outcome SCI_linear, echo = TRUE}
+grid_lin <- df_lin %>%
+  select(i_prop_false_timeout, i_prop_failed1, i_prop_failed2, 
+         i_judgement_time1, i_judgement_time2, i_time_outside_reticle, 
+         i_time_on_edge, i_prop_hit, i_correct_reaction2, 
+         i_reaction_time_max2, i_reaction_time2, i_rep_shapes12, 
+         i_rep_shapes34, i_memory_time12, i_memory_time34, 
+         i_composite_score)
+results <- SCB_linear_outcome(df_fit = df_lin, model = model_lin, grid_df = grid_lin)
+```
+
+The `levels = c(-3, 0, 3)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse region, the inner confidence region, and the outer confidence region.
+
+```{r ipad_estimate_outcome_SCI_linear_plot_cs, echo = TRUE}
+results <- tibble::as_tibble(results)
+p <- suppressWarnings(plot_cs(results,
+        levels = c(-3, 0, 3), 
+        x = grid_lin$i_composite_score, 
+        mu_hat = results$Mean, 
+        xlab = "", 
+        ylab = "", 
+        level_label = T, 
+        min.size = 40, 
+        palette = "Spectral", 
+        color_level_label = "black"))
+p + ylim(-10, 10)
 ```
