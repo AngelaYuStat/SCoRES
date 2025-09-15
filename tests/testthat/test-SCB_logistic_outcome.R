@@ -2,9 +2,9 @@ set.seed(262)
 
 x1 <- rnorm(100)
 x2 <- rnorm(100)
-epsilon <- rnorm(100,0,sqrt(2))
-y <- -1 + x1 + 0.5 * x1^2 - 1.1 * x1^3 - 0.5 * x2 + 0.8 * x2^2 - 1.1 * x2^3 + epsilon
-y <- SCoRES:::expit(y)
+mu <- -1 + x1 + 0.5 * x1^2 - 1.1 * x1^3 - 0.5 * x2 + 0.8 * x2^2 - 1.1 * x2^3
+p <- SCoRES:::expit(mu)
+y <- rbinom(500, size = 1, prob = p)
 df <- data.frame(x1 = x1, x2 = x2, y = y)
 grid <- data.frame(x1 = seq(-1, 1, length.out = 100), x2 = seq(-1, 1, length.out = 100))
 # fit the logistic regression model and obtain the SCB for y
