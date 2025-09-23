@@ -266,12 +266,8 @@ In the following example, we illustrate the usge of `grid_df` for `ipad` data.
 
 ```{r ipad_estimate_outcome SCI_linear, echo = TRUE}
 grid_lin <- df_lin %>%
-  select(i_prop_false_timeout, i_prop_failed1, i_prop_failed2, 
-         i_judgement_time1, i_judgement_time2, i_time_outside_reticle, 
-         i_time_on_edge, i_prop_hit, i_correct_reaction2, 
-         i_reaction_time_max2, i_reaction_time2, i_rep_shapes12, 
-         i_rep_shapes34, i_memory_time12, i_memory_time34, 
-         i_composite_score)
+  select(p_fpc1, p_fpc2, p_fpc3, p_fpc4, p_fpc5, p_fpc6, p_PMC_pctChg, p_auc) %>%
+  arrange(p_auc)
 results <- SCB_linear_outcome(df_fit = df_lin, model = model_lin, grid_df = grid_lin)
 ```
 
@@ -281,10 +277,10 @@ The `levels = c(-3, 0, 3)` argument specifies a set of thresholds, and `SCoRES::
 results <- tibble::as_tibble(results)
 p <- suppressWarnings(plot_cs(results,
         levels = c(-3, 0, 3), 
-        x = grid_lin$i_composite_score, 
+        x = grid_lin$p_auc, 
         mu_hat = results$Mean, 
         xlab = "", 
-        ylab = "", 
+        ylab = "",  
         level_label = T, 
         min.size = 40, 
         palette = "Spectral", 

@@ -10,6 +10,7 @@ data-raw/ccds_load.R
 data/ccds.rda
 _pkgdown.yml
 SCoRES.pdf
+RESI.pdf
 Simulation.R
 Simulation.Rmd
 Simulation.html
