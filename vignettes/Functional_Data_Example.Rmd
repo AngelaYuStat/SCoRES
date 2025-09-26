@@ -76,67 +76,8 @@ $$
 $$
 where:
 
-- \( Y_i(t) \) is a functional outcome (percent_change)
-- \( X_{i1} \) is a scalar covariate (use)
-
-```{r pupil SCB, echo = TRUE}
-# CMA approach
-results_pupil_cma <- SCoRES::SCB_functional_outcome(
-                                          data_df = pupil,
-                                          object = fosr_mod, 
-                                          method = "cma",
-                                          fitted = TRUE, 
-                                          alpha = 0.05, 
-                                          outcome = "percent_change",
-                                          domain = "seconds", 
-                                          subset = c("use = 1"), 
-                                          id = "id")
-
-#CMA approach for parameter function
-results_pupil_cma_para <- SCoRES::SCB_functional_outcome(
-                                          data_df = pupil,
-                                          object = fosr_mod, 
-                                          method = "cma",
-                                          fitted = FALSE, 
-                                          alpha = 0.05, 
-                                          outcome = "percent_change",
-                                          domain = "seconds", 
-                                          subset = c("use = 1"), 
-                                          id = "id")
-
-# Multiplier-t Bootstrap
-results_pupil_multiplier <- SCoRES::SCB_functional_outcome(
-                                          data_df = pupil,
-                                          object = fosr_mod, 
-                                          method = "multiplier",
-                                          fitted = TRUE, 
-                                          alpha = 0.05, 
-                                          outcome = "percent_change",
-                                          domain = "seconds", 
-                                          subset = c("use = 1"), 
-                                          id = "id")
-
-results_pupil_multiplier_para <- SCoRES::SCB_functional_outcome(
-                                          data_df = pupil,
-                                          object = fosr_mod, 
-                                          method = "multiplier",
-                                          fitted = FALSE, 
-                                          alpha = 0.05, 
-                                          outcome = "percent_change",
-                                          domain = "seconds", 
-                                          subset = c("use = 1"), 
-                                          id = "id")
-
-results_pupil_multiplier_overall <- SCoRES::SCB_functional_outcome(
-                                          data_df = pupil,
-                                          method = "multiplier",
-                                          fitted = TRUE,
-                                          alpha = 0.05, 
-                                          outcome = "percent_change",
-                                          domain = "seconds", 
-                                          subset = c("use = 1"), 
-                                          id = "id")
-```
+- \( Y_(t) \) is a functional outcome (percent_change)
+- \( X_{1} \) is a scalar covariate (use)
 
 In the multiplier bootstrap procedure, `SCoRES` supports three types of multiplier distributions, which is specified by `weights`:
 
@@ -162,6 +103,18 @@ The code below visualizes the simultaneous outer and inner region derived from S
 The `levels = c(-18, -20, -22, -24)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse region, the inner confidence region, and the outer confidence region. 
 
 ```{r pupil_plot_cs_cma, echo = TRUE}
+# CMA approach
+results_pupil_cma <- SCoRES::SCB_functional_outcome(
+                                          data_df = pupil,
+                                          object = fosr_mod, 
+                                          method = "cma",
+                                          fitted = TRUE, 
+                                          alpha = 0.05, 
+                                          outcome = "percent_change",
+                                          domain = "seconds", 
+                                          subset = c("use = 1"), 
+                                          id = "id")
+
 results_pupil_cma <- tibble::as_tibble(results_pupil_cma)
 plot_cs(results_pupil_cma,
         levels = c(-18, -20, -22, -24), 
@@ -180,6 +133,18 @@ The plot demonstrate how to use SCB to find regions of s where the estimated mea
 The next plot shows the SCB for the coefficient function for the use group.
 
 ```{r ccds_plot_cs_pupil_para, echo = TRUE}
+#CMA approach for parameter function
+results_pupil_cma_para <- SCoRES::SCB_functional_outcome(
+                                          data_df = pupil,
+                                          object = fosr_mod, 
+                                          method = "cma",
+                                          fitted = FALSE, 
+                                          alpha = 0.05, 
+                                          outcome = "percent_change",
+                                          domain = "seconds", 
+                                          subset = c("use = 1"), 
+                                          id = "id")
+
 results_pupil_cma_para <- tibble::as_tibble(results_pupil_cma_para)
 plot_cs(results_pupil_cma_para,
         levels = c(4.5, 5, 5.5, 6), 
@@ -193,9 +158,21 @@ plot_cs(results_pupil_cma_para,
         color_level_label = "black")
 ```
 
-The following plots show the results of multiplier bootstrap. The only difference between these two plots is that, the solid black line in the first one represents the estimated mean fitted through functional regresson object, while the second represents the sample mean. All possible NA's are imputed using `refund::fpca.face()`.
+The following plots show the results of multiplier bootstrap. The first one displays the SCB for mean outcome function for the use group, while the second one is for the coefficient function of the use group. All possible NA's are inputted using `refund::fpca.face()`.
 
 ```{r pupil_plot_cs_multiplier, echo = TRUE}
+# Multiplier-t Bootstrap
+results_pupil_multiplier <- SCoRES::SCB_functional_outcome(
+                                          data_df = pupil,
+                                          object = fosr_mod, 
+                                          method = "multiplier",
+                                          fitted = TRUE, 
+                                          alpha = 0.05, 
+                                          outcome = "percent_change",
+                                          domain = "seconds", 
+                                          subset = c("use = 1"), 
+                                          id = "id")
+
 results_pupil_multiplier <- tibble::as_tibble(results_pupil_multiplier)
 plot_cs(results_pupil_multiplier,
         levels = c(-18, -20, -22, -24), 
@@ -210,6 +187,17 @@ plot_cs(results_pupil_multiplier,
 ```
 
 ```{r pupil_plot_cs_multiplier_para, echo = TRUE}
+results_pupil_multiplier_para <- SCoRES::SCB_functional_outcome(
+                                          data_df = pupil,
+                                          object = fosr_mod, 
+                                          method = "multiplier",
+                                          fitted = FALSE, 
+                                          alpha = 0.05, 
+                                          outcome = "percent_change",
+                                          domain = "seconds", 
+                                          subset = c("use = 1"), 
+                                          id = "id")
+
 results_pupil_multiplier_para <- tibble::as_tibble(results_pupil_multiplier_para)
 plot_cs(results_pupil_multiplier_para,
         levels = c(4.5, 5, 5.5, 6), 
@@ -223,7 +211,19 @@ plot_cs(results_pupil_multiplier_para,
         color_level_label = "black")
 ```
 
+The following plot displays the SCB for the overall mean outcome function. the solid black line represents the sample mean. 
+
 ```{r pupil_plot_cs_multiplier_overall, echo = TRUE}
+results_pupil_multiplier_overall <- SCoRES::SCB_functional_outcome(
+                                          data_df = pupil,
+                                          method = "multiplier",
+                                          fitted = TRUE,
+                                          alpha = 0.05, 
+                                          outcome = "percent_change",
+                                          domain = "seconds", 
+                                          subset = c("use = 1"), 
+                                          id = "id")
+
 results_pupil_multiplier_overall <- tibble::as_tibble(results_pupil_multiplier_overall)
 plot_cs(results_pupil_multiplier_overall,
         levels = c(-18, -20, -22, -24), 
@@ -246,12 +246,14 @@ $$
 $$
 where:
 
-- \( Y_i(t) \) is a functional outcome (percent_change)
+- \( Y(t) \) is a functional outcome (percent_change)
 - \( X_{1} \) is a scalar covariate (use)
 - \( X_{2} \) is a continuous covariate (age)
 - \( X_{3} \) is a scalar covariate (gender)
 
-```{r pupil SCB 2, echo = TRUE}
+The following plots show the SCBs and inverse SCBs for the mean outcome function. The first one is from CMA approach and the second is from multiplier bootstrap.
+
+```{r pupil_plot_cs_cma 2, echo = TRUE}
 # CMA approach
 results_pupil_cma <- SCoRES::SCB_functional_outcome(
                                           data_df = pupil,
@@ -266,24 +268,6 @@ results_pupil_cma <- SCoRES::SCB_functional_outcome(
                                                      "gender = 0"),  
                                           id = "id")
 
-# Multiplier-t Bootstrap
-results_pupil_multiplier <- SCoRES::SCB_functional_outcome(
-                                          data_df = pupil,
-                                          object = fosr_mod,
-                                          fitted = TRUE,
-                                          method = "multiplier", 
-                                          alpha = 0.05, 
-                                          outcome = "percent_change", 
-                                          domain = "seconds", 
-                                          subset = c("use = 1", 
-                                                     "age = 40", 
-                                                     "gender = 0"), 
-                                          id = "id")
-```
-
-The following plots show the SCBs and inverse SCBs for the mean outcome function. The first one is from CMA approach and the second is from multiplier bootstrap.
-
-```{r pupil_plot_cs_cma 2, echo = TRUE}
 results_pupil_cma <- tibble::as_tibble(results_pupil_cma)
 plot_cs(results_pupil_cma,
         levels = c(-18, -20, -22, -24), 
@@ -298,6 +282,20 @@ plot_cs(results_pupil_cma,
 ```
 
 ```{r pupil_plot_cs_multiplier 2, echo = TRUE}
+# Multiplier-t Bootstrap
+results_pupil_multiplier <- SCoRES::SCB_functional_outcome(
+                                          data_df = pupil,
+                                          object = fosr_mod,
+                                          fitted = TRUE,
+                                          method = "multiplier", 
+                                          alpha = 0.05, 
+                                          outcome = "percent_change", 
+                                          domain = "seconds", 
+                                          subset = c("use = 1", 
+                                                     "age = 40", 
+                                                     "gender = 0"), 
+                                          id = "id")
+
 results_pupil_multiplier <- tibble::as_tibble(results_pupil_multiplier)
 plot_cs(results_pupil_multiplier,
         levels = c(-18, -20, -22, -24), 
