@@ -125,8 +125,8 @@ outcome Y(t) of user’s group:
 $\hat{f}(t) = E[Y(t) | X_{1} = 1]= \beta_0(t) + \beta_1(t),$
 where:
 
-- $Y_i(t)$ is a functional outcome (percent_change)
-- $X_{i1}$ is a scalar covariate (use)
+- $Y(t)$ is a functional outcome (percent_change)
+- $X_{1}$ is a scalar covariate (use)
 
 ``` r
 # CMA approach

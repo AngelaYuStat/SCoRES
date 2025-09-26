@@ -62,7 +62,7 @@
       <h1>Linear_Model_Example</h1>
                         <h4 data-toc-skip class="author">Angela Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-09-25</h4>
+            <h4 data-toc-skip class="date">2025-09-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Linear_Model_Example.Rmd" class="external-link"><code>vignettes/Linear_Model_Example.Rmd</code></a></small>
       <div class="d-none name"><code>Linear_Model_Example.Rmd</code></div>
@@ -80,9 +80,15 @@ training design matrix used to fit the linear model, while
 <code>grid_df</code> define the mean outcome for which simultaneous
 confidence bands (SCB) are constructed. Use argument <code>model</code>
 to specify the formula used for fitting the linear model.</p>
-<p>In the following example, we establishes simultaneous confidence
-bands for the expected response surface
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>Y</mi><mo stretchy="false" form="prefix">|</mo><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><msubsup><mi>X</mi><mn>1</mn><mn>2</mn></msubsup><mo>,</mo><msubsup><mi>X</mi><mn>1</mn><mn>3</mn></msubsup><mo>,</mo><msub><mi>X</mi><mn>2</mn></msub><mo>,</mo><msubsup><mi>X</mi><mn>2</mn><mn>2</mn></msubsup><mo>,</mo><msubsup><mi>X</mi><mn>3</mn><mn>2</mn></msubsup><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">E[Y|X_1,X^2_1,X^3_1,X_2,X^2_2,X^2_3]</annotation></semantics></math>,
+<p>In the following example, we use a linear regression to estimate the
+simultaneous confidence band (SCB) for the mean outcome, with modeling
+equation as follows:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>i</mi></msub><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mrow><mi>i</mi><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msubsup><mi>x</mi><mrow><mi>i</mi><mn>1</mn></mrow><mn>2</mn></msubsup><mo>+</mo><msub><mi>β</mi><mn>3</mn></msub><msubsup><mi>x</mi><mrow><mi>i</mi><mn>1</mn></mrow><mn>3</mn></msubsup><mo>+</mo><msub><mi>β</mi><mn>4</mn></msub><msub><mi>x</mi><mrow><mi>i</mi><mn>2</mn></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>5</mn></msub><msubsup><mi>x</mi><mrow><mi>i</mi><mn>2</mn></mrow><mn>2</mn></msubsup><mo>+</mo><msub><mi>β</mi><mn>6</mn></msub><msubsup><mi>x</mi><mrow><mi>i</mi><mn>2</mn></mrow><mn>3</mn></msubsup><mo>+</mo><msub><mi>ϵ</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">
+Y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i1}^2 + \beta_3 x_{i1}^3 + \beta_4 x_{i2} + \beta_5 x_{i2}^2 + \beta_6 x_{i2}^3 + \epsilon_i
+</annotation></semantics></math></p>
+<p>We establish simultaneous confidence bands for the expected response
+surface
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>Y</mi><mo stretchy="false" form="prefix">|</mo><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><msub><mi>X</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">E[Y|X_1,X_2]</annotation></semantics></math>,
 with the independent variables
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mn>1</mn></msub><annotation encoding="application/x-tex">X_1</annotation></semantics></math>
 and
@@ -120,11 +126,62 @@ the outer confidence region.</p>
 <span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
 <span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Linear_Model_Example_files/figure-html/simulate_plot_cs_linear-1.png" width="576"></p>
+<p>In the following example, we establishes simultaneous confidence
+bands for the expected response surface
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>Y</mi><mo stretchy="false" form="prefix">|</mo><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><msub><mi>X</mi><mn>2</mn></msub><mo>=</mo><mn>0</mn><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">E[Y|X_1, X_2 =0]</annotation></semantics></math>,
+with the independent variable
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mn>1</mn></msub><annotation encoding="application/x-tex">X_1</annotation></semantics></math>
+discretized into 100 equidistant points over the domain
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">[</mo><mi>−</mi><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[-1, 1]</annotation></semantics></math>.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
+<span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
+<span><span class="va">epsilon</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span>,<span class="fl">0</span>,<span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="va">x1</span><span class="op">^</span><span class="fl">2</span> <span class="op">-</span> <span class="fl">1.1</span> <span class="op">*</span> <span class="va">x1</span><span class="op">^</span><span class="fl">3</span> <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="va">x2</span> <span class="op">+</span> <span class="fl">0.8</span> <span class="op">*</span> <span class="va">x2</span><span class="op">^</span><span class="fl">2</span> <span class="op">-</span> <span class="fl">1.1</span> <span class="op">*</span> <span class="va">x2</span><span class="op">^</span><span class="fl">3</span> <span class="op">+</span> <span class="va">epsilon</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="va">x1</span>, x2 <span class="op">=</span> <span class="va">x2</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span></span>
+<span><span class="co"># fit the linear regression model and obtain the SCB for y</span></span>
+<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">"y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"</span></span>
+<span><span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCB_linear_outcome.html">SCB_linear_outcome</a></span><span class="op">(</span>df_fit <span class="op">=</span> <span class="va">df</span>, model <span class="op">=</span> <span class="va">model</span>, grid_df <span class="op">=</span> <span class="va">grid</span><span class="op">)</span></span></code></pre></div>
+<p>The <code>levels = c(-1.5, -1.0, -0.5)</code> argument specifies a
+set of thresholds, and <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code> function estimates
+multiple inverse upper excursion sets corresponding to these thresholds,
+and plot the estimated inverse region, the inner confidence region, and
+the outer confidence region.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results</span>,</span>
+<span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.5</span>, <span class="op">-</span><span class="fl">1.0</span>, <span class="op">-</span><span class="fl">0.5</span><span class="op">)</span>, </span>
+<span>        x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, </span>
+<span>        mu_hat <span class="op">=</span> <span class="va">results</span><span class="op">$</span><span class="va">Mean</span>, </span>
+<span>        xlab <span class="op">=</span> <span class="st">"x2"</span>, </span>
+<span>        ylab <span class="op">=</span> <span class="st">"y"</span>, </span>
+<span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
+<span>        min.size <span class="op">=</span> <span class="fl">40</span>, </span>
+<span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
+<span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="Linear_Model_Example_files/figure-html/simulate_plot_cs_linear_2-1.png" width="576"></p>
 <p>In addition to linear regression, <code>SCoRES</code> also
 provides<code><a href="../reference/SCB_logistic_outcome.html">SCoRES::SCB_logistic_outcome()</a></code> for estimating the
-SCB for outcome of logistic regression. The mean outcome here for
-establishing the SCB stays the same.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+SCB for outcome of logistic regression.</p>
+<p>Here, we use a similar model structure with logistic regression to
+estimate the simultaneous confidence band (SCB) for the outcome
+probability, with modeling equation as follows:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>i</mi></msub><mo>∼</mo><mi>B</mi><mi>e</mi><mi>r</mi><mi>n</mi><mi>o</mi><mi>u</mi><mi>l</mi><mi>l</mi><mi>i</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>p</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+Y_i \sim Bernoulli(p_i)
+</annotation></semantics></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>log</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><msub><mi>p</mi><mi>i</mi></msub><mrow><mn>1</mn><mo>−</mo><msub><mi>p</mi><mi>i</mi></msub></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>x</mi><mrow><mi>i</mi><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><msubsup><mi>x</mi><mrow><mi>i</mi><mn>1</mn></mrow><mn>2</mn></msubsup><mo>+</mo><msub><mi>β</mi><mn>3</mn></msub><msubsup><mi>x</mi><mrow><mi>i</mi><mn>1</mn></mrow><mn>3</mn></msubsup><mo>+</mo><msub><mi>β</mi><mn>4</mn></msub><msub><mi>x</mi><mrow><mi>i</mi><mn>2</mn></mrow></msub><mo>+</mo><msub><mi>β</mi><mn>5</mn></msub><msubsup><mi>x</mi><mrow><mi>i</mi><mn>2</mn></mrow><mn>2</mn></msubsup><mo>+</mo><msub><mi>β</mi><mn>6</mn></msub><msubsup><mi>x</mi><mrow><mi>i</mi><mn>2</mn></mrow><mn>3</mn></msubsup></mrow><annotation encoding="application/x-tex">
+\log\left(\frac{p_i}{1-p_i}\right) = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i1}^2 + \beta_3 x_{i1}^3 + \beta_4 x_{i2} + \beta_5 x_{i2}^2 + \beta_6 x_{i2}^3
+</annotation></semantics></math></p>
+<p>We establish simultaneous confidence bands for the expected response
+surface
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">logit</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>Y</mi><mo stretchy="false" form="prefix">|</mo><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><msub><mi>X</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{logit}(E[Y|X_1,X_2])</annotation></semantics></math>,
+with the independent variables
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mn>1</mn></msub><annotation encoding="application/x-tex">X_1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mn>2</mn></msub><annotation encoding="application/x-tex">X_2</annotation></semantics></math>
+discretized into 100 equidistant points over the domain
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">[</mo><mi>−</mi><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[-1, 1]</annotation></semantics></math>.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># generate simulated data</span></span>
 <span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
@@ -141,7 +198,7 @@ specifies a set of thresholds, and <code><a href="../reference/plot_cs.html">SCo
 function estimates multiple inverse upper excursion sets corresponding
 to these thresholds, and plot the estimated inverse region, the inner
 confidence region, and the outer confidence region.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results</span>,</span>
 <span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.4</span>, <span class="fl">0.5</span><span class="op">)</span>, </span>
@@ -154,37 +211,15 @@ confidence region, and the outer confidence region.</p>
 <span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
 <span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Linear_Model_Example_files/figure-html/simulate_plot_cs_logistic-1.png" width="576"></p>
-<p>In the following example, we establishes simultaneous confidence
-bands for the expected response surface
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>Y</mi><mo stretchy="false" form="prefix">|</mo><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><msubsup><mi>X</mi><mn>1</mn><mn>2</mn></msubsup><mo>,</mo><msubsup><mi>X</mi><mn>1</mn><mn>3</mn></msubsup><mo>,</mo><msub><mi>X</mi><mn>2</mn></msub><mo>=</mo><mn>0</mn><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">E[Y|X_1,X^2_1,X^3_1, X_2 =0]</annotation></semantics></math>,
-with the independent variable
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mn>1</mn></msub><annotation encoding="application/x-tex">X_1</annotation></semantics></math>
-discretized into 100 equidistant points over the domain
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">[</mo><mi>−</mi><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[-1, 1]</annotation></semantics></math>.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCB_logistic_outcome.html">SCB_logistic_outcome</a></span><span class="op">(</span>df_fit <span class="op">=</span> <span class="va">df</span>, model <span class="op">=</span> <span class="va">model</span>, grid_df <span class="op">=</span> <span class="va">grid</span><span class="op">)</span></span></code></pre></div>
-<p>The <code>levels = c(0.3, 0.4, 0.5)</code> argument specifies a set
-of thresholds, and <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code> function estimates
-multiple inverse upper excursion sets corresponding to these thresholds,
-and plot the estimated inverse region, the inner confidence region, and
-the outer confidence region.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results</span>,</span>
-<span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.4</span>, <span class="fl">0.5</span><span class="op">)</span>, </span>
-<span>        x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, </span>
-<span>        mu_hat <span class="op">=</span> <span class="va">results</span><span class="op">$</span><span class="va">Mean</span>, </span>
-<span>        xlab <span class="op">=</span> <span class="st">"x2"</span>, </span>
-<span>        ylab <span class="op">=</span> <span class="st">"y"</span>, </span>
-<span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
-<span>        min.size <span class="op">=</span> <span class="fl">40</span>, </span>
-<span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
-<span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Linear_Model_Example_files/figure-html/simulate_plot_cs_logistic_2-1.png" width="576"></p>
 <p>Besides, <code><a href="../reference/SCB_regression_coef.html">SCoRES::SCB_regression_coef</a></code> can estimate the
-SCB for every coefficient (50 in total) in the linear/logistic
-model.</p>
+SCB for every coefficient in the linear/logistic model.</p>
+<p>Here, we use a linear regression model with 50 coefficients in total
+to estimate the simultaneous confidence band (SCB) for all coefficients
+and the intercept, with modeling equation as follows:
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>i</mi></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mn>50</mn></munderover><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>β</mi><mi>j</mi></msub><mo>+</mo><msub><mi>ϵ</mi><mi>i</mi></msub><mo>,</mo></mrow><annotation encoding="application/x-tex">
+Y_i = \sum^{50}_{j=1}X_{ij}\beta_j + \epsilon_i,
+</annotation></semantics></math> where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mi>o</mi><mi>v</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mi>i</mi></msub><mo>,</mo><msub><mi>X</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msup><mn>0.4</mn><mrow><mo stretchy="true" form="prefix">|</mo><mi>i</mi><mo>−</mo><mi>j</mi><mo stretchy="true" form="postfix">|</mo></mrow></msup></mrow><annotation encoding="application/x-tex">Cov(X_i, X_j)=0.4^{|i-j|}</annotation></semantics></math>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">MASS</a></span><span class="op">)</span></span>
 <span><span class="co"># generate simulated data</span></span>
@@ -244,10 +279,13 @@ for model:
 <span>                       grid_df <span class="op">=</span> <span class="va">grid</span>, n_boot <span class="op">=</span> <span class="fl">50</span>, alpha <span class="op">=</span> <span class="fl">0.1</span>,</span>
 <span>                       fitted <span class="op">=</span> <span class="cn">FALSE</span>, w <span class="op">=</span> <span class="va">w</span><span class="op">)</span></span>
 <span><span class="co">#&gt;            scb_low      Mean   scb_up</span></span>
-<span><span class="co">#&gt; scb_low -0.6793555 0.2371476 1.153651</span></span></code></pre></div>
+<span><span class="co">#&gt; scb_low -0.4971322 0.3964766 1.290085</span></span></code></pre></div>
 <p>In the following example, we load <code>ipad</code> dataset, and
 establishes simultaneous confidence bands for all the coefficients and
-the intercept in the model fitted.</p>
+the intercept in the model fitted. Here, we set <code>log(t_mmr1)</code>
+as the outcome, and include all variables from
+<code>Pupillography</code>, <code>Tablet (task metrics)</code> and
+<code>Cardiovascular</code> as predictors.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://angelayustat.github.io/SCoRES">SCoRES</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
@@ -277,10 +315,10 @@ and plot the estimated inverse region, the inner confidence region, and
 the outer confidence region. Here, for illustration, we filter out the
 SCB for intercept.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results</span>,</span>
 <span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="fl">0.4</span><span class="op">)</span>, </span>
-<span>        x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Intercept"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df_lin</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df_lin</span><span class="op">)</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>, </span>
+<span>        x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df_lin</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df_lin</span><span class="op">)</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>, </span>
 <span>        mu_hat <span class="op">=</span> <span class="va">results</span><span class="op">$</span><span class="va">Mean</span>, </span>
 <span>        xlab <span class="op">=</span> <span class="st">""</span>, </span>
 <span>        ylab <span class="op">=</span> <span class="st">""</span>, </span>
@@ -289,7 +327,8 @@ SCB for intercept.</p>
 <span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
 <span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Linear_Model_Example_files/figure-html/ipad_plot_cs_linear-1.png" width="576"></p>
-<p>We fit a logistic model with the same equation, and obtain SCBs for
+<p>We fit a logistic model with <code>recent_smoke</code> as outcome
+with the same predictors in linear regression model, and obtain SCBs for
 all coefficients and the intercept.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_log</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -316,41 +355,6 @@ SCB for intercept.</p>
 <span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
 <span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Linear_Model_Example_files/figure-html/ipad_plot_cs_logistic-1.png" width="576"></p>
-<p>In the following example, we establishes simultaneous confidence
-bands for the expected response surface
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>Y</mi><mo stretchy="false" form="prefix">|</mo><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><msubsup><mi>X</mi><mn>1</mn><mn>2</mn></msubsup><mo>,</mo><msubsup><mi>X</mi><mn>1</mn><mn>3</mn></msubsup><mo>,</mo><msub><mi>X</mi><mn>2</mn></msub><mo>=</mo><mn>0</mn><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">E[Y|X_1,X^2_1,X^3_1, X_2 =0]</annotation></semantics></math>,
-with the independent variable
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mn>1</mn></msub><annotation encoding="application/x-tex">X_1</annotation></semantics></math>
-discretized into 100 equidistant points over the domain
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">[</mo><mi>−</mi><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[-1, 1]</annotation></semantics></math>.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
-<span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
-<span><span class="va">epsilon</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span>,<span class="fl">0</span>,<span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="va">x1</span><span class="op">^</span><span class="fl">2</span> <span class="op">-</span> <span class="fl">1.1</span> <span class="op">*</span> <span class="va">x1</span><span class="op">^</span><span class="fl">3</span> <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="va">x2</span> <span class="op">+</span> <span class="fl">0.8</span> <span class="op">*</span> <span class="va">x2</span><span class="op">^</span><span class="fl">2</span> <span class="op">-</span> <span class="fl">1.1</span> <span class="op">*</span> <span class="va">x2</span><span class="op">^</span><span class="fl">3</span> <span class="op">+</span> <span class="va">epsilon</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="va">x1</span>, x2 <span class="op">=</span> <span class="va">x2</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span></span>
-<span><span class="co"># fit the linear regression model and obtain the SCB for y</span></span>
-<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="st">"y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"</span></span>
-<span><span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SCB_linear_outcome.html">SCB_linear_outcome</a></span><span class="op">(</span>df_fit <span class="op">=</span> <span class="va">df</span>, model <span class="op">=</span> <span class="va">model</span>, grid_df <span class="op">=</span> <span class="va">grid</span><span class="op">)</span></span></code></pre></div>
-<p>The <code>levels = c(-1.5, -1.0, -0.5)</code> argument specifies a
-set of thresholds, and <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code> function estimates
-multiple inverse upper excursion sets corresponding to these thresholds,
-and plot the estimated inverse region, the inner confidence region, and
-the outer confidence region.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results</span>,</span>
-<span>        levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.5</span>, <span class="op">-</span><span class="fl">1.0</span>, <span class="op">-</span><span class="fl">0.5</span><span class="op">)</span>, </span>
-<span>        x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, </span>
-<span>        mu_hat <span class="op">=</span> <span class="va">results</span><span class="op">$</span><span class="va">Mean</span>, </span>
-<span>        xlab <span class="op">=</span> <span class="st">"x2"</span>, </span>
-<span>        ylab <span class="op">=</span> <span class="st">"y"</span>, </span>
-<span>        level_label <span class="op">=</span> <span class="cn">T</span>, </span>
-<span>        min.size <span class="op">=</span> <span class="fl">40</span>, </span>
-<span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
-<span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Linear_Model_Example_files/figure-html/simulate_plot_cs_linear_2-1.png" width="576"></p>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>

@@ -76,7 +76,7 @@ $$
 $$
 where:
 
-- \( Y_(t) \) is a functional outcome (percent_change)
+- \( Y(t) \) is a functional outcome (percent_change)
 - \( X_{1} \) is a scalar covariate (use)
 
 In the multiplier bootstrap procedure, `SCoRES` supports three types of multiplier distributions, which is specified by `weights`:
