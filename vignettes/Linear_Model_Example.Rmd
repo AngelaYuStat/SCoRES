@@ -145,7 +145,7 @@ Besides, `SCoRES::SCB_regression_coef` can estimate the SCB for every coefficien
 
 Here, we use a linear regression model with 50 coefficients in total to estimate the simultaneous confidence band (SCB) for all coefficients and the intercept, with modeling equation as follows:
 $$
-Y_i = \sum^{50}_{j=1}X_{ij}\beta_j + \epsilon_i,
+Y_i = \beta_0 + \sum^{50}_{j=1}X_{ij}\beta_j + \epsilon_i,
 $$
 where $Cov(X_i, X_j)=0.4^{|i-j|}$.
 

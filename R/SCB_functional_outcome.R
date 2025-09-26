@@ -97,7 +97,7 @@
 #'                                   outcome = "percent_change", domain = "seconds",
 #'                                   subset = c("use = 1"), id = "id")
 #'
-#' results <- SCB_functional_outcome(data_df = pupil, object = fosr_mod,
+#' results <- SCB_functional_outcome(data_df = pupil,
 #'                                   method = "multiplier", fitted = TRUE,
 #'                                   outcome = "percent_change", domain = "seconds",
 #'                                   subset = c("use = 1"), id = "id")
