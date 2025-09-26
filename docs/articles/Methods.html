@@ -62,7 +62,7 @@
       <h1>Methods</h1>
                         <h4 data-toc-skip class="author">Angela Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-09-22</h4>
+            <h4 data-toc-skip class="date">2025-09-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Methods.Rmd" class="external-link"><code>vignettes/Methods.Rmd</code></a></small>
       <div class="d-none name"><code>Methods.Rmd</code></div>
@@ -108,7 +108,7 @@ Sommerfeld et al. (2018) introduced the Coverage Probability Excursion
 (CoPE) sets, defined as:
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CS</mtext><mtext mathvariant="normal">in</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>⊆</mo><msup><mi>μ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>⊆</mo><msub><mtext mathvariant="normal">CS</mtext><mtext mathvariant="normal">out</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
 \text{CS}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CS}_{\text{out}}(U)
-</annotation></semantics></math> which satisfy:
+</annotation></semantics></math> which satisfies:
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℙ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mtext mathvariant="normal">CS</mtext><mtext mathvariant="normal">in</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>⊆</mo><msup><mi>μ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>⊆</mo><msub><mtext mathvariant="normal">CS</mtext><mtext mathvariant="normal">out</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>≥</mo><mn>1</mn><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">
 \mathbb{P}\left(\text{CS}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CS}_{\text{out}}(U)\right) \geq 1 - \alpha
 </annotation></semantics></math> for a pre-specified confidence level
@@ -261,42 +261,89 @@ Y_i(t) = \beta_0(t) + \beta_1(t) X_{i1} + \sum_{k=1}^{K} \xi_{ik} \phi_k(t) + \e
 <h2 id="construction-of-simultaneous-confidence-bands-for-functional-regression-model">Construction of Simultaneous Confidence Bands for Functional
 Regression Model<a class="anchor" aria-label="anchor" href="#construction-of-simultaneous-confidence-bands-for-functional-regression-model"></a>
 </h2>
+<p>We consider simultaneous confidence bands (SCBs) for a target
+function
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>⋅</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\eta(\cdot)</annotation></semantics></math>
+on a grid
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝒮</mi><annotation encoding="application/x-tex">\mathcal{S}</annotation></semantics></math>.
+For example,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>⋅</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\eta(\cdot)</annotation></semantics></math>
+could be
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">Y_i(t)</annotation></semantics></math>
+or
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>β</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\beta_1(t)</annotation></semantics></math>.
+Given an estimator
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>η</mi><mo accent="true">̂</mo></mover><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat{\eta}_N(s)</annotation></semantics></math>
+with pointwise standard error
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>ζ</mi><mo accent="true">̂</mo></mover><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat{\zeta}_N(s)</annotation></semantics></math>
+and a normalizing factor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>τ</mi><mi>N</mi></msub><annotation encoding="application/x-tex">\tau_N</annotation></semantics></math>,
+we can define the simultaneous confidence band for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>⋅</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\eta(\cdot)</annotation></semantics></math>
+as:
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">S</mi><mi mathvariant="normal">C</mi><mi mathvariant="normal">B</mi></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo>;</mo><msub><mi>q</mi><mrow><mi>α</mi><mo>,</mo><mi>N</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">[</mo><mspace width="0.167em"></mspace><msub><mover><mi>η</mi><mo accent="true">̂</mo></mover><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><msub><mi>q</mi><mrow><mi>α</mi><mo>,</mo><mi>N</mi></mrow></msub><mfrac displaystyle="false"><mrow><msub><mover><mi>ζ</mi><mo accent="true">̂</mo></mover><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><msub><mi>τ</mi><mi>N</mi></msub></mfrac><mo>,</mo><mspace width="0.278em"></mspace><msub><mover><mi>η</mi><mo accent="true">̂</mo></mover><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>q</mi><mrow><mi>α</mi><mo>,</mo><mi>N</mi></mrow></msub><mfrac displaystyle="false"><mrow><msub><mover><mi>ζ</mi><mo accent="true">̂</mo></mover><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><msub><mi>τ</mi><mi>N</mi></msub></mfrac><mo minsize="1.8" maxsize="1.8" stretchy="false" form="postfix">]</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathrm{SCB}(s;q_{\alpha,N})
+= \Big[\, \hat{\eta}_N(s) - q_{\alpha,N}\tfrac{\hat{\zeta}_N(s)}{\tau_N},\;
+              \hat{\eta}_N(s) + q_{\alpha,N}\tfrac{\hat{\zeta}_N(s)}{\tau_N} \Big].
+</annotation></semantics></math> And we can verify that these bands
+achieve
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(1-\alpha)</annotation></semantics></math>
+simultaneous coverage by
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℙ</mi><mspace width="-0.167em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mo>∀</mo><mi>s</mi><mo>∈</mo><mi>𝒮</mi><mo>:</mo><mspace width="0.278em"></mspace><mi>η</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>∈</mo><mrow><mi mathvariant="normal">S</mi><mi mathvariant="normal">C</mi><mi mathvariant="normal">B</mi></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo>;</mo><msub><mi>q</mi><mrow><mi>α</mi><mo>,</mo><mi>N</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>1</mn><mo>−</mo><mi>α</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
+\mathbb{P}\!\left(\forall s\in\mathcal{S}:\; \eta(s)\in \mathrm{SCB}(s;q_{\alpha,N})\right)=1-\alpha,
+</annotation></semantics></math> whenever the critical value
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>q</mi><mrow><mi>α</mi><mo>,</mo><mi>N</mi></mrow></msub><annotation encoding="application/x-tex">q_{\alpha,N}</annotation></semantics></math>
+satisfies
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℙ</mi><mspace width="-0.167em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><munder><mo>max</mo><mrow><mi>s</mi><mo>∈</mo><mi>𝒮</mi></mrow></munder><mspace width="0.167em"></mspace><msub><mi>τ</mi><mi>N</mi></msub><mspace width="0.167em"></mspace><mfrac><mrow><msub><mover><mi>η</mi><mo accent="true">̂</mo></mover><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>η</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><msub><mover><mi>ζ</mi><mo accent="true">̂</mo></mover><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mspace width="0.278em"></mspace><mo>&gt;</mo><mspace width="0.278em"></mspace><msub><mi>q</mi><mrow><mi>α</mi><mo>,</mo><mi>N</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>α</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbb{P}\!\left(\max_{s\in\mathcal{S}}\, \tau_N\,
+\frac{\hat{\eta}_N(s)-\eta(s)}{\hat{\zeta}_N(s)} \;&gt;\; q_{\alpha,N}\right)=\alpha. 
+</annotation></semantics></math></p>
+<p>The
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>q</mi><mrow><mi>α</mi><mo>,</mo><mi>N</mi></mrow></msub><annotation encoding="application/x-tex">q_{\alpha,N}</annotation></semantics></math>
+is unknown in practice. In SCoRES, we implement two approaches for
+estimating the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>q</mi><mrow><mi>α</mi><mo>,</mo><mi>N</mi></mrow></msub><annotation encoding="application/x-tex">q_{\alpha,N}</annotation></semantics></math>
+for functional parameter functions in FoSR model: the Correlation and
+Multiplicity-Adjusted (CMA) bands based on parameter simulations, and a
+multiplier bootstrap procedure. We detail the CMA procedure below:</p>
 <div class="section level3">
 <h3 id="correlation-and-multiplicity-adjusted-cma-confidence-bands-based-on-parameter-simulations">Correlation and Multiplicity Adjusted (CMA) Confidence Bands Based
 on Parameter Simulations<a class="anchor" aria-label="anchor" href="#correlation-and-multiplicity-adjusted-cma-confidence-bands-based-on-parameter-simulations"></a>
 </h3>
 <ol style="list-style-type: decimal">
 <li><p>Simulate model parameters
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝛃</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>𝛃</mi><mi>B</mi></msub><mover><mo>∼</mo><mtext mathvariant="normal">i.i.d.</mtext></mover><mi>𝒩</mi><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>𝛃</mi><mo accent="true">̂</mo></mover><mo>,</mo><msub><mover><mi>V</mi><mo accent="true">̂</mo></mover><mi>𝛃</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\boldsymbol{\beta}_1, \ldots, \boldsymbol{\beta}_B \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\hat{\boldsymbol{\beta}}, \hat{V}_{\boldsymbol{\beta}})</annotation></semantics></math>
-, where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝛃</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>𝛃</mi><mi>B</mi></msub><mover><mo>∼</mo><mtext mathvariant="normal">i.i.d.</mtext></mover><mi>𝒩</mi><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>𝛃</mi><mo accent="true">̂</mo></mover><mo>,</mo><msub><mover><mi>V</mi><mo accent="true">̂</mo></mover><mi>𝛃</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\boldsymbol{\beta}_1, \ldots, \boldsymbol{\beta}_B \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\hat{\boldsymbol{\beta}}, \hat{V}_{\boldsymbol{\beta}})</annotation></semantics></math>,
+where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>𝛃</mi><mo accent="true">̂</mo></mover><mo>,</mo><msub><mover><mi>V</mi><mo accent="true">̂</mo></mover><mi>𝛃</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\hat{\boldsymbol{\beta}}, \hat{V}_{\boldsymbol{\beta}})</annotation></semantics></math>
-are estimated via a fitted FoSR model.</p></li>
+are estimated from a fitted FoSR model.</p></li>
 <li><p>For each
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">b = 1, \ldots, B</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">b=1,\ldots,B</annotation></semantics></math>,
 compute
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐗</mi><mi>b</mi></msub><mo>=</mo><mfrac><mrow><mi>𝐁</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>β</mi><mi>b</mi></msub><mo>−</mo><mover><mi>β</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow></mrow><msub><mi>𝐃</mi><mi>f</mi></msub></mfrac></mrow><annotation encoding="application/x-tex">
-\mathbf{X}_b = \frac{\mathbf{B}({\beta}_b - \hat{{\beta}})}{\mathbf{D}_f}
-</annotation></semantics></math> , where the division is element-wise
-and
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐗</mi><mi>b</mi></msub><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mfrac><mrow><mi>𝐁</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>β</mi><mi>b</mi></msub><mo>−</mo><mover><mi>β</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow></mrow><msub><mi>𝐃</mi><mi>f</mi></msub></mfrac><mo>,</mo></mrow><annotation encoding="application/x-tex">
+\mathbf{X}_b \;=\; \frac{\mathbf{B}(\beta_b - \hat{\beta})}{\mathbf{D}_f},
+</annotation></semantics></math> where the division is element-wise and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐁</mi><annotation encoding="application/x-tex">\mathbf{B}</annotation></semantics></math>
 maps parameters to functional effects.</p></li>
-<li><p>Let
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mi>b</mi></msub><mo>=</mo><mo>max</mo><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mo stretchy="true" form="prefix">|</mo><msub><mi>𝐗</mi><mi>b</mi></msub><mo stretchy="true" form="postfix">|</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="1.0em"></mspace><mi>b</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">
-d_b = \max(|\mathbf{X}_b|), \quad b = 1, \ldots, B
-</annotation></semantics></math> , where the absolute value is taken
+<li><p>Define
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mi>b</mi></msub><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mo>max</mo><mspace width="-0.167em"></mspace><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">(</mo><mrow><mo stretchy="true" form="prefix">|</mo><msub><mi>𝐗</mi><mi>b</mi></msub><mo stretchy="true" form="postfix">|</mo></mrow><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">)</mo><mo>,</mo><mspace width="1.0em"></mspace><mi>b</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>B</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
+d_b \;=\; \max\!\big(|\mathbf{X}_b|\big), \quad b=1,\ldots,B,
+</annotation></semantics></math> where the absolute value is taken
 element-wise.</p></li>
 <li><p>Estimate
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>C</mi><mi>f</mi></msub><mo>,</mo><mn>1</mn><mo>−</mo><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">q(C_f, 1 - \alpha)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>q</mi><mrow><mi>α</mi><mo>,</mo><mi>N</mi></mrow></msub><annotation encoding="application/x-tex">q_{\alpha,N}</annotation></semantics></math>
 as the
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mo>⋅</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">100 \cdot (1 - \alpha)</annotation></semantics></math>
-percentile of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><msub><mi>d</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>d</mi><mi>B</mi></msub><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{d_1, \ldots, d_B\}</annotation></semantics></math>.</p></li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>⋅</mo><mn>100</mn><mi>%</mi></mrow><annotation encoding="application/x-tex">(1 - \alpha) \cdot 100\%</annotation></semantics></math>
+quantile of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><msub><mi>d</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>d</mi><mi>B</mi></msub><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{d_1,\ldots,d_B\}</annotation></semantics></math>.</p></li>
 </ol>
 </div>
 <div class="section level3">
 <h3 id="multiplier-t-bootstrap-procedure-for-constructing-confidence-bands">Multiplier-t Bootstrap Procedure for Constructing Confidence
 Bands<a class="anchor" aria-label="anchor" href="#multiplier-t-bootstrap-procedure-for-constructing-confidence-bands"></a>
 </h3>
+<p>The second is the multiplier-t bootstrap procedure for constructing
+confidence bands. A full introduction to the method can be found in
+previous work from .</p>
 <ol style="list-style-type: decimal">
 <li><p>Compute residuals
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>R</mi><mn>1</mn><mi>N</mi></msubsup><mo>,</mo><mi>…</mi><mo>,</mo><msubsup><mi>R</mi><mi>N</mi><mi>N</mi></msubsup></mrow><annotation encoding="application/x-tex">R_1^N, \ldots, R_N^N</annotation></semantics></math>,
@@ -307,7 +354,10 @@ and multipliers
 with
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝔼</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>g</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\mathbb{E}[g] = 0</annotation></semantics></math>
 and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">v</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi></mrow><mrow><mo stretchy="true" form="prefix">[</mo><mi>g</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathrm{var}[g] = 1</annotation></semantics></math>.</p></li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">v</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi></mrow><mrow><mo stretchy="true" form="prefix">[</mo><mi>g</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathrm{var}[g] = 1</annotation></semantics></math>,
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>μ</mi><mo accent="true">̂</mo></mover><mi>N</mi></msub><annotation encoding="application/x-tex">\hat{\mu}_N</annotation></semantics></math>
+is fitted mean value from a FoSR model.</p></li>
 <li><p>Estimate
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mover><mi>ϵ</mi><mo accent="true">̂</mo></mover><mi>N</mi><mo>*</mo></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat{\epsilon}_N^*(s)</annotation></semantics></math>
 from
@@ -323,50 +373,113 @@ quantile of
 to estimate
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>q</mi><mrow><mi>α</mi><mo>,</mo><mi>N</mi></mrow></msub><annotation encoding="application/x-tex">q_{\alpha, N}</annotation></semantics></math>.</p></li>
 </ol>
-<p>For details of the algorithm, please refer to Telschow et
-al. (2019)</p>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>μ</mi><mo accent="true">̂</mo></mover><mi>N</mi></msub><annotation encoding="application/x-tex">\hat{\mu}_N</annotation></semantics></math>
-will be estimated though using the <strong>fitted mean value</strong>
-from a functional regression model (e.g., using
-<code><a href="https://rdrr.io/pkg/mgcv/man/bam.html" class="external-link">mgcv::bam</a></code>).</p>
-<p>In the multiplier bootstrap procedure, <code>SCoRES</code> supports
-three types of multiplier distributions, which is specified by
-<code>weights</code>:</p>
-<ul>
-<li>
-<code>"rademacher"</code>:
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>g</mi><mi>i</mi></msub><mo>∈</mo><mo stretchy="false" form="prefix">{</mo><mi>−</mi><mn>1</mn><mo>,</mo><mi>+</mi><mn>1</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">g_i \in \{-1, +1\}</annotation></semantics></math>
-with equal probability</li>
-<li>
-<code>"gaussian"</code>:
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>g</mi><mi>i</mi></msub><mo>∼</mo><mi>𝒩</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">g_i \sim \mathcal{N}(0, 1)</annotation></semantics></math>
-</li>
-<li>
-<code>"mammen"</code>: A two-point distribution with mean zero and
-variance one (see Mammen, 1993)</li>
-</ul>
-<p>Default is <code>rademacher</code>.</p>
-<p>Two options are available for estimating the standard error
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mover><mi>ϵ</mi><mo accent="true">̂</mo></mover><mi>N</mi><mo>*</mo></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>s</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat{\epsilon}_N^*(s_j)</annotation></semantics></math>,
-which is specified by <code>method_SD</code>:</p>
-<ul>
-<li><p>“regular” (empirical standard error based on residuals):
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mover><mi>ϵ</mi><mo accent="true">̂</mo></mover><mi>N</mi><mo>*</mo></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>s</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msqrt><mrow><mfrac><mn>1</mn><mi>n</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Y</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>s</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mover><mi>β</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>s</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msqrt></mrow><annotation encoding="application/x-tex">
-\hat{\epsilon}_N^*(s_j) = \sqrt{ \frac{1}{n} \sum_{i=1}^n \left( {Y}_i(s_j) - \hat{\beta}(s_j) \right)^2 / (n-1) }
-</annotation></semantics></math>.</p></li>
-<li><p>“t” (bootstrap second moment-based estimator):
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mover><mi>ϵ</mi><mo accent="true">̂</mo></mover><mi>N</mi><mo>*</mo></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>s</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msqrt><mrow><mfrac><mi>N</mi><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow></mfrac><mrow><mo stretchy="true" form="prefix">|</mo><msub><mi>𝔼</mi><mi>b</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><msup><mi>Y</mi><mi>b</mi></msup><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>s</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>𝔼</mi><mi>b</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><msup><mi>Y</mi><mi>b</mi></msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>s</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo stretchy="true" form="postfix">|</mo></mrow></mrow></msqrt></mrow><annotation encoding="application/x-tex">
-\hat{\epsilon}_N^*(s_j) = \sqrt{ \frac{N}{N-1} \left| \mathbb{E}_b\left[ {Y}^{b}(s_j)^2 \right] - \left( \mathbb{E}_b\left[ {Y}^{b}(s_j) \right] \right)^2 \right| }
-</annotation></semantics></math> , where expectations are taken over
+<p>At step 2, we allow three choices for the multiplier distribution
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>g</mi><mi>i</mi></msub><annotation encoding="application/x-tex">g_i</annotation></semantics></math>,
+each with mean zero and unit variance:</p>
+<ol style="list-style-type: decimal">
+<li><p><code>rademacher</code>:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>g</mi><mi>i</mi></msub><mo>∈</mo><mo stretchy="false" form="prefix">{</mo><mi>−</mi><mn>1</mn><mo>,</mo><mi>+</mi><mn>1</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">g_i \in \{-1,+1\}</annotation></semantics></math>
+with equal probability;</p></li>
+<li><p><code>gaussian</code>:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>g</mi><mi>i</mi></msub><mo>∼</mo><mi>𝒩</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">g_i \sim \mathcal{N}(0,1)</annotation></semantics></math>;</p></li>
+<li><p><code>mammen</code>: a two–point distribution with mean
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0</mn><annotation encoding="application/x-tex">0</annotation></semantics></math>
+and variance
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math>
+from .</p></li>
+</ol>
+<p>Unless stated otherwise, we use the <code>rademacher</code>
+multipliers.</p>
+<p>At step 3, we consider two alternatives for the pointwise standrad
+errors
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mover><mi>ϵ</mi><mo accent="true">̂</mo></mover><mi>N</mi><mo>*</mo></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>s</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat{\epsilon}_N^*(s_j)</annotation></semantics></math>:</p>
+<ol style="list-style-type: decimal">
+<li><p><code>regular</code>,
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mover><mi>ϵ</mi><mo accent="true">̂</mo></mover><mi>N</mi><mo>*</mo></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>s</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msqrt><mrow><mfrac><mn>1</mn><mi>n</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">(</mo><msub><mi>Y</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>s</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mover><mi>β</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>s</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><msup><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msqrt><mspace width="0.167em"></mspace><mo>;</mo></mrow><annotation encoding="application/x-tex">
+ \hat{\epsilon}_N^*(s_j)
+ = \sqrt{\frac{1}{n}\sum_{i=1}^n\big(Y_i(s_j)-\hat{\beta}(s_j)\big)^2/(n-1)}\,;
+  </annotation></semantics></math></p></li>
+<li><p><code>t</code>,
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mover><mi>ϵ</mi><mo accent="true">̂</mo></mover><mi>N</mi><mo>*</mo></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>s</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msqrt><mrow><mfrac><mi>N</mi><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow></mfrac><mspace width="0.167em"></mspace><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">|</mo><msub><mi>𝔼</mi><mi>b</mi></msub><mspace width="-0.167em"></mspace><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">[</mo><msup><mi>Y</mi><mi>b</mi></msup><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>s</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">]</mo><mo>−</mo><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">(</mo><msub><mi>𝔼</mi><mi>b</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><msup><mi>Y</mi><mi>b</mi></msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>s</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><msup><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">|</mo></mrow></msqrt><mo>,</mo></mrow><annotation encoding="application/x-tex">
+ \hat{\epsilon}_N^*(s_j)
+ = \sqrt{\frac{N}{N-1}\,\Big|\mathbb{E}_b\!\big[Y^{b}(s_j)^2\big]
+   - \big(\mathbb{E}_b[Y^{b}(s_j)]\big)^2\Big|},
+  </annotation></semantics></math> where expectations are taken over
 bootstrap replicates and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>Y</mi><mi>b</mi></msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>s</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">{Y}^{b}(s_j)</annotation></semantics></math>
-is the perturbed sample in bootstrap iteration
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>Y</mi><mi>b</mi></msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>s</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">Y^{b}(s_j)</annotation></semantics></math>
+denotes the perturbed sample at iteration
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>.
-The absolute value ensures numerical stability when subtracting large,
-nearly equal quantities.</p></li>
-</ul>
-<p>Default is <code>t</code>.</p>
+The absolute value improves numerical stability when subtracting nearly
+equal quantities.</p></li>
+</ol>
+<p>Unless noted otherwise, we report results using the <code>t</code>
+estimator.</p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="construction-of-simultaneous-confidence-bands-for-linearlogistic-regression-model">Construction of Simultaneous Confidence Bands for Linear/Logistic
+Regression Model<a class="anchor" aria-label="anchor" href="#construction-of-simultaneous-confidence-bands-for-linearlogistic-regression-model"></a>
+</h2>
+<p>We next describe the bootstrap algorithm used to construct
+simultaneous confidence intervals (SCIs) for the mean outcome of
+regression on a fixed test design matrix. We also use the same
+procedures for the construction of SCIs for the regression coefficients.
+For details of this algorithm, please refer to .</p>
+<p>Suppose we have training data outcome
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>,
+design matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>,
+and a fixed test design matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>X</mi><mo accent="true">̃</mo></mover><annotation encoding="application/x-tex">\tilde{X}</annotation></semantics></math>.
+Let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>β</mi><mo>,</mo><mi>X</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(\beta, X)</annotation></semantics></math>
+denote the fitted regression function. The algorithm proceeds as
+follows.</p>
+<p>First, we estimate
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>β</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat{\beta}</annotation></semantics></math>
+on the training data
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mi>y</mi><mo>,</mo><mi>X</mi><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(y, X)</annotation></semantics></math>
+using least squares. Then we compute the estimated mean outcome on the
+test design matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>E</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>y</mi><mo accent="true">̃</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo>:=</mo><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>β</mi><mo accent="true">̂</mo></mover><mo>,</mo><mover><mi>X</mi><mo accent="true">̃</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat{E}(\tilde{y}) := f(\hat{\beta}, \tilde{X})</annotation></semantics></math>,
+together with its standard deviation
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>σ</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat{\sigma}</annotation></semantics></math>.</p>
+<p>For bootstrap samples
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>L</mi></mrow><annotation encoding="application/x-tex">b=1,\ldots,L</annotation></semantics></math>,
+repeat:</p>
+<ol style="list-style-type: decimal">
+<li><p>Resample
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>y</mi><mi>b</mi></msub><mo>,</mo><msub><mi>X</mi><mi>b</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(y_b, X_b)</annotation></semantics></math>
+with replacement from the training data.</p></li>
+<li><p>Fit the model on the resampled data to obtain
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>β</mi><mo accent="true">̂</mo></mover><mi>b</mi></msub><annotation encoding="application/x-tex">\hat{\beta}_b</annotation></semantics></math>.</p></li>
+<li><p>Compute the estimated mean
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>E</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><msub><mover><mi>y</mi><mo accent="true">̃</mo></mover><mi>b</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>:=</mo><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mover><mi>β</mi><mo accent="true">̂</mo></mover><mi>b</mi></msub><mo>,</mo><mover><mi>X</mi><mo accent="true">̃</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat{E}(\tilde{y}_b):=f(\hat{\beta}_b, \tilde{X})</annotation></semantics></math>
+and its pointwise standard deviation
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>σ</mi><mo accent="true">̂</mo></mover><mi>b</mi></msub><annotation encoding="application/x-tex">\hat{\sigma}_b</annotation></semantics></math>.</p></li>
+<li><p>Calculate the standardized absolute residuals on the test design
+grid,
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mi>b</mi></msub><mo>=</mo><mfrac><mrow><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">|</mo><mover><mi>E</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><msub><mover><mi>y</mi><mo accent="true">̃</mo></mover><mi>b</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mover><mi>E</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>y</mi><mo accent="true">̃</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">|</mo></mrow><msub><mover><mi>σ</mi><mo accent="true">̂</mo></mover><mi>b</mi></msub></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
+  r_b = \frac{\big| \hat{E}(\tilde{y}_b) - \hat{E}(\tilde{y}) \big|}{\hat{\sigma}_b}.
+  </annotation></semantics></math></p></li>
+<li><p>Record the maximum value of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mi>b</mi></msub><annotation encoding="application/x-tex">r_b</annotation></semantics></math>
+as
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>r</mi><mi>b</mi><mo>max</mo></msubsup><annotation encoding="application/x-tex">r^{\max}_b</annotation></semantics></math>.</p></li>
+</ol>
+<p>After
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>
+bootstrap iterations, take the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(1-\alpha)</annotation></semantics></math>
+quantile of the empirical distribution of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><msubsup><mi>r</mi><mi>b</mi><mo>max</mo></msubsup><msubsup><mo stretchy="false" form="postfix">}</mo><mrow><mi>b</mi><mo>=</mo><mn>1</mn></mrow><mi>L</mi></msubsup></mrow><annotation encoding="application/x-tex">\{r^{\max}_b\}_{b=1}^L</annotation></semantics></math>
+as the threshold
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>.
+The SCI on the test design matrix is then given by
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">(</mo><mover><mi>E</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>y</mi><mo accent="true">̃</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>a</mi><mo>×</mo><mover><mi>σ</mi><mo accent="true">̂</mo></mover><mo>,</mo><mspace width="0.278em"></mspace><mspace width="0.278em"></mspace><mover><mi>E</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>y</mi><mo accent="true">̃</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mi>a</mi><mo>×</mo><mover><mi>σ</mi><mo accent="true">̂</mo></mover><mo minsize="1.8" maxsize="1.8" stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\Big( \hat{E}(\tilde{y}) - a \times \hat{\sigma}, \;\; \hat{E}(\tilde{y}) + a \times \hat{\sigma} \Big).
+</annotation></semantics></math> For logistic regression, the SCI is
+further transformed back to the data scale using the link function.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

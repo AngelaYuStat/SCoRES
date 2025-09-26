@@ -28,7 +28,7 @@ A point estimator for the inverse set can be constructed as $\hat{\mu}_n^{-1}(U)
 $$
 \text{CS}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CS}_{\text{out}}(U)
 $$
-which satisfy: 
+which satisfies: 
 $$
 \mathbb{P}\left(\text{CS}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CS}_{\text{out}}(U)\right) \geq 1 - \alpha
 $$ 
@@ -122,67 +122,116 @@ $$
 
 ## Construction of Simultaneous Confidence Bands for Functional Regression Model
 
+We consider simultaneous confidence bands (SCBs) for a target function $\eta(\cdot)$ on a grid $\mathcal{S}$. For example, $\eta(\cdot)$ could be $Y_i(t)$ or $\beta_1(t)$.
+Given an estimator $\hat{\eta}_N(s)$ with pointwise standard error $\hat{\zeta}_N(s)$ and a normalizing
+factor $\tau_N$, we can define the simultaneous confidence band for $\eta(\cdot)$ as:
+\[
+\mathrm{SCB}(s;q_{\alpha,N})
+= \Big[\, \hat{\eta}_N(s) - q_{\alpha,N}\tfrac{\hat{\zeta}_N(s)}{\tau_N},\;
+              \hat{\eta}_N(s) + q_{\alpha,N}\tfrac{\hat{\zeta}_N(s)}{\tau_N} \Big].
+\]
+And we can verify that these bands achieve $(1-\alpha)$ simultaneous coverage by
+\[
+\mathbb{P}\!\left(\forall s\in\mathcal{S}:\; \eta(s)\in \mathrm{SCB}(s;q_{\alpha,N})\right)=1-\alpha,
+\]
+whenever the critical value $q_{\alpha,N}$ satisfies
+\[
+\mathbb{P}\!\left(\max_{s\in\mathcal{S}}\, \tau_N\,
+\frac{\hat{\eta}_N(s)-\eta(s)}{\hat{\zeta}_N(s)} \;>\; q_{\alpha,N}\right)=\alpha. 
+\]
+
+The $q_{\alpha,N}$ is unknown in practice. In SCoRES, we implement two approaches for estimating the $q_{\alpha,N}$ for functional parameter functions in FoSR model: the Correlation and Multiplicity-Adjusted (CMA) bands based on parameter simulations, and a multiplier bootstrap procedure. We detail the CMA procedure below:
+
 ### Correlation and Multiplicity Adjusted (CMA) Confidence Bands Based on Parameter Simulations
 
-1.  Simulate model parameters
-    $\boldsymbol{\beta}_1, \ldots, \boldsymbol{\beta}_B \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\hat{\boldsymbol{\beta}}, \hat{V}_{\boldsymbol{\beta}})$
-, where
-    $(\hat{\boldsymbol{\beta}}, \hat{V}_{\boldsymbol{\beta}})$
-    are estimated via a fitted FoSR model.
+1. Simulate model parameters
+    $\boldsymbol{\beta}_1, \ldots, \boldsymbol{\beta}_B \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\hat{\boldsymbol{\beta}}, \hat{V}_{\boldsymbol{\beta}})$,
+    where $(\hat{\boldsymbol{\beta}}, \hat{V}_{\boldsymbol{\beta}})$ are estimated from a fitted FoSR model.
 
-2. For each $b = 1, \ldots, B$, compute
-$$
-   \mathbf{X}_b = \frac{\mathbf{B}({\beta}_b - \hat{{\beta}})}{\mathbf{D}_f}
-$$
-, where the division is element-wise and \( \mathbf{B} \) maps parameters to functional effects.
+2. For each $b=1,\ldots,B$, compute
+\[
+   \mathbf{X}_b \;=\; \frac{\mathbf{B}(\beta_b - \hat{\beta})}{\mathbf{D}_f},
+\]
+    where the division is element-wise and $\mathbf{B}$ maps parameters to functional effects.
 
-3. Let
-$$
-   d_b = \max(|\mathbf{X}_b|), \quad b = 1, \ldots, B
-$$
-, where the absolute value is taken element-wise.
+3. Define
+\[
+   d_b \;=\; \max\!\big(|\mathbf{X}_b|\big), \quad b=1,\ldots,B,
+\]
+    where the absolute value is taken element-wise.
 
-4. Estimate $q(C_f, 1 - \alpha)$ as the $100 \cdot (1 - \alpha)$ percentile of $\{d_1, \ldots, d_B\}$.
+4. Estimate $q_{\alpha,N}$ as the $(1 - \alpha) \cdot 100\%$ quantile of $\{d_1,\ldots,d_B\}$.
 
 ### Multiplier-t Bootstrap Procedure for Constructing Confidence Bands
 
-1. Compute residuals $R_1^N, \ldots, R_N^N$, where $R_n^N = \sqrt{\frac{N}{N - 1}} \left( Y_n - \hat{\mu}_N \right)$, and multipliers $g_1, \ldots, g_N \overset{\text{i.i.d.}}{\sim} g$ with $\mathbb{E}[g] = 0$ and $\mathrm{var}[g] = 1$.
+The second is the multiplier-t bootstrap procedure for constructing confidence bands. A full introduction to the method can be found in previous work from \cite{Telschow:2022}.
+
+1. Compute residuals $R_1^N, \ldots, R_N^N$, where $R_n^N = \sqrt{\frac{N}{N - 1}} \left( Y_n - \hat{\mu}_N \right)$, and multipliers $g_1, \ldots, g_N \overset{\text{i.i.d.}}{\sim} g$ with $\mathbb{E}[g] = 0$ and $\mathrm{var}[g] = 1$, where $\hat{\mu}_N$ is fitted mean value from a FoSR model.
 
 2. Estimate $\hat{\epsilon}_N^*(s)$ from $g_1 Y_1(s), \ldots, g_N Y_N(s)$.
 
 3. Compute 
-$$
+\[
 T^*(s) = \frac{1}{\sqrt{N}} \sum_{n=1}^N g_n \frac{R_n^N(s)}{\hat{\epsilon}_N^*(s)}
-$$
+\]
 
 4. Repeat steps 1 to 3 many times. Take the $(1 - \alpha) \cdot 100\%$ quantile of $\mathcal{L}^*$ to estimate $q_{\alpha, N}$.
 
-For details of the algorithm, please refer to Telschow et al. (2019)
+At step 2, we allow three choices for the multiplier distribution $g_i$, each with mean zero and unit variance:
 
-$\hat{\mu}_N$ will be estimated though using the **fitted mean value** from a functional regression model (e.g., using `mgcv::bam`).
+1. `rademacher`: $g_i \in \{-1,+1\}$ with equal probability;
 
-In the multiplier bootstrap procedure, `SCoRES` supports three types of multiplier distributions, which is specified by `weights`:
+2. `gaussian`: $g_i \sim \mathcal{N}(0,1)$;
 
-- `"rademacher"`: $g_i \in \{-1, +1\}$ with equal probability
-- `"gaussian"`: $g_i \sim \mathcal{N}(0, 1)$
-- `"mammen"`: A two-point distribution with mean zero and variance one (see Mammen, 1993)
+3. `mammen`: a two–point distribution with mean $0$ and variance $1$ from \cite{Mammen:1993}.
 
-Default is `rademacher`.
+Unless stated otherwise, we use the `rademacher` multipliers.
 
-Two options are available for estimating the standard error 
-$\hat{\epsilon}_N^*(s_j)$, which is specified by `method_SD`:
+At step 3, we consider two alternatives for the pointwise standrad errors
+$\hat{\epsilon}_N^*(s_j)$:
 
-- "regular" (empirical standard error based on residuals):
-$$
-  \hat{\epsilon}_N^*(s_j) = \sqrt{ \frac{1}{n} \sum_{i=1}^n \left( {Y}_i(s_j) - \hat{\beta}(s_j) \right)^2 / (n-1) }
-$$.
+1. `regular`,
+  \[
+    \hat{\epsilon}_N^*(s_j)
+    = \sqrt{\frac{1}{n}\sum_{i=1}^n\big(Y_i(s_j)-\hat{\beta}(s_j)\big)^2/(n-1)}\,;
+  \]
 
-- "t" (bootstrap second moment-based estimator):
-$$
-\hat{\epsilon}_N^*(s_j) = \sqrt{ \frac{N}{N-1} \left| \mathbb{E}_b\left[ {Y}^{b}(s_j)^2 \right] - \left( \mathbb{E}_b\left[ {Y}^{b}(s_j) \right] \right)^2 \right| }
-$$
-, where expectations are taken over bootstrap replicates and 
-${Y}^{b}(s_j)$ is the perturbed sample in bootstrap iteration $b$. The absolute value ensures numerical stability when subtracting large, nearly equal quantities.
+2. `t`,
+  \[
+    \hat{\epsilon}_N^*(s_j)
+    = \sqrt{\frac{N}{N-1}\,\Big|\mathbb{E}_b\!\big[Y^{b}(s_j)^2\big]
+      - \big(\mathbb{E}_b[Y^{b}(s_j)]\big)^2\Big|},
+  \]
+  where expectations are taken over bootstrap replicates and $Y^{b}(s_j)$ denotes the perturbed sample at iteration $b$. The absolute value improves numerical stability when subtracting nearly equal quantities.
+
+Unless noted otherwise, we report results using the `t` estimator.
   
-Default is `t`.
+## Construction of Simultaneous Confidence Bands for Linear/Logistic Regression Model
+
+We next describe the bootstrap algorithm used to construct simultaneous confidence intervals (SCIs) for the mean outcome of regression on a fixed test design matrix. We also use the same procedures for the construction of SCIs for the regression coefficients. For details of this algorithm, please refer to \cite{Ren:2024}.
+
+Suppose we have training data outcome $y$, design matrix $X$, and a fixed test design matrix $\tilde{X}$. Let $f(\beta, X)$ denote the fitted regression function. The algorithm proceeds as follows.
+
+First, we estimate $\hat{\beta}$ on the training data $(y, X)$ using least squares. Then we compute the estimated mean outcome on the test design matrix $\hat{E}(\tilde{y}) := f(\hat{\beta}, \tilde{X})$,
+together with its standard deviation $\hat{\sigma}$.
+
+For bootstrap samples $b=1,\ldots,L$, repeat:
+
+1. Resample $(y_b, X_b)$ with replacement from the training data.
+
+2. Fit the model on the resampled data to obtain $\hat{\beta}_b$.
+
+3. Compute the estimated mean $\hat{E}(\tilde{y}_b):=f(\hat{\beta}_b, \tilde{X})$ and its pointwise standard deviation $\hat{\sigma}_b$.
+
+4. Calculate the standardized absolute residuals on the test design grid,
+  \[
+  r_b = \frac{\big| \hat{E}(\tilde{y}_b) - \hat{E}(\tilde{y}) \big|}{\hat{\sigma}_b}.
+  \]
   
+5. Record the maximum value of $r_b$ as $r^{\max}_b$.
+
+After $L$ bootstrap iterations, take the $(1-\alpha)$ quantile of the empirical distribution of $\{r^{\max}_b\}_{b=1}^L$ as the threshold $a$. The SCI on the test design matrix is then given by
+\[
+\Big( \hat{E}(\tilde{y}) - a \times \hat{\sigma}, \;\; \hat{E}(\tilde{y}) + a \times \hat{\sigma} \Big).
+\]
+For logistic regression, the SCI is further transformed back to the data scale using the link function.
