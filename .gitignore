@@ -3,6 +3,7 @@
 WorkingCode.R
 README.html
 inst/doc
+inst/extdata
 /doc/
 /Meta/
 R/data_ccds.R

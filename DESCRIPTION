@@ -37,7 +37,8 @@ Imports:
     reshape,
     tibble,
     rlang,
-    magrittr
+    magrittr,
+    utils
 Depends: 
     R (>= 3.5)
 LazyData: true

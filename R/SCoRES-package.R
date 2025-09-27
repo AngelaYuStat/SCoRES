@@ -18,5 +18,6 @@
 #' @importFrom rlang :=
 #' @importFrom tibble as_tibble
 #' @importFrom tidyr pivot_wider
+#' @importFrom utils type.convert
 ## usethis namespace: end
 NULL

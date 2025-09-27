@@ -2,6 +2,7 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^data-raw$
+^inst/extdata/
 ^README\.Rmd$
 ^README\.pdf$
 ^README_files$

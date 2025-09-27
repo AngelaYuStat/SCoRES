@@ -53,6 +53,7 @@
 #' @importFrom tibble as_tibble
 #' @importFrom stats predict
 #' @importFrom magrittr %>%
+#' @importFrom utils type.convert
 #'
 #' @examples
 #' library(mgcv)
