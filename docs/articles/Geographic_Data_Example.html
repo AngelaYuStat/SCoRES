@@ -62,7 +62,7 @@
       <h1>Geographic_Data_Example</h1>
                         <h4 data-toc-skip class="author">Angela Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-08-24</h4>
+            <h4 data-toc-skip class="date">2025-09-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Geographic_Data_Example.Rmd" class="external-link"><code>vignettes/Geographic_Data_Example.Rmd</code></a></small>
       <div class="d-none name"><code>Geographic_Data_Example.Rmd</code></div>
@@ -70,10 +70,27 @@
 
     
     
-<p>The following example is for displaying the Confidence sets for the
+<p>The following example is for displaying the confidence region for the
 increase of the mean summer temperature (June–August) in North America
 between the 20th and 21st centuries according to the specific climate
 model analyzed in Sommerfeld et al.(2018).</p>
+<p><code><a href="../reference/SCB_gls_climate.html">SCoRES::SCB_gls_climate()</a></code> function use multiplier
+bootstrap algorithm to construct the SCB for a specified linear
+combination of coefficients across a geographical area. The argument
+<code>sp_list</code> specifies a list containing the spatial coordinates
+and the observations on each spot. <code>data_fit</code> specifies a
+data frame containing the design matrix used to fit the spatial
+generalized least square model (notice intercept should also be included
+inside the data frame), while <code>w</code> defines the weights for the
+linear combination of coefficients on which the simultaneous confidence
+bands (SCB) are constructed. Use the <code>correlation</code> argument
+to specify the correlation structure for model fitting. If the
+observations are grouped, a grouping factor can be specified using the
+<code>group</code> argument, and a covariance array <code>V</code> may
+also be provided to supply a known covariance matrix for each spot.
+<code>mask</code> is an optional logical matrix indicating spatial
+locations to include in the SCB, with excluded areas (e.g., water) set
+to 0 or NA.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://svn.r-project.org/R-packages/trunk/nlme/" class="external-link">nlme</a></span><span class="op">)</span></span>
@@ -96,7 +113,7 @@ model analyzed in Sommerfeld et al.(2018).</p>
 <span><span class="va">end_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">time_taken</span> <span class="op">&lt;-</span> <span class="va">end_time</span> <span class="op">-</span> <span class="va">start_time</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">time_taken</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Time difference of 3.986491 mins</span></span></code></pre></div>
+<span><span class="co">#&gt; Time difference of 3.25834 mins</span></span></code></pre></div>
 <p>Heat maps show the estimate of the mean temperature difference. The
 first row displays the contours of the outer confidence region,
 estimated inverse region, and the inner confidence region, for various
@@ -120,7 +137,7 @@ red line is the contour of the inner confidence region.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Angela Yu, Armin Schwartzman, Junting Ren, Julia Wrobel.</p>
+  <p>Developed by Zhuoran Yu, Armin Schwartzman, Junting Ren, Julia Wrobel.</p>
 </div>
 
 <div class="pkgdown-footer-right">

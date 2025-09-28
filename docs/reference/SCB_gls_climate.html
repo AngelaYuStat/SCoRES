@@ -82,10 +82,10 @@ estimated mean surface significantly deviates from it. Default is NULL.</p></dd>
 <dt id="arg-data-fit">data_fit<a class="anchor" aria-label="anchor" href="#arg-data-fit"></a></dt>
 <dd><p>A design matrix used to fit the generalized least squares
 (GLS) model. Each row corresponds to an observation, and each column to a covariate
-to be included in the model. Outcome/boservation should not be included.
+to be included in the model. Outcome/observation should not be included.
 The first column is typically an intercept column,
 which will contain only 1s, if an intercept is included in the model.
-Categorical variables in <code>data_fit</code> should be coverted to dummy variables.
+Categorical variables in <code>data_fit</code> should be converted to dummy variables.
 Default is <code>matrix(1, n, 1)</code> (only keep the intercept term)</p></dd>
 
 
@@ -110,8 +110,8 @@ the correlation structure function specified in <code>correlation</code>.</p></d
 <dt id="arg-groups">groups<a class="anchor" aria-label="anchor" href="#arg-groups"></a></dt>
 <dd><p>A vector of group identifiers used to define
 the within-group correlation structure (e.g., repeated measures, time blocks).
-If not specified, defaults to <code>rep(1, n)</code>,
-assuming all observations belong to a single group.</p></dd>
+If not specified, defaults to <code>rep(1, n)</code>, assuming all observations
+belong to a single group.</p></dd>
 
 
 <dt id="arg-v">V<a class="anchor" aria-label="anchor" href="#arg-v"></a></dt>
@@ -119,7 +119,8 @@ assuming all observations belong to a single group.</p></dd>
 shape <code>[length(x), length(y), n, n]</code>, where each <code>V[i,j,,]</code>
 corresponds to the covariance matrix for the observations at spatial location
 <code>(x[i], y[j])</code>. If V is given, then the GLS model will be fitted based on V.
-Otherwise, the GLS model will be fitted based on correlation structure.</p></dd>
+Otherwise, the GLS model will be fitted based on correlation structure.
+If neither is provided, the model reduces to ordinary least squares (OLS) regression.</p></dd>
 
 
 <dt id="arg-alpha">alpha<a class="anchor" aria-label="anchor" href="#arg-alpha"></a></dt>
@@ -194,7 +195,7 @@ Confidence regions for spatial excursion sets from repeated random field observa
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Angela Yu, Armin Schwartzman, Junting Ren, Julia Wrobel.</p>
+  <p>Developed by Zhuoran Yu, Armin Schwartzman, Junting Ren, Julia Wrobel.</p>
 </div>
 
 <div class="pkgdown-footer-right">

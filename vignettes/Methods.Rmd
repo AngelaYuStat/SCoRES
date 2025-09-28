@@ -235,3 +235,43 @@ After $L$ bootstrap iterations, take the $(1-\alpha)$ quantile of the empirical 
 \Big( \hat{E}(\tilde{y}) - a \times \hat{\sigma}, \;\; \hat{E}(\tilde{y}) + a \times \hat{\sigma} \Big).
 \]
 For logistic regression, the SCI is further transformed back to the data scale using the link function.
+
+## Construction of SCB for Spatial Generalized Least Square Model
+
+We also provide tools in SCoRES for estimating SCB of geographic data, however, their use is currently limited to the spatial generalized least squares model. 
+
+Let the spatial domain be sampled on spots \(s\in\mathcal S\) with coordinates \(s=(x_s,y_s)\).
+At each spot \(s\), we observe \(n\) outcomes \(\mathbf z_s\in\mathbb R^{n}\) with design matrix
+\(\mathbf X\in\mathbb R^{n\times p}\). We fit a spot-specific generalized least squares (GLS) model
+
+$$
+\mathbf z_s=\mathbf X\boldsymbol\beta(s)+\boldsymbol\varepsilon_s,\qquad
+\boldsymbol\varepsilon_s\sim \mathcal N\!\left(\mathbf 0,\ \mathbf V_s\right),
+$$
+
+where the variance-covariance matrix within the spot encodes the prespecified correlation structure \(\mathbf V_s\).
+
+SCoRES allows users to directly input the matrix \(\mathbf V_s\) for each spot \(s\), or specify the correlation structure \(\mathbf R\).
+
+Assume we are interested in the linear functional \(\eta(s)=\mathbf w^\top \boldsymbol\beta(s)\), with \(\mathbf w\) as a weight vector for the specific linear combination. The pointwise estimated standard error is
+
+$$
+\widehat{\zeta}(s)=\sqrt{\mathbf w^\top \mathrm{Var}(\beta)\, \mathbf w}.
+$$
+
+To quantify uncertainty uniformly across spots, we construct a simultaneous confidence band (SCB)
+for \(\eta(\cdot)\) on the grid \(\mathcal S\):
+
+$$
+\mathrm{SCB}(s;\,q_\alpha)=\Big[\ \widehat{\eta}(s)-q_\alpha\,\widehat{\zeta}(s),\ \
+\widehat{\eta}(s)+q_\alpha\,\widehat{\zeta}(s)\ \Big],\qquad s\in\mathcal S,
+$$
+
+where \(q_\alpha\) satisfies
+
+$$
+\mathbb P\!\left(\max_{s\in\mathcal S}\frac{|\widehat{\eta}(s)-\eta(s)|}{\widehat{\zeta}(s)}
+\le q_\alpha\right)= 1-\alpha.
+$$
+
+We estimate \(q_\alpha\) by multiplier-\(t\) bootstrap method introduced before.

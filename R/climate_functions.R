@@ -12,10 +12,10 @@
 #' estimated mean surface significantly deviates from it. Default is NULL.
 #' @param data_fit A design matrix used to fit the generalized least squares
 #' (GLS) model. Each row corresponds to an observation, and each column to a covariate
-#' to be included in the model. Outcome/boservation should not be included.
+#' to be included in the model. Outcome/observation should not be included.
 #' The first column is typically an intercept column,
 #' which will contain only 1s, if an intercept is included in the model.
-#' Categorical variables in `data_fit` should be coverted to dummy variables.
+#' Categorical variables in `data_fit` should be converted to dummy variables.
 #' Default is `matrix(1, n, 1)` (only keep the intercept term)
 #' @param w A numeric vector specifying the target function for constructing the SCB,
 #' by giving a linear combination of the regression coefficients in the GLS model.
@@ -28,13 +28,14 @@
 #' the correlation structure function specified in \code{correlation}.
 #' @param groups A vector of group identifiers used to define
 #' the within-group correlation structure (e.g., repeated measures, time blocks).
-#'   If not specified, defaults to \code{rep(1, n)},
-#'   assuming all observations belong to a single group.
+#' If not specified, defaults to \code{rep(1, n)}, assuming all observations
+#' belong to a single group.
 #' @param V An optional array of known covariance matrices of
 #' shape \code{[length(x), length(y), n, n]}, where each \code{V[i,j,,]}
 #' corresponds to the covariance matrix for the observations at spatial location
 #' \code{(x[i], y[j])}. If V is given, then the GLS model will be fitted based on V.
 #' Otherwise, the GLS model will be fitted based on correlation structure.
+#' If neither is provided, the model reduces to ordinary least squares (OLS) regression.
 #' @param alpha A numerical value specifying the confidence level
 #' for the Simultaneous Confidence Bands. Defalut is `0.1`.
 #' @param N An integer specifying the number of bootstrap samples to
@@ -245,7 +246,8 @@ SCB_gls_climate =
             model <- lm.gls(formula(fo), data = df,
                                   W = V[i, j, , ], inverse = TRUE)
           }else{
-            stop("Must provide one of 'correlation' and 'V'.")
+            #stop("Must provide one of 'correlation' and 'V'.")
+            model <- gls(formula(fo), data = df)
           }
 
           mu_hat[i, j] <- t(w) %*% model$coefficients

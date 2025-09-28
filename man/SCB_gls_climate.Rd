@@ -33,10 +33,10 @@ estimated mean surface significantly deviates from it. Default is NULL.}
 
 \item{data_fit}{A design matrix used to fit the generalized least squares
 (GLS) model. Each row corresponds to an observation, and each column to a covariate
-to be included in the model. Outcome/boservation should not be included.
+to be included in the model. Outcome/observation should not be included.
 The first column is typically an intercept column,
 which will contain only 1s, if an intercept is included in the model.
-Categorical variables in \code{data_fit} should be coverted to dummy variables.
+Categorical variables in \code{data_fit} should be converted to dummy variables.
 Default is \code{matrix(1, n, 1)} (only keep the intercept term)}
 
 \item{w}{A numeric vector specifying the target function for constructing the SCB,
@@ -53,14 +53,15 @@ the correlation structure function specified in \code{correlation}.}
 
 \item{groups}{A vector of group identifiers used to define
 the within-group correlation structure (e.g., repeated measures, time blocks).
-If not specified, defaults to \code{rep(1, n)},
-assuming all observations belong to a single group.}
+If not specified, defaults to \code{rep(1, n)}, assuming all observations
+belong to a single group.}
 
 \item{V}{An optional array of known covariance matrices of
 shape \code{[length(x), length(y), n, n]}, where each \code{V[i,j,,]}
 corresponds to the covariance matrix for the observations at spatial location
 \code{(x[i], y[j])}. If V is given, then the GLS model will be fitted based on V.
-Otherwise, the GLS model will be fitted based on correlation structure.}
+Otherwise, the GLS model will be fitted based on correlation structure.
+If neither is provided, the model reduces to ordinary least squares (OLS) regression.}
 
 \item{alpha}{A numerical value specifying the confidence level
 for the Simultaneous Confidence Bands. Defalut is \code{0.1}.}

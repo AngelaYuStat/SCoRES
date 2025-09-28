@@ -62,7 +62,7 @@
       <h1>Linear_Model_Example</h1>
                         <h4 data-toc-skip class="author">Angela Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-09-26</h4>
+            <h4 data-toc-skip class="date">2025-09-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Linear_Model_Example.Rmd" class="external-link"><code>vignettes/Linear_Model_Example.Rmd</code></a></small>
       <div class="d-none name"><code>Linear_Model_Example.Rmd</code></div>
@@ -216,8 +216,8 @@ SCB for every coefficient in the linear/logistic model.</p>
 <p>Here, we use a linear regression model with 50 coefficients in total
 to estimate the simultaneous confidence band (SCB) for all coefficients
 and the intercept, with modeling equation as follows:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>i</mi></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mn>50</mn></munderover><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>β</mi><mi>j</mi></msub><mo>+</mo><msub><mi>ϵ</mi><mi>i</mi></msub><mo>,</mo></mrow><annotation encoding="application/x-tex">
-Y_i = \sum^{50}_{j=1}X_{ij}\beta_j + \epsilon_i,
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>i</mi></msub><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mn>50</mn></munderover><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>β</mi><mi>j</mi></msub><mo>+</mo><msub><mi>ϵ</mi><mi>i</mi></msub><mo>,</mo></mrow><annotation encoding="application/x-tex">
+Y_i = \beta_0 + \sum^{50}_{j=1}X_{ij}\beta_j + \epsilon_i,
 </annotation></semantics></math> where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mi>o</mi><mi>v</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mi>i</mi></msub><mo>,</mo><msub><mi>X</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msup><mn>0.4</mn><mrow><mo stretchy="true" form="prefix">|</mo><mi>i</mi><mo>−</mo><mi>j</mi><mo stretchy="true" form="postfix">|</mo></mrow></msup></mrow><annotation encoding="application/x-tex">Cov(X_i, X_j)=0.4^{|i-j|}</annotation></semantics></math>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">

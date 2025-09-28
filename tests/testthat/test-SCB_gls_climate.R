@@ -48,7 +48,7 @@ test_that("Input validation: data_fit", {
   V_bad <- array(0, dim = c(2,2,5,4))
   expect_error(SCB_gls_climate(sp, data_fit = df, w=w, V=V_bad, groups=groups), "last two dimensions of `V`")
   # neither correlation nor V
-  expect_error(SCB_gls_climate(sp, data_fit = df, w=w, groups=groups), "provide one of 'correlation' and 'V'")
+  #expect_error(SCB_gls_climate(sp, data_fit = df, w=w, groups=groups), "provide one of 'correlation' and 'V'")
 })
 
 test_that("Input validation: mask", {

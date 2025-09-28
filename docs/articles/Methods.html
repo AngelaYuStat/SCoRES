@@ -62,7 +62,7 @@
       <h1>Methods</h1>
                         <h4 data-toc-skip class="author">Angela Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-09-25</h4>
+            <h4 data-toc-skip class="date">2025-09-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Methods.Rmd" class="external-link"><code>vignettes/Methods.Rmd</code></a></small>
       <div class="d-none name"><code>Methods.Rmd</code></div>
@@ -480,6 +480,69 @@ The SCI on the test design matrix is then given by
 \Big( \hat{E}(\tilde{y}) - a \times \hat{\sigma}, \;\; \hat{E}(\tilde{y}) + a \times \hat{\sigma} \Big).
 </annotation></semantics></math> For logistic regression, the SCI is
 further transformed back to the data scale using the link function.</p>
+</div>
+<div class="section level2">
+<h2 id="construction-of-scb-for-spatial-generalized-least-square-model">Construction of SCB for Spatial Generalized Least Square Model<a class="anchor" aria-label="anchor" href="#construction-of-scb-for-spatial-generalized-least-square-model"></a>
+</h2>
+<p>We also provide tools in SCoRES for estimating SCB of geographic
+data, however, their use is currently limited to the spatial generalized
+least squares model.</p>
+<p>Let the spatial domain be sampled on spots
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>∈</mo><mi>𝒮</mi></mrow><annotation encoding="application/x-tex">s\in\mathcal S</annotation></semantics></math>
+with coordinates
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mi>s</mi></msub><mo>,</mo><msub><mi>y</mi><mi>s</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">s=(x_s,y_s)</annotation></semantics></math>.
+At each spot
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>,
+we observe
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+outcomes
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐳</mi><mi>s</mi></msub><mo>∈</mo><msup><mi>ℝ</mi><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">\mathbf z_s\in\mathbb R^{n}</annotation></semantics></math>
+with design matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐗</mi><mo>∈</mo><msup><mi>ℝ</mi><mrow><mi>n</mi><mo>×</mo><mi>p</mi></mrow></msup></mrow><annotation encoding="application/x-tex">\mathbf X\in\mathbb R^{n\times p}</annotation></semantics></math>.
+We fit a spot-specific generalized least squares (GLS) model</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐳</mi><mi>s</mi></msub><mo>=</mo><mi>𝐗</mi><mi>𝛃</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>𝛆</mi><mi>s</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>𝛆</mi><mi>s</mi></msub><mo>∼</mo><mi>𝒩</mi><mspace width="-0.167em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mn>𝟎</mn><mo>,</mo><mspace width="0.222em"></mspace><msub><mi>𝐕</mi><mi>s</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+\mathbf z_s=\mathbf X\boldsymbol\beta(s)+\boldsymbol\varepsilon_s,\qquad
+\boldsymbol\varepsilon_s\sim \mathcal N\!\left(\mathbf 0,\ \mathbf V_s\right),
+</annotation></semantics></math></p>
+<p>where the variance-covariance matrix within the spot encodes the
+prespecified correlation structure
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐕</mi><mi>s</mi></msub><annotation encoding="application/x-tex">\mathbf V_s</annotation></semantics></math>.</p>
+<p>SCoRES allows users to directly input the matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐕</mi><mi>s</mi></msub><annotation encoding="application/x-tex">\mathbf V_s</annotation></semantics></math>
+for each spot
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>,
+or specify the correlation structure
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐑</mi><annotation encoding="application/x-tex">\mathbf R</annotation></semantics></math>.</p>
+<p>Assume we are interested in the linear functional
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msup><mi>𝐰</mi><mi>⊤</mi></msup><mi>𝛃</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\eta(s)=\mathbf w^\top \boldsymbol\beta(s)</annotation></semantics></math>,
+with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝐰</mi><annotation encoding="application/x-tex">\mathbf w</annotation></semantics></math>
+as a weight vector for the specific linear combination. The pointwise
+estimated standard error is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>ζ</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msqrt><mrow><msup><mi>𝐰</mi><mi>⊤</mi></msup><mrow><mi mathvariant="normal">V</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>β</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.167em"></mspace><mi>𝐰</mi></mrow></msqrt><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\widehat{\zeta}(s)=\sqrt{\mathbf w^\top \mathrm{Var}(\beta)\, \mathbf w}.
+</annotation></semantics></math></p>
+<p>To quantify uncertainty uniformly across spots, we construct a
+simultaneous confidence band (SCB) for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>⋅</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\eta(\cdot)</annotation></semantics></math>
+on the grid
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>𝒮</mi><annotation encoding="application/x-tex">\mathcal S</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">S</mi><mi mathvariant="normal">C</mi><mi mathvariant="normal">B</mi></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo>;</mo><mspace width="0.167em"></mspace><msub><mi>q</mi><mi>α</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">[</mo><mspace width="0.222em"></mspace><mover><mi>η</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><msub><mi>q</mi><mi>α</mi></msub><mspace width="0.167em"></mspace><mover><mi>ζ</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="0.222em"></mspace><mspace width="0.222em"></mspace><mover><mi>η</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>q</mi><mi>α</mi></msub><mspace width="0.167em"></mspace><mover><mi>ζ</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.222em"></mspace><mo minsize="1.8" maxsize="1.8" stretchy="false" form="postfix">]</mo><mo>,</mo><mspace width="2.0em"></mspace><mi>s</mi><mo>∈</mo><mi>𝒮</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
+\mathrm{SCB}(s;\,q_\alpha)=\Big[\ \widehat{\eta}(s)-q_\alpha\,\widehat{\zeta}(s),\ \
+\widehat{\eta}(s)+q_\alpha\,\widehat{\zeta}(s)\ \Big],\qquad s\in\mathcal S,
+</annotation></semantics></math></p>
+<p>where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>q</mi><mi>α</mi></msub><annotation encoding="application/x-tex">q_\alpha</annotation></semantics></math>
+satisfies</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℙ</mi><mspace width="-0.167em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><munder><mo>max</mo><mrow><mi>s</mi><mo>∈</mo><mi>𝒮</mi></mrow></munder><mfrac><mrow><mo stretchy="true" form="prefix">|</mo><mover><mi>η</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>η</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">|</mo></mrow><mrow><mover><mi>ζ</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mo>≤</mo><msub><mi>q</mi><mi>α</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>1</mn><mo>−</mo><mi>α</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\mathbb P\!\left(\max_{s\in\mathcal S}\frac{|\widehat{\eta}(s)-\eta(s)|}{\widehat{\zeta}(s)}
+\le q_\alpha\right)= 1-\alpha.
+</annotation></semantics></math></p>
+<p>We estimate
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>q</mi><mi>α</mi></msub><annotation encoding="application/x-tex">q_\alpha</annotation></semantics></math>
+by
+multiplier-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
+bootstrap method introduced before.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
