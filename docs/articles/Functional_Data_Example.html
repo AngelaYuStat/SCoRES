@@ -62,7 +62,7 @@
       <h1>Functional_Data_Example</h1>
                         <h4 data-toc-skip class="author">Angela Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-09-26</h4>
+            <h4 data-toc-skip class="date">2025-10-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Functional_Data_Example.Rmd" class="external-link"><code>vignettes/Functional_Data_Example.Rmd</code></a></small>
       <div class="d-none name"><code>Functional_Data_Example.Rmd</code></div>
@@ -70,6 +70,9 @@
 
     
     
+<div class="section level2">
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h2>
 <p>The example here is to use pupil functional data to construct the
 simultaneous outer and inner confidence region from simultaneous
 confidence bands (SCB) using Function-on-Scalar Regression (FoSR).</p>
@@ -170,6 +173,13 @@ which is specified by <code>method_SD</code>:</p>
 </ul>
 <p>Default is <code>t</code>.</p>
 <p>For mathematical details, see vignette Methods.</p>
+</div>
+<div class="section level2">
+<h2 id="correlation-and-multiplicity-adjusted-cma-confidence-bands">Correlation and Multiplicity Adjusted (CMA) Confidence Bands<a class="anchor" aria-label="anchor" href="#correlation-and-multiplicity-adjusted-cma-confidence-bands"></a>
+</h2>
+<div class="section level3">
+<h3 id="scb-for-mean-outcome-function">SCB for Mean Outcome Function<a class="anchor" aria-label="anchor" href="#scb-for-mean-outcome-function"></a>
+</h3>
 <p>The code below visualizes the simultaneous outer and inner region
 derived from SCB results using the <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code>
 function. The <code>results</code> object is first converted to a tibble
@@ -215,6 +225,10 @@ the estimated mean is greater than the corresponding levels); the outer
 confidence region are the union of the blue, yellow and red line (where
 the upper SCB is greater than the corresponding levels) and contain both
 the estimated inverse region and the inner confidence region.</p>
+</div>
+<div class="section level3">
+<h3 id="scb-for-coefficient-function">SCB for Coefficient Function<a class="anchor" aria-label="anchor" href="#scb-for-coefficient-function"></a>
+</h3>
 <p>The next plot shows the SCB for the coefficient function for the use
 group.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -242,10 +256,18 @@ group.</p>
 <span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
 <span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Functional_Data_Example_files/figure-html/ccds_plot_cs_pupil_para-1.png" width="576"></p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="multiplier-t-bootstrap-confidence-bands">Multiplier-t Bootstrap Confidence Bands<a class="anchor" aria-label="anchor" href="#multiplier-t-bootstrap-confidence-bands"></a>
+</h2>
+<div class="section level3">
+<h3 id="scb-for-mean-outcome-function-1">SCB for Mean Outcome Function<a class="anchor" aria-label="anchor" href="#scb-for-mean-outcome-function-1"></a>
+</h3>
 <p>The following plots show the results of multiplier bootstrap. The
 first one displays the SCB for mean outcome function for the use group,
 while the second one is for the coefficient function of the use group.
-All possible NA’s are inputted using
+All possible NA’s are imputed using
 <code><a href="https://rdrr.io/pkg/refund/man/fpca.face.html" class="external-link">refund::fpca.face()</a></code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Multiplier-t Bootstrap</span></span>
@@ -272,6 +294,10 @@ All possible NA’s are inputted using
 <span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
 <span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Functional_Data_Example_files/figure-html/pupil_plot_cs_multiplier-1.png" width="576"></p>
+</div>
+<div class="section level3">
+<h3 id="scb-for-coefficient-function-1">SCB for Coefficient Function<a class="anchor" aria-label="anchor" href="#scb-for-coefficient-function-1"></a>
+</h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_pupil_multiplier_para</span> <span class="op">&lt;-</span> <span class="fu">SCoRES</span><span class="fu">::</span><span class="fu"><a href="../reference/SCB_functional_outcome.html">SCB_functional_outcome</a></span><span class="op">(</span></span>
 <span>                                          data_df <span class="op">=</span> <span class="va">pupil</span>,</span>
@@ -322,6 +348,17 @@ function. the solid black line represents the sample mean.</p>
 <span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
 <span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Functional_Data_Example_files/figure-html/pupil_plot_cs_multiplier_overall-1.png" width="576"></p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="an-extended-example">An Extended Example<a class="anchor" aria-label="anchor" href="#an-extended-example"></a>
+</h2>
+<div class="section level3">
+<h3 id="correlation-and-multiplicity-adjusted-cma-confidence-bands-1">Correlation and Multiplicity Adjusted (CMA) Confidence Bands<a class="anchor" aria-label="anchor" href="#correlation-and-multiplicity-adjusted-cma-confidence-bands-1"></a>
+</h3>
+<div class="section level4">
+<h4 id="scb-for-mean-outcome-function-2">SCB for Mean Outcome Function<a class="anchor" aria-label="anchor" href="#scb-for-mean-outcome-function-2"></a>
+</h4>
 <p>To further illustrate the power of
 <code><a href="../reference/SCB_functional_outcome.html">SCoRES::SCB_functional_outcome</a></code> for constructing SCBs for
 multiple group variables, we analyze the 40-years-old male user group by
@@ -377,6 +414,14 @@ from multiplier bootstrap.</p>
 <span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
 <span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Functional_Data_Example_files/figure-html/pupil_plot_cs_cma%202-1.png" width="576"></p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="correlation-and-multiplicity-adjusted-cma-confidence-bands-2">Correlation and Multiplicity Adjusted (CMA) Confidence Bands<a class="anchor" aria-label="anchor" href="#correlation-and-multiplicity-adjusted-cma-confidence-bands-2"></a>
+</h3>
+<div class="section level4">
+<h4 id="scb-for-mean-outcome-function-3">SCB for Mean Outcome Function<a class="anchor" aria-label="anchor" href="#scb-for-mean-outcome-function-3"></a>
+</h4>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Multiplier-t Bootstrap</span></span>
 <span><span class="va">results_pupil_multiplier</span> <span class="op">&lt;-</span> <span class="fu">SCoRES</span><span class="fu">::</span><span class="fu"><a href="../reference/SCB_functional_outcome.html">SCB_functional_outcome</a></span><span class="op">(</span></span>
@@ -404,6 +449,9 @@ from multiplier bootstrap.</p>
 <span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
 <span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Functional_Data_Example_files/figure-html/pupil_plot_cs_multiplier%202-1.png" width="576"></p>
+</div>
+</div>
+</div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>

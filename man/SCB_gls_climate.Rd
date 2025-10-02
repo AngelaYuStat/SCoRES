@@ -48,7 +48,7 @@ coefficient.}
 the correlation structure (e.g., \code{"corAR1"}, \code{"corCompSymm"})
 to be used in the GLS model. If \code{NULL}, no correlation structure is assumed.}
 
-\item{corpar}{A list of parameters to be passed to
+\item{corpar}{A numerical vector containing parameters to be passed to
 the correlation structure function specified in \code{correlation}.}
 
 \item{groups}{A vector of group identifiers used to define

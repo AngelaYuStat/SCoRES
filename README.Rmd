@@ -123,8 +123,8 @@ The `levels = c(-18, -20, -22, -24)` argument specifies a set of thresholds, and
 results_pupil_cma <- tibble::as_tibble(results_pupil_cma)
 plot_cs(results_pupil_cma,
         levels = c(-18, -20, -22, -24), 
-        x = results_pupil_cma$time, 
-        mu_hat = results_pupil_cma$yhat, 
+        x = results_pupil_cma$domain, 
+        mu_hat = results_pupil_cma$mu_hat, 
         xlab = "Seconds", 
         ylab = "Percent_Outcome", 
         level_label = T, 

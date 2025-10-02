@@ -54,7 +54,7 @@ Dimension of \code{x1} must match the second dimension of \code{scb_up} and \cod
 
 \item{type}{A character string specifying the type of inverse set to construct
 if levels are not a matrix. Choices are \code{"upper"}, \code{"lower"}, \code{"two-sided"}
-or \code{"interval"}. Notice that \code{"two-sided"} type is not available for
+or \code{"interval"}. Notice that \code{"two-sided"} and \code{"interval"} type is not available for
 plotting (\code{return_plot = TRUE}).}
 
 \item{return_contain_only}{Logical. If \code{TRUE}, only return a matrix/logical

@@ -33,7 +33,7 @@
 #' Dimension of `x1` must match the second dimension of `scb_up` and `scb_low`.
 #' @param type A character string specifying the type of inverse set to construct
 #' if levels are not a matrix. Choices are `"upper"`, `"lower"`, `"two-sided"`
-#' or `"interval"`. Notice that `"two-sided"` type is not available for
+#' or `"interval"`. Notice that `"two-sided"` and `"interval"` type is not available for
 #' plotting (\code{return_plot = TRUE}).
 #' @param return_contain_only Logical. If `TRUE`, only return a matrix/logical
 #' map indicating which point is contained within two types of CSs across all levels.

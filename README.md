@@ -118,7 +118,12 @@ analyze. The input data should have numerical binary 0/1 values for all
 scalar group variables. Here, we analyze the user group by specifying
 `groups = "use"`. Use `fitted` to specify the object for SCB estimation.
 If `fitted = TRUE`, `SCoRES::SCB_functional_outcome` will construct the
-SCB for the fitted mean outcome function. If `fitted = FALSE`,
+SCB for the fitted mean outcome function. If `fitted = FALSE`, 
+`SCoRES::SCB_functional_outcome` will construct the SCB for the fitted parameter 
+function. For `cma` option, users are required to provide a functional regression 
+object through argument object. For multiplier option, users also need to provide 
+input for object. If `object = NULL`, the function will only output the SCB for an 
+overall mean outcome function regardless of the group specified.
 
 Here, we estimated SCBs using both options seperately for the mean
 outcome Y(t) of user’s group: 
@@ -134,8 +139,7 @@ results_pupil_cma <- SCoRES::SCB_functional_outcome(
                                           data_df = pupil,
                                           object = fosr_mod, 
                                           method = "cma",
-                                          fitted = TRUE,
-                                          est_mean = TRUE, 
+                                          fitted = TRUE, 
                                           alpha = 0.05, 
                                           outcome = "percent_change",
                                           domain = "seconds", 
@@ -158,8 +162,8 @@ confidence region.
 results_pupil_cma <- tibble::as_tibble(results_pupil_cma)
 plot_cs(results_pupil_cma,
         levels = c(-18, -20, -22, -24), 
-        x = results_pupil_cma$time, 
-        mu_hat = results_pupil_cma$yhat, 
+        x = results_pupil_cma$domain, 
+        mu_hat = results_pupil_cma$mu_hat, 
         xlab = "Seconds", 
         ylab = "Percent_Outcome", 
         level_label = T, 

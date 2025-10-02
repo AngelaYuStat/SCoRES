@@ -24,7 +24,7 @@
 #' @param correlation A character string specifying the name of
 #' the correlation structure (e.g., \code{"corAR1"}, \code{"corCompSymm"})
 #' to be used in the GLS model. If \code{NULL}, no correlation structure is assumed.
-#' @param corpar A list of parameters to be passed to
+#' @param corpar A numerical vector containing parameters to be passed to
 #' the correlation structure function specified in \code{correlation}.
 #' @param groups A vector of group identifiers used to define
 #' the within-group correlation structure (e.g., repeated measures, time blocks).
@@ -192,11 +192,14 @@ SCB_gls_climate =
     }
 
     if(!is.null(corpar)){
-      if (!is.list(corpar)) {
-        stop("`corpar` must be a list of parameters for the correlation structure function.")
-      }
-      if (is.null(names(corpar)) || any(names(corpar) == "")) {
-        warning("Some elements in `corpar` are not named; this may cause errors in `do.call`.")
+      #if (!is.list(corpar)) {
+        #stop("`corpar` must be a list of parameters for the correlation structure function.")
+      #}
+      #if (is.null(names(corpar)) || any(names(corpar) == "")) {
+        #warning("Some elements in `corpar` are not named; this may cause errors in `do.call`.")
+      #}
+      if (!is.numeric(corpar) || !is.vector(corpar)) {
+        stop("`corpar` should be a numeric vector.")
       }
     }
 

@@ -256,7 +256,7 @@ SCoRES allows users to directly input the matrix \(\mathbf V_s\) for each spot \
 Assume we are interested in the linear functional \(\eta(s)=\mathbf w^\top \boldsymbol\beta(s)\), with \(\mathbf w\) as a weight vector for the specific linear combination. The pointwise estimated standard error is
 
 $$
-\widehat{\zeta}(s)=\sqrt{\mathbf w^\top \mathrm{Var}(\beta)\, \mathbf w}.
+\widehat{\zeta}(s)=\sqrt{\mathbf w^\top \mathrm{Var}(\beta(s))\, \mathbf w}.
 $$
 
 To quantify uncertainty uniformly across spots, we construct a simultaneous confidence band (SCB)

@@ -18,7 +18,7 @@
 #'           (except for domain index zero, where this is allowed).
 #'           Otherwise, the function will return an error.
 #'           If missing values (NA) exist in the outcome variable in \code{data_df},
-#'           the function will inpute them using \code{fpca.face} before
+#'           the function will impute them using \code{fpca.face} before
 #'           performing the Multiplier Bootstrap.
 #'  }
 #' @param fitted Logical. Whether to estimate the simultaneous confidence bands
