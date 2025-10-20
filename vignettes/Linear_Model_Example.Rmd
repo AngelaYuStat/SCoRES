@@ -29,6 +29,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+## SCBs for Mean Outcome of Linear Model 
+
 In the following example, we use a linear regression to estimate the simultaneous confidence band (SCB) for the mean outcome, with modeling equation as follows:
 
 $$
@@ -98,6 +100,8 @@ suppressWarnings(plot_cs(results,
         color_level_label = "black"))
 ```
 
+## SCBs for Mean Outcome of Logistic Model 
+
 In addition to linear regression, `SCoRES` also  provides`SCoRES::SCB_logistic_outcome()` for estimating the SCB for outcome of logistic regression. 
 
 Here, we use a similar model structure with logistic regression to estimate the simultaneous confidence band (SCB) for the outcome probability, with modeling equation as follows:
@@ -140,6 +144,8 @@ plot_cs(results,
         palette = "Spectral", 
         color_level_label = "black")
 ```
+
+## SCBs for Coefficients of Linear/Logistic Model 
 
 Besides, `SCoRES::SCB_regression_coef` can estimate the SCB for every coefficient in the linear/logistic model.
 

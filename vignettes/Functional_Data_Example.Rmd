@@ -258,7 +258,7 @@ plot_cs(results_pupil_multiplier_overall,
 #### SCB for Mean Outcome Function
 
 To further illustrate the power of `SCoRES::SCB_functional_outcome` for constructing SCBs for multiple group variables, we analyze the 40-years-old male user group by specifying
-`group_name = c("use", "age", "gender")` and `group_value = c(1, 40, 0)`. We set `fitted = TRUE` and `est_mean= TRUE`.
+`group_name = c("use", "age", "gender")` and `group_value = c(1, 40, 0)`. We set `fitted = TRUE`.
 
 The SCBs are estimated using both options separately for the mean outcome Y(t) of the specified group:
 $$
@@ -302,7 +302,7 @@ plot_cs(results_pupil_cma,
         color_level_label = "black")
 ```
 
-### Correlation and Multiplicity Adjusted (CMA) Confidence Bands
+### Multiplier-t Bootstrap Confidence Bands
 
 #### SCB for Mean Outcome Function
 

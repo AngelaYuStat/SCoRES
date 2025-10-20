@@ -9,7 +9,7 @@
 #' \code{timept = 2} only.
 #'
 #' @format
-#' A \code{tibble}), one row per participant at timepoint 2.
+#' A \code{tibble}, one row per participant at timepoint 2.
 #' Variables are grouped below.
 #'
 #' \describe{

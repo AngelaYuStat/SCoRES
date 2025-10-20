@@ -333,7 +333,7 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
           }
         }
       }
-      p = p + ggtitle("Confidence sets") + theme_light() +
+      p = p + ggtitle("Confidence regions") + theme_light() +
         theme(plot.title = element_text(face = "bold", hjust = 0.5,), plot.margin = unit(c(0.2,0.2,0.2,0.2), "mm"),
               axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
         labs(x = "Coefficients", y = "Magnitude")
@@ -426,11 +426,11 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
         }
       }
       if(is.null(ylab)){
-        p = p + ggtitle("Confidence sets") + theme_light() +
+        p = p + ggtitle("Confidence regions") + theme_light() +
           theme(plot.title = element_text(face = "bold", hjust = 0.5,), plot.margin = unit(c(1,0.2,0.2,0.2), "mm"))+
           labs(x = xlab, y = "")
       }else{
-        p = p + ggtitle("Confidence sets") + theme_light() +
+        p = p + ggtitle("Confidence regions") + theme_light() +
           theme(plot.title = element_text(face = "bold", hjust = 0.5,), plot.margin = unit(c(1,0.2,0.2,0.2), "mm"))+
           labs(x = xlab, y = ylab)
       }
@@ -493,7 +493,7 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
         min_mu = round(min(mu$true_mean, na.rm = T)-0.2, digits = 1)
         p_u <- ggplot()+
           geom_raster(aes(x=X1, y = X2, fill = true_mean), data = mu)+
-          ggtitle("Outer confidence sets")+
+          ggtitle("Outer confidence regions")+
           scale_fill_distiller(palette = "Spectral", direction = -1, limits = c(min_mu,max_mu), na.value = "transparent")+
           labs(fill="True mean", x = xlab, y = ylab)
         #scale_fill_gradientn(colours =
@@ -501,13 +501,13 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
         p_l <- ggplot()+
           geom_raster(aes(x=X1, y = X2, fill = true_mean),
                       data = mu,show.legend = F)+
-          ggtitle("Inner confidence sets")+
+          ggtitle("Inner confidence regions")+
           scale_fill_distiller(palette = "Spectral", direction = -1, na.value = "transparent")+
           labs(fill="True mean", x = xlab, y = ylab)
         p_est <- ggplot()+
           geom_raster(aes(x=X1, y = X2, fill = true_mean),
                       data = mu,show.legend = F)+
-          ggtitle("Estimated sets")+
+          ggtitle("Estimated regions")+
           scale_fill_distiller(palette = "Spectral", direction = -1, na.value = "transparent")+
           labs(fill="True mean", x = xlab, y = ylab)
       }else{
@@ -516,19 +516,19 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
         #browser()
         p_u <- ggplot()+
           geom_raster(aes(x=X1, y = X2, fill = estimated_mean), data = mu)+
-          ggtitle("Outer confidence sets")+
+          ggtitle("Outer confidence regions")+
           scale_fill_distiller(palette = "Spectral", direction = -1, limits = c(min_mu,max_mu), na.value = "transparent")+
           labs(fill="Estimated \n mean", x = xlab, y = ylab)
         p_l <- ggplot()+
           geom_raster(aes(x=X1, y = X2, fill = estimated_mean),
                       data = mu,show.legend = F)+
-          ggtitle("Inner confidence sets")+
+          ggtitle("Inner confidence regions")+
           scale_fill_distiller(palette = "Spectral", direction = -1, na.value = "transparent")+
           labs(fill="Estimated \n mean", x = xlab, y = ylab)
         p_est <- ggplot()+
           geom_raster(aes(x=X1, y = X2, fill = estimated_mean),
                       data = mu,show.legend = F)+
-          ggtitle("Estimated sets")+
+          ggtitle("Estimated regions")+
           scale_fill_distiller(palette = "Spectral", direction = -1, na.value = "transparent")+
           labs(fill="Estimated \n mean", x = xlab, y = ylab)
       }

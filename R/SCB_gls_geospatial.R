@@ -24,7 +24,7 @@
 #' @param correlation A character string specifying the name of
 #' the correlation structure (e.g., \code{"corAR1"}, \code{"corCompSymm"})
 #' to be used in the GLS model. If \code{NULL}, no correlation structure is assumed.
-#' @param corpar A numerical vector containing parameters to be passed to
+#' @param corpar A list containing parameters to be passed to
 #' the correlation structure function specified in \code{correlation}.
 #' @param groups A vector of group identifiers used to define
 #' the within-group correlation structure (e.g., repeated measures, time blocks).
@@ -80,10 +80,10 @@
 #' library(nlme)
 #' # Construct confidence sets for the increase of the mean temperature (June-August)
 #' # in North America between the 20th and 21st centuries
-#' temp = SCB_gls_climate(sp_list = climate_data$Z, level = 2, data_fit = climate_data$X,
+#' temp = SCB_gls_geospatial(sp_list = climate_data$Z, level = 2, data_fit = climate_data$X,
 #'                        w = c(1,0,0,0), correlation = climate_data$correlation,
 #'                        mask = climate_data$mask, alpha = 0.1)
-SCB_gls_climate =
+SCB_gls_geospatial =
   function (sp_list, level = NULL, data_fit = NULL, w = NULL,
             correlation = NULL, corpar = NULL, groups = NULL, V = NULL,
             alpha = 0.1, N = 1000, mask = NULL)
@@ -198,9 +198,9 @@ SCB_gls_climate =
       #if (is.null(names(corpar)) || any(names(corpar) == "")) {
         #warning("Some elements in `corpar` are not named; this may cause errors in `do.call`.")
       #}
-      if (!is.numeric(corpar) || !is.vector(corpar)) {
-        stop("`corpar` should be a numeric vector.")
-      }
+      #if (!is.numeric(corpar) || !is.vector(corpar)) {
+        #stop("`corpar` should be a numeric vector.")
+      #}
     }
 
     if (is.null(groups)) {
@@ -320,7 +320,7 @@ SCB_gls_climate =
 #' @keywords internal
 #'
 #' @examples
-#' # Used internally by SCB_gls_climate
+#' # Used internally by SCB_gls_geospatial
 #'
 MB_ = function (x, y, R, N = 1000)
 {

@@ -5,7 +5,7 @@
 \alias{ipad}
 \title{iPad task and physiology (40-minute timepoint)}
 \format{
-A \code{tibble}), one row per participant at timepoint 2.
+A \code{tibble}, one row per participant at timepoint 2.
 Variables are grouped below.
 
 \describe{

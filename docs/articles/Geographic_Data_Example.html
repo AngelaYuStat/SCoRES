@@ -62,7 +62,7 @@
       <h1>Geographic_Data_Example</h1>
                         <h4 data-toc-skip class="author">Angela Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-10-01</h4>
+            <h4 data-toc-skip class="date">2025-10-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Geographic_Data_Example.Rmd" class="external-link"><code>vignettes/Geographic_Data_Example.Rmd</code></a></small>
       <div class="d-none name"><code>Geographic_Data_Example.Rmd</code></div>
@@ -74,7 +74,7 @@
 increase of the mean summer temperature (June–August) in North America
 between the 20th and 21st centuries according to the specific climate
 model analyzed in Sommerfeld et al.(2018).</p>
-<p><code><a href="../reference/SCB_gls_climate.html">SCoRES::SCB_gls_climate()</a></code> function uses multiplier
+<p><code><a href="../reference/SCB_gls_geospatial.html">SCoRES::SCB_gls_geospatial()</a></code> function uses multiplier
 bootstrap algorithm to construct the SCB for a specified linear
 combination of coefficients across a geographical area. The argument
 <code>sp_list</code> specifies a list containing the spatial coordinates
@@ -101,8 +101,8 @@ to 0 or NA.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">climate_data</span><span class="op">)</span></span>
 <span><span class="va">start_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># construct confidence sets for the increase of the mean temperature (June-August) in North America between the 20th and 21st centuries</span></span>
-<span><span class="va">temp</span> <span class="op">=</span> <span class="fu"><a href="../reference/SCB_gls_climate.html">SCB_gls_climate</a></span><span class="op">(</span>sp_list <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">Z</span>, </span>
+<span><span class="co"># construct confidence region for the increase of the mean temperature (June-August) in North America between the 20th and 21st centuries</span></span>
+<span><span class="va">temp</span> <span class="op">=</span> <span class="fu"><a href="../reference/SCB_gls_geospatial.html">SCB_gls_geospatial</a></span><span class="op">(</span>sp_list <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">Z</span>, </span>
 <span>                       level <span class="op">=</span> <span class="fl">2</span>, </span>
 <span>                       data_fit <span class="op">=</span> <span class="va">climate_data</span><span class="op">$</span><span class="va">X</span>,</span>
 <span>                       w <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0</span>,<span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>,</span>
@@ -113,7 +113,7 @@ to 0 or NA.</p>
 <span><span class="va">end_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">time_taken</span> <span class="op">&lt;-</span> <span class="va">end_time</span> <span class="op">-</span> <span class="va">start_time</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">time_taken</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Time difference of 3.407465 mins</span></span></code></pre></div>
+<span><span class="co">#&gt; Time difference of 5.304303 mins</span></span></code></pre></div>
 <p>Heat maps show the estimate of the mean temperature difference. The
 first row displays the contours of the outer confidence region,
 estimated inverse region, and the inner confidence region, for various

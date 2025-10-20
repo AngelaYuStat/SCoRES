@@ -62,7 +62,7 @@
       <h1>Functional_Data_Example</h1>
                         <h4 data-toc-skip class="author">Angela Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-10-01</h4>
+            <h4 data-toc-skip class="date">2025-10-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Functional_Data_Example.Rmd" class="external-link"><code>vignettes/Functional_Data_Example.Rmd</code></a></small>
       <div class="d-none name"><code>Functional_Data_Example.Rmd</code></div>
@@ -364,7 +364,7 @@ function. the solid black line represents the sample mean.</p>
 multiple group variables, we analyze the 40-years-old male user group by
 specifying <code>group_name = c("use", "age", "gender")</code> and
 <code>group_value = c(1, 40, 0)</code>. We set
-<code>fitted = TRUE</code> and <code>est_mean= TRUE</code>.</p>
+<code>fitted = TRUE</code>.</p>
 <p>The SCBs are estimated using both options separately for the mean
 outcome Y(t) of the specified group:
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>f</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>Y</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="prefix">|</mo><msub><mi>X</mi><mn>1</mn></msub><mo>=</mo><mn>1</mn><mo>,</mo><msub><mi>X</mi><mn>2</mn></msub><mo>=</mo><mn>40</mn><mo>,</mo><msub><mi>X</mi><mn>3</mn></msub><mo>=</mo><mn>0</mn><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mn>40</mn><mo>*</mo><msub><mi>β</mi><mn>2</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
@@ -417,7 +417,7 @@ from multiplier bootstrap.</p>
 </div>
 </div>
 <div class="section level3">
-<h3 id="correlation-and-multiplicity-adjusted-cma-confidence-bands-2">Correlation and Multiplicity Adjusted (CMA) Confidence Bands<a class="anchor" aria-label="anchor" href="#correlation-and-multiplicity-adjusted-cma-confidence-bands-2"></a>
+<h3 id="multiplier-t-bootstrap-confidence-bands-1">Multiplier-t Bootstrap Confidence Bands<a class="anchor" aria-label="anchor" href="#multiplier-t-bootstrap-confidence-bands-1"></a>
 </h3>
 <div class="section level4">
 <h4 id="scb-for-mean-outcome-function-3">SCB for Mean Outcome Function<a class="anchor" aria-label="anchor" href="#scb-for-mean-outcome-function-3"></a>
