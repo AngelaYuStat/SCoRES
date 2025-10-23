@@ -16,8 +16,8 @@ editor_options:
 encoding: UTF-8
 ---
 
-The example here is to use simulated data to construct the simultaneous outer and inner confidence region from simultaneous confidence bands (SCB) using linear regression. 
-`SCoRES::SCB_linear_outcome()` function use a non-parametric bootstrap algorithm to construct the SCB in linear regression. The argument `df_fit` specifies a data frame containing the training design matrix used to fit the linear model, while `grid_df` define the mean outcome for which simultaneous confidence bands (SCB) are constructed. Use argument `model` to specify the formula used for fitting the linear model.
+The example here is to use simulated data to construct the simultaneous outer and inner confidence regions (SCRs) from simultaneous confidence bands (SCB) using linear regression. 
+`SCoRES::SCB_linear_outcome()` function uses a non-parametric bootstrap algorithm to construct the SCB in linear regression. The argument `df_fit` specifies a data frame containing the training design matrix used to fit the linear model, while `grid_df` defines the mean outcome for which simultaneous confidence bands (SCB) are constructed. Use argument `model` to specify the formula used for fitting the linear model.
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
@@ -54,7 +54,7 @@ model <- "y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"
 results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
 ```
 
-The `levels = c(-0.3, 0, 0.3)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse region, the inner confidence region, and the outer confidence region.
+The `levels = c(-0.3, 0, 0.3)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plots the estimated inverse regions, the inner confidence regions, and the outer confidence regions.
 
 ```{r simulate_plot_cs_linear, echo = TRUE}
 results <- tibble::as_tibble(results)
@@ -70,7 +70,7 @@ suppressWarnings(plot_cs(results,
         color_level_label = "black"))
 ```
 
-In the following example, we establishes simultaneous confidence bands for the expected response surface $E[Y|X_1, X_2 =0]$, with the independent variable $X_1$ discretized into 100 equidistant points over the domain $[-1, 1]$.
+In the following example, we establish simultaneous confidence bands for the expected response surface $E[Y|X_1, X_2 =0]$, with the independent variable $X_1$ discretized into 100 equidistant points over the domain $[-1, 1]$.
 
 ```{r simulate data_estimate SCI_linear_2, echo = TRUE}
 x1 <- rnorm(100)
@@ -84,7 +84,7 @@ grid <- data.frame(x2 = seq(-1, 1, length.out = 100))
 results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
 ```
 
-The `levels = c(-1.5, -1.0, -0.5)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse region, the inner confidence region, and the outer confidence region.
+The `levels = c(-1.5, -1.0, -0.5)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plots the estimated inverse regions, the inner confidence regions, and the outer confidence regions.
 
 ```{r simulate_plot_cs_linear_2, echo = TRUE}
 results <- tibble::as_tibble(results)
@@ -174,7 +174,7 @@ model <- "y ~ ."
 results <- SCB_regression_coef(df, model)
 ```
 
-Likewise, the `levels = c(-2, -0.5, -0.1, 0.2)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse region, the inner confidence region, and the outer confidence region.
+Likewise, the `levels = c(-2, -0.5, -0.1, 0.2)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plots the estimated inverse regions, the inner confidence regions, and the outer confidence regions.
 
 ```{r simulate_plot_cs_coef, echo = TRUE}
 results <- tibble::as_tibble(results)
@@ -190,7 +190,7 @@ plot_cs(results,
         color_level_label = "black")
 ```
 
-Users can also compute the SCB for any linear combination of these coefficients by specifying a weight vector of the same length as the coefficient vector. This can be done by using `SCoRES::SCB_regression_outcome()`, and specify the linear combination through `w`. For example, suppose we want to calculate the SCB for the linear combination $\beta_1+\beta_2+\beta_3$ for model: $y=\beta_0+\beta_1 X_1 +\beta_2X^2_1+\beta_3X^3_1+\beta_4X_2+\beta_5X^2_2+\beta_6X^2_3$:
+Users can also compute the SCB for any linear combination of these coefficients by specifying a weight vector of the same length as the coefficient vector. This can be done by using `SCoRES::SCB_regression_outcome()`, and specifying the linear combination through `w`. For example, suppose we want to calculate the SCB for the linear combination $\beta_1+\beta_2+\beta_3$ for model: $y=\beta_0+\beta_1 X_1 +\beta_2X^2_1+\beta_3X^3_1+\beta_4X_2+\beta_5X^2_2+\beta_6X^2_3$:
 
 ```{r SCB_reg_outcome, echo = TRUE}
 x1 <- rnorm(100)
@@ -208,7 +208,7 @@ SCB_regression_outcome(df_fit = df, model = model,
                        fitted = FALSE, w = w)
 ```
 
-In the following example, we load `ipad` dataset, and establishes simultaneous confidence bands for all the coefficients and the intercept in the model fitted. Here, we set `log(t_mmr1)` as the outcome, and include all variables from `Pupillography`, `Tablet (task metrics)` and `Cardiovascular` as predictors.
+In the following example, we load `ipad` dataset, and establish simultaneous confidence bands for all the coefficients and the intercept in the model fitted. Here, we set `log(t_mmr1)` as the outcome, and include all variables from `Pupillography`, `Tablet (task metrics)` and `Cardiovascular` as predictors.
 
 ```{r ipad_estimate_coef SCI_linear, echo = TRUE}
 library(SCoRES)
@@ -260,7 +260,7 @@ model_log <- "recent_smoke ~ ."
 results <- SCB_regression_coef(df_fit = df_log, model = model_log, type = "logistic")
 ```
 
-The `levels = c(2e-07, 3e-07, 4e-07)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse region, the inner confidence region, and the outer confidence region. Here, for illustration, we filter out the SCB for intercept.
+The `levels = c(2e-07, 3e-07, 4e-07)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plots the estimated inverse regions, the inner confidence regions, and the outer confidence regions. Here, for illustration, we filter out the SCB for intercept.
 
 ```{r ipad_plot_cs_logistic, echo = TRUE}
 results <- tibble::as_tibble(results[-1, ])

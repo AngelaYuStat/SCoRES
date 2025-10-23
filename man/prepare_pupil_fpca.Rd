@@ -4,7 +4,7 @@
 \alias{prepare_pupil_fpca}
 \title{Prepare Pupil FPCA Dataset}
 \usage{
-prepare_pupil_fpca(input_data, k_mean = 30, k_fpca = 15)
+prepare_pupil_fpca(input_data, k_mean = 30, k_fpca = 15, example = "original")
 }
 \arguments{
 \item{input_data}{Raw pupil data}
@@ -12,6 +12,10 @@ prepare_pupil_fpca(input_data, k_mean = 30, k_fpca = 15)
 \item{k_mean}{Number of basis functions for mean model smooth terms (default: 30)}
 
 \item{k_fpca}{Number of knots for FPCA estimation (default: 15)}
+
+\item{example}{Choice for different model. If \code{example = "original"}, will only
+include use as the only covariate. If \code{example = "original"}, will include
+use, age and gender as covariates.}
 }
 \value{
 A tibble containing:

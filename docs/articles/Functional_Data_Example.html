@@ -62,7 +62,7 @@
       <h1>Functional_Data_Example</h1>
                         <h4 data-toc-skip class="author">Angela Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-10-20</h4>
+            <h4 data-toc-skip class="date">2025-10-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Functional_Data_Example.Rmd" class="external-link"><code>vignettes/Functional_Data_Example.Rmd</code></a></small>
       <div class="d-none name"><code>Functional_Data_Example.Rmd</code></div>
@@ -74,8 +74,8 @@
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
 <p>The example here is to use pupil functional data to construct the
-simultaneous outer and inner confidence region from simultaneous
-confidence bands (SCB) using Function-on-Scalar Regression (FoSR).</p>
+simultaneous outer and inner confidence regions (SCRs) from simultaneous
+confidence bands (SCBs) using Function-on-Scalar Regression (FoSR).</p>
 <p>The pupil dataset contains repeated measures of percent change over
 time for multiple subjects under two user categories (use: 1 and no use:
 0). It contains both user and non-user groups, multiple time points, and
@@ -88,32 +88,30 @@ consumption.</p>
 <p>Before calculating the SCBs, we first process pupil data by fitting a
 mean GAM model, extracting residuals and performing FPCA using
 <code><a href="../reference/prepare_pupil_fpca.html">SCoRES::prepare_pupil_fpca()</a></code>, the function will return an
-enhanced dataset includes the FPCA-derived basis scores (Phi1, Phi2,
-Phi3, Phi4) for Function-on-Scalar Regression (FoSR) analysis.</p>
+enhanced dataset that includes the FPCA-derived basis scores (Phi1,
+Phi2, Phi3, Phi4) for Function-on-Scalar Regression (FoSR) analysis.</p>
 <p>Following the FPCA-based data augmentation, we fit a FoSR model using
 <code><a href="https://rdrr.io/pkg/mgcv/man/bam.html" class="external-link">mgcv::bam()</a></code>, which allows efficient estimation of
 Generalized Additive Mixed Models (GAMMs). The model formula is designed
 to capture both population-level smooth trends and subject-specific
 functional variation.</p>
-<p>The response here is percent_change. Time variable t is seconds. And
-the covariate is use, which is a binary variable (1:use, 0:no use).</p>
+<p>The response here is percent_change. Time variable t is seconds, and
+the covariate is use, which is a binary indicator (1:use, 0:no use).</p>
 <p>The function-on-scalar regression model is</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><msub><mi>X</mi><mrow><mi>i</mi><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>b</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>ϵ</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
-Y_i(t) = \beta_0(t) + \beta_1(t) X_{i1} + b_i(t) + \epsilon_i(t),
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">percent_change</mtext><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><msub><mtext mathvariant="normal">use</mtext><mi>i</mi></msub><mo>+</mo><msub><mi>b</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>ϵ</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+\text{percent_change}_i(t) = \beta_0(t) + \beta_1(t) \text{use}_i + b_i(t) + \epsilon_i(t),
 </annotation></semantics></math></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pupil_fpca</span> <span class="op">&lt;-</span> <span class="fu">SCoRES</span><span class="fu">::</span><span class="fu"><a href="../reference/prepare_pupil_fpca.html">prepare_pupil_fpca</a></span><span class="op">(</span><span class="va">pupil</span><span class="op">)</span></span>
 <span><span class="va">fosr_mod</span> <span class="op">&lt;-</span> <span class="fu">mgcv</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/bam.html" class="external-link">bam</a></span><span class="op">(</span><span class="va">percent_change</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">seconds</span>, k<span class="op">=</span><span class="fl">30</span>, bs<span class="op">=</span><span class="st">"cr"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>            <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">seconds</span>, by <span class="op">=</span> <span class="va">use</span>, k<span class="op">=</span><span class="fl">30</span>, bs <span class="op">=</span> <span class="st">"cr"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>            <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">seconds</span>, by <span class="op">=</span> <span class="va">age</span>, k <span class="op">=</span> <span class="fl">30</span>, bs <span class="op">=</span> <span class="st">"cr"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>            <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">seconds</span>, by <span class="op">=</span> <span class="va">gender</span>, k <span class="op">=</span> <span class="fl">30</span>, bs <span class="op">=</span> <span class="st">"cr"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>            <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi1</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>            <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi2</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>            <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi3</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>            <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi4</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span>,</span>
 <span>            method <span class="op">=</span> <span class="st">"fREML"</span>, data <span class="op">=</span> <span class="va">pupil_fpca</span>, discrete <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>After obtaining the FoSR object <code>fosr_mod</code>, simultaneous
-confidence bands (SCB) can be constructed though
+<p>After obtaining the FoSR object <code>fosr_mod</code>, the
+simultaneous confidence bands (SCBs) can be constructed through
 <code><a href="../reference/SCB_functional_outcome.html">SCoRES::SCB_functional_outcome</a></code> using pre-specified methods.
 The SCoRES package provides two options for calculating simultaneous
 confidence bands (SCBs), specified via the method argument:
@@ -134,19 +132,11 @@ required to provide a functional regression object through argument
 to provide input for <code>object</code>. If <code>object = NULL</code>,
 the function will only output the SCB for an overall mean outcome
 function regardless of the group specified.</p>
-<p>Here, we estimated SCBs using both options separately for the mean
+<p>Here, we estimate SCBs using both options separately for the mean
 outcome Y(t) of user’s group:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>f</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>Y</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="prefix">|</mo><msub><mi>X</mi><mn>1</mn></msub><mo>=</mo><mn>1</mn><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
-\hat{f}(t) = E[Y(t) | X_{1} = 1]= \beta_0(t) + \beta_1(t),
-</annotation></semantics></math> where:</p>
-<ul>
-<li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">Y(t)</annotation></semantics></math>
-is a functional outcome (percent_change)</li>
-<li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mn>1</mn></msub><annotation encoding="application/x-tex">X_{1}</annotation></semantics></math>
-is a scalar covariate (use)</li>
-</ul>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mtext mathvariant="normal">percent_change</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="prefix">|</mo><mtext mathvariant="normal">use</mtext><mo>=</mo><mn>1</mn><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+E[\text{percent_change}(t) | \text{use} = 1] = \beta_0(t) + \beta_1(t),
+</annotation></semantics></math></p>
 <p>In the multiplier bootstrap procedure, <code>SCoRES</code> supports
 three types of multiplier distributions, which is specified by
 <code>weights</code>:</p>
@@ -180,15 +170,15 @@ which is specified by <code>method_SD</code>:</p>
 <div class="section level3">
 <h3 id="scb-for-mean-outcome-function">SCB for Mean Outcome Function<a class="anchor" aria-label="anchor" href="#scb-for-mean-outcome-function"></a>
 </h3>
-<p>The code below visualizes the simultaneous outer and inner region
+<p>The code below visualizes the simultaneous outer and inner regions
 derived from SCB results using the <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code>
 function. The <code>results</code> object is first converted to a tibble
 for easier manipulation.</p>
 <p>The <code>levels = c(-18, -20, -22, -24)</code> argument specifies a
 set of thresholds, and <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code> function estimates
 multiple inverse upper excursion sets corresponding to these thresholds,
-and plot the estimated inverse region, the inner confidence region, and
-the outer confidence region.</p>
+and plots the estimated inverse regions, the inner confidence regions,
+and the outer confidence regions.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># CMA approach</span></span>
 <span><span class="va">results_pupil_cma</span> <span class="op">&lt;-</span> <span class="fu">SCoRES</span><span class="fu">::</span><span class="fu"><a href="../reference/SCB_functional_outcome.html">SCB_functional_outcome</a></span><span class="op">(</span></span>
@@ -214,23 +204,23 @@ the outer confidence region.</p>
 <span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
 <span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Functional_Data_Example_files/figure-html/pupil_plot_cs_cma-1.png" width="576"></p>
-<p>The plot demonstrate how to use SCB to find regions of s where the
-estimated mean is greater than or equal to the four levels -18, -20, -22
-and -24 for ccds data. The gray shaded area is the 95% SCB, the solid
-black line is the estimated mean. The red horizontal line shows the
-inner confidence region (where the lower SCB is greater than the
+<p>The plot demonstrates how to use SCBs to find regions of time where
+the estimated mean is greater than or equal to the four levels -18, -20,
+-22 and -24 for pupil data. The gray shaded area is the 95% SCB, the
+solid black line is the estimated mean. The red horizontal line shows
+the inner confidence regions (where the lower SCB is greater than the
 corresponding level) that are contained in the estimated inverse region
 represented by the union of the yellow and red horizontal line (where
 the estimated mean is greater than the corresponding levels); the outer
-confidence region are the union of the blue, yellow and red line (where
+confidence regions are the union of the blue, yellow and red line (where
 the upper SCB is greater than the corresponding levels) and contain both
-the estimated inverse region and the inner confidence region.</p>
+the estimated inverse regions and the inner confidence regions.</p>
 </div>
 <div class="section level3">
 <h3 id="scb-for-coefficient-function">SCB for Coefficient Function<a class="anchor" aria-label="anchor" href="#scb-for-coefficient-function"></a>
 </h3>
 <p>The next plot shows the SCB for the coefficient function for the use
-group.</p>
+group, and the corresponding SCRs based on specified levels.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#CMA approach for parameter function</span></span>
 <span><span class="va">results_pupil_cma_para</span> <span class="op">&lt;-</span> <span class="fu">SCoRES</span><span class="fu">::</span><span class="fu"><a href="../reference/SCB_functional_outcome.html">SCB_functional_outcome</a></span><span class="op">(</span></span>
@@ -322,8 +312,9 @@ All possible NA’s are imputed using
 <span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
 <span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Functional_Data_Example_files/figure-html/pupil_plot_cs_multiplier_para-1.png" width="576"></p>
-<p>The following plot displays the SCB for the overall mean outcome
-function. the solid black line represents the sample mean.</p>
+<p>The following plot displays the SCB and the corresponding SCRs of
+specified levels for the overall mean outcome function. The solid black
+line represents the sample mean.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results_pupil_multiplier_overall</span> <span class="op">&lt;-</span> <span class="fu">SCoRES</span><span class="fu">::</span><span class="fu"><a href="../reference/SCB_functional_outcome.html">SCB_functional_outcome</a></span><span class="op">(</span></span>
 <span>                                          data_df <span class="op">=</span> <span class="va">pupil</span>,</span>
@@ -361,33 +352,35 @@ function. the solid black line represents the sample mean.</p>
 </h4>
 <p>To further illustrate the power of
 <code><a href="../reference/SCB_functional_outcome.html">SCoRES::SCB_functional_outcome</a></code> for constructing SCBs for
-multiple group variables, we analyze the 40-years-old male user group by
-specifying <code>group_name = c("use", "age", "gender")</code> and
+multiple group variables, we add age and gender as covariates, and
+analyze the 40-year-old male user group by specifying
+<code>group_name = c("use", "age", "gender")</code> and
 <code>group_value = c(1, 40, 0)</code>. We set
 <code>fitted = TRUE</code>.</p>
+<p>The function-on-scalar regression model is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">percent_change</mtext><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><msub><mtext mathvariant="normal">use</mtext><mi>i</mi></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><msub><mtext mathvariant="normal">age</mtext><mi>i</mi></msub><mo>+</mo><msub><mi>β</mi><mn>3</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><msub><mtext mathvariant="normal">gender</mtext><mi>i</mi></msub><mo>+</mo><msub><mi>b</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>ϵ</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+\text{percent_change}_i(t) = \beta_0(t) + \beta_1(t) \text{use}_i + \beta_2(t) \text{age}_i + \beta_3(t) \text{gender}_i + b_i(t) + \epsilon_i(t),
+</annotation></semantics></math></p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pupil_fpca</span> <span class="op">&lt;-</span> <span class="fu">SCoRES</span><span class="fu">::</span><span class="fu"><a href="../reference/prepare_pupil_fpca.html">prepare_pupil_fpca</a></span><span class="op">(</span><span class="va">pupil</span>, example <span class="op">=</span> <span class="st">"extended"</span><span class="op">)</span></span>
+<span><span class="va">fosr_mod</span> <span class="op">&lt;-</span> <span class="fu">mgcv</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/bam.html" class="external-link">bam</a></span><span class="op">(</span><span class="va">percent_change</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">seconds</span>, k<span class="op">=</span><span class="fl">30</span>, bs<span class="op">=</span><span class="st">"cr"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>            <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">seconds</span>, by <span class="op">=</span> <span class="va">use</span>, k<span class="op">=</span><span class="fl">30</span>, bs <span class="op">=</span> <span class="st">"cr"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>            <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">seconds</span>, by <span class="op">=</span> <span class="va">age</span>, k <span class="op">=</span> <span class="fl">30</span>, bs <span class="op">=</span> <span class="st">"cr"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>            <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">seconds</span>, by <span class="op">=</span> <span class="va">gender</span>, k <span class="op">=</span> <span class="fl">30</span>, bs <span class="op">=</span> <span class="st">"cr"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>            <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi1</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>            <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi2</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>            <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi3</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>            <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi4</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span>,</span>
+<span>            method <span class="op">=</span> <span class="st">"fREML"</span>, data <span class="op">=</span> <span class="va">pupil_fpca</span>, discrete <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>The SCBs are estimated using both options separately for the mean
-outcome Y(t) of the specified group:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>f</mi><mo accent="true">̂</mo></mover><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>Y</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="prefix">|</mo><msub><mi>X</mi><mn>1</mn></msub><mo>=</mo><mn>1</mn><mo>,</mo><msub><mi>X</mi><mn>2</mn></msub><mo>=</mo><mn>40</mn><mo>,</mo><msub><mi>X</mi><mn>3</mn></msub><mo>=</mo><mn>0</mn><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mn>40</mn><mo>*</mo><msub><mi>β</mi><mn>2</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
-\hat{f}(t) = E[Y(t) | X_{1} = 1, X_{2} = 40, X_{3} = 0]= \beta_0(t) + \beta_1(t) + 40*\beta_2(t),
-</annotation></semantics></math> where:</p>
-<ul>
-<li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">Y(t)</annotation></semantics></math>
-is a functional outcome (percent_change)</li>
-<li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mn>1</mn></msub><annotation encoding="application/x-tex">X_{1}</annotation></semantics></math>
-is a scalar covariate (use)</li>
-<li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mn>2</mn></msub><annotation encoding="application/x-tex">X_{2}</annotation></semantics></math>
-is a continuous covariate (age)</li>
-<li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mn>3</mn></msub><annotation encoding="application/x-tex">X_{3}</annotation></semantics></math>
-is a scalar covariate (gender)</li>
-</ul>
+outcome Y(t) of the specified group:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mtext mathvariant="normal">percent_change</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="prefix">|</mo><mtext mathvariant="normal">use</mtext><mo>=</mo><mn>1</mn><mo>,</mo><mtext mathvariant="normal">age</mtext><mo>=</mo><mn>40</mn><mo>,</mo><mtext mathvariant="normal">gender</mtext><mo>=</mo><mn>0</mn><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mn>40</mn><mo>*</mo><msub><mi>β</mi><mn>2</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+E[\text{percent_change}(t) | \text{use} = 1, \text{age} = 40, \text{gender} = 0]= \beta_0(t) + \beta_1(t) + 40*\beta_2(t),
+</annotation></semantics></math></p>
 <p>The following plots show the SCBs and inverse SCBs for the mean
 outcome function. The first one is from CMA approach and the second is
 from multiplier bootstrap.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># CMA approach</span></span>
 <span><span class="va">results_pupil_cma</span> <span class="op">&lt;-</span> <span class="fu">SCoRES</span><span class="fu">::</span><span class="fu"><a href="../reference/SCB_functional_outcome.html">SCB_functional_outcome</a></span><span class="op">(</span></span>
 <span>                                          data_df <span class="op">=</span> <span class="va">pupil</span>,</span>
@@ -422,7 +415,7 @@ from multiplier bootstrap.</p>
 <div class="section level4">
 <h4 id="scb-for-mean-outcome-function-3">SCB for Mean Outcome Function<a class="anchor" aria-label="anchor" href="#scb-for-mean-outcome-function-3"></a>
 </h4>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Multiplier-t Bootstrap</span></span>
 <span><span class="va">results_pupil_multiplier</span> <span class="op">&lt;-</span> <span class="fu">SCoRES</span><span class="fu">::</span><span class="fu"><a href="../reference/SCB_functional_outcome.html">SCB_functional_outcome</a></span><span class="op">(</span></span>
 <span>                                          data_df <span class="op">=</span> <span class="va">pupil</span>,</span>

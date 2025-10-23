@@ -16,7 +16,7 @@ editor_options:
 ---
 
 ## Definition of Inverse Set and Introduction of the Estimation Method
-The identification of domain sets whose outcomes belong to predefined subsets can address fundamental risk assessment challenges in climatology and medicine. A  motivating example involves estimating geographical regions where average  difference between summer and winter temperatures exceed a certain benchmark,  which help policymakers focus on specific areas that are at higher risk for  effects of climate change.  
+The identification of domain sets whose outcomes belong to predefined subsets can address fundamental risk assessment challenges in climatology and medicine. A  motivating example involves estimating geographical regions where average difference between summer and winter temperatures exceeds a certain benchmark,  which helps policymakers focus on specific areas that are at higher risk for  effects of climate change.  
 
 Mathematically, the target region corresponding to the inverse image of $U \subset  \mathbb{R}$ under an unknown function $\mu: \mathcal{S} \to \mathbb{R}$, can be defined as 
 $$
@@ -26,50 +26,50 @@ $$
 
 A point estimator for the inverse set can be constructed as $\hat{\mu}_n^{-1}(U)$, where $\hat{\mu}_n$ is an empirical estimator of $\mu$ based on $n$ observations. To quantify the spatial uncertainty of this estimate, Sommerfeld et al. (2018)  introduced the Coverage Probability Excursion (CoPE) sets, defined as: 
 $$
-\text{CS}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CS}_{\text{out}}(U)
+\text{CR}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CR}_{\text{out}}(U)
 $$
-which satisfies: 
+which satisfy: 
 $$
-\mathbb{P}\left(\text{CS}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CS}_{\text{out}}(U)\right) \geq 1 - \alpha
+\mathbb{P}\left(\text{CR}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CR}_{\text{out}}(U)\right) \geq 1 - \alpha
 $$ 
 for a pre-specified confidence level $1-\alpha$ (e.g., $\alpha = 0.05$).  
 
 Existing approaches require restrictive assumptions, including domain density of $S$ in $R$, continuity of $\hat{\mu}_n$ and $\mu$ near thresholds, and  large-sample guarantees, which limit the applicability. Besides, the estimation  and coverage depend on setting a fixed threshold level, which is difficult to  determine.  
 
-Ren et al. (2023) proposed a framework that generalizes the estimation of such inverse sets to dense and non-dense domains with protection against inflated Type I error, and constructs multiple upper, lower or interval confidence region of $\mu^{-1}(U)$ over arbitrary chosen thresholds. The coverage probability is achieved non-asymptotically and simultaneously through inverting simultaneous confidence intervals. For instance, suppose we are interested in inverse region  $\mu^{-1}([c,\infty))$ for a single value $c$, the inverse confidence region are constructed by inverting simultaneous confidence intervals (SCIs). Given SCI  bounds $\hat{B}_{l}(\boldsymbol{s})$ and $\hat{B}_{u}(\boldsymbol{s})$ satisfying:
+Ren et al. (2023) proposed a framework that generalizes the estimation of such inverse sets to dense and non-dense domains with protection against inflated Type I error, and constructs multiple upper, lower or interval confidence regions of $\mu^{-1}(U)$ over arbitrary chosen thresholds. The coverage probability is achieved non-asymptotically and simultaneously through inverting simultaneous confidence intervals. For instance, suppose we are interested in inverse regions  $\mu^{-1}([c,\infty))$ for a single value $c$, the inverse confidence regions are constructed by inverting simultaneous confidence intervals (SCIs). Given SCI  bounds $\hat{B}_{l}(\boldsymbol{s})$ and $\hat{B}_{u}(\boldsymbol{s})$ satisfying:
 
 $$
 \mathbb{P}\left(\forall\boldsymbol{s}\in\mathcal{S}: \hat{B}_{l}(\boldsymbol{s}) \leq \mu(\boldsymbol{s}) \leq \hat{B}_{u}(\boldsymbol{s})\right) = 1-\alpha
 $$
 
-The inner and outer CSs for the inverse upper excursion set $$\mu^{-1}[c, \infty)$$ are defined as:  
+The inner and outer confidence regions (CRs) for the inverse upper excursion set $$\mu^{-1}[c, \infty)$$ are defined as:  
 $$
-\text{CS}_{\text{in}}[c, \infty) := \hat{B}_\ell^{-1}[c, \infty)
-$$
-
-$$
-\text{CS}_{\text{out}}[c,\infty) := \hat{B}_u^{-1}[c, \infty)
+\text{CR}_{\text{in}}[c, \infty) := \hat{B}_\ell^{-1}[c, \infty)
 $$
 
-The outer and inner confidence region for the inverse lower excursion set $\mu^{-1}\left(-\infty, c\right]$ are defined as:
+$$
+\text{CR}_{\text{out}}[c,\infty) := \hat{B}_u^{-1}[c, \infty)
+$$
+
+The outer and inner confidence regions for the inverse lower excursion set $\mu^{-1}\left(-\infty, c\right]$ are defined as:
 
 $$
-\text{CS}_{\text{in}}\left(-\infty, c\right] := \hat{B}_u^{-1}\left(-\infty, c\right]
+\text{CR}_{\text{in}}\left(-\infty, c\right] := \hat{B}_u^{-1}\left(-\infty, c\right]
 = \left( \hat{B}_u^{-1}\left[c, +\infty\right) \right)^{\complement}
 $$
 $$
-\text{CS}_{\text{out}}\left(-\infty, c\right] := \hat{B}_\ell^{-1}\left(-\infty, c\right]
+\text{CR}_{\text{out}}\left(-\infty, c\right] := \hat{B}_\ell^{-1}\left(-\infty, c\right]
 = \left( \hat{B}_\ell^{-1}\left[c, +\infty\right) \right)^{\complement}
 $$
 
-The inner and outer CSs for the inverse interval set $\mu^{-1}[a, b]$ are defined as:
+The inner and outer CRs for the inverse interval set $\mu^{-1}[a, b]$ are defined as:
 
 $$
-\text{CS}_{\text{in}}[a, b] := \hat{B}_\ell^{-1}[a, \infty) \cap \hat{B}_u^{-1}(-\infty, b]
+\text{CR}_{\text{in}}[a, b] := \hat{B}_\ell^{-1}[a, \infty) \cap \hat{B}_u^{-1}(-\infty, b]
 $$
 
 $$
-\text{CS}_{\text{out}}[a, b] := \hat{B}_u^{-1}[a, \infty) \cap \hat{B}_\ell^{-1}(-\infty, b]
+\text{CR}_{\text{out}}[a, b] := \hat{B}_u^{-1}[a, \infty) \cap \hat{B}_\ell^{-1}(-\infty, b]
 $$
 
 ## Linear Function-on-Scalar Regression (FoSR)
@@ -166,7 +166,7 @@ The $q_{\alpha,N}$ is unknown in practice. In SCoRES, we implement two approache
 
 The second is the multiplier-t bootstrap procedure for constructing confidence bands. A full introduction to the method can be found in previous work from \cite{Telschow:2022}.
 
-1. Compute residuals $R_1^N, \ldots, R_N^N$, where $R_n^N = \sqrt{\frac{N}{N - 1}} \left( Y_n - \hat{\mu}_N \right)$, and multipliers $g_1, \ldots, g_N \overset{\text{i.i.d.}}{\sim} g$ with $\mathbb{E}[g] = 0$ and $\mathrm{var}[g] = 1$, where $\hat{\mu}_N$ is fitted mean value from a FoSR model.
+1. Compute residuals $R_1^N, \ldots, R_N^N$, where $R_n^N = \sqrt{\frac{N}{N - 1}} \left( Y_n - \hat{\mu}_N \right)$, and multipliers $g_1, \ldots, g_N \overset{\text{i.i.d.}}{\sim} g$ with $\mathbb{E}[g] = 0$ and $\mathrm{var}[g] = 1$, where $\hat{\mu}_N$ is the fitted mean value from a FoSR model.
 
 2. Estimate $\hat{\epsilon}_N^*(s)$ from $g_1 Y_1(s), \ldots, g_N Y_N(s)$.
 
@@ -187,7 +187,7 @@ At step 2, we allow three choices for the multiplier distribution $g_i$, each wi
 
 Unless stated otherwise, we use the `rademacher` multipliers.
 
-At step 3, we consider two alternatives for the pointwise standrad errors
+At step 3, we consider two alternatives for the pointwise standard errors
 $\hat{\epsilon}_N^*(s_j)$:
 
 1. `regular`,

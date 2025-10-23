@@ -62,7 +62,7 @@
       <h1>Geographic_Data_Example</h1>
                         <h4 data-toc-skip class="author">Angela Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-10-20</h4>
+            <h4 data-toc-skip class="date">2025-10-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Geographic_Data_Example.Rmd" class="external-link"><code>vignettes/Geographic_Data_Example.Rmd</code></a></small>
       <div class="d-none name"><code>Geographic_Data_Example.Rmd</code></div>
@@ -73,24 +73,24 @@
 <p>The following example is for displaying the confidence region for the
 increase of the mean summer temperature (June–August) in North America
 between the 20th and 21st centuries according to the specific climate
-model analyzed in Sommerfeld et al.(2018).</p>
+model analyzed in Sommerfeld et al. (2018).</p>
 <p><code><a href="../reference/SCB_gls_geospatial.html">SCoRES::SCB_gls_geospatial()</a></code> function uses multiplier
 bootstrap algorithm to construct the SCB for a specified linear
 combination of coefficients across a geographical area. The argument
 <code>sp_list</code> specifies a list containing the spatial coordinates
 and the observations on each spot. <code>data_fit</code> specifies a
 data frame containing the design matrix used to fit the spatial
-generalized least square model (notice intercept should also be included
-inside the data frame), while <code>w</code> defines the weights for the
-linear combination of coefficients on which the simultaneous confidence
-bands (SCB) are constructed. Use the <code>correlation</code> argument
-to specify the correlation structure for model fitting. If the
-observations are grouped, a grouping factor can be specified using the
-<code>group</code> argument, and a covariance array <code>V</code> may
-also be provided to supply a known covariance matrix for each spot.
-<code>mask</code> is an optional logical matrix indicating spatial
-locations to include in the SCB, with excluded areas (e.g., water) set
-to 0 or NA.</p>
+generalized least squares model (notice that the intercept should also
+be included inside the data frame), while <code>w</code> defines the
+weights for the linear combination of coefficients on which the
+simultaneous confidence bands (SCB) are constructed. Use the
+<code>correlation</code> argument to specify the correlation structure
+for model fitting. If the observations are grouped, a grouping factor
+can be specified using the <code>group</code> argument, and a covariance
+array <code>V</code> may also be provided to supply a known covariance
+matrix for each spot. <code>mask</code> is an optional logical matrix
+indicating spatial locations to include in the SCB, with excluded areas
+(e.g., water) set to 0 or NA.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://svn.r-project.org/R-packages/trunk/nlme/" class="external-link">nlme</a></span><span class="op">)</span></span>
@@ -113,16 +113,17 @@ to 0 or NA.</p>
 <span><span class="va">end_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">time_taken</span> <span class="op">&lt;-</span> <span class="va">end_time</span> <span class="op">-</span> <span class="va">start_time</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">time_taken</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Time difference of 5.304303 mins</span></span></code></pre></div>
+<span><span class="co">#&gt; Time difference of 12.31293 mins</span></span></code></pre></div>
 <p>Heat maps show the estimate of the mean temperature difference. The
-first row displays the contours of the outer confidence region,
-estimated inverse region, and the inner confidence region, for various
-levels. The three plots in the second row display the confidence region
-for the inverse sets, where the estimated mean difference is greater or
-equal to the individual level 1.5, 2.0, or 2.5 respectively. In the
-second row, the blue line is the contour of the outer confidence region,
-the green line is the contour of the estimated inverse region and the
-red line is the contour of the inner confidence region.</p>
+first row displays the contours of the outer confidence regions, the
+estimated inverse regions, and the inner confidence regions, for various
+levels. The three plots in the second row display the simultaneous
+confidence regions (SCRs) for the inverse regions, where the estimated
+mean difference is greater or equal to the individual levels of 1.5,
+2.0, or 2.5 respectively. In the second row, the blue line is the
+contour of the outer confidence region, the green line is the contour of
+the estimated inverse region and the red line is the contour of the
+inner confidence region.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> </span>
 <span><span class="va">p2</span> <span class="op">=</span> <span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>scb_up <span class="op">=</span> <span class="va">temp</span><span class="op">$</span><span class="va">scb_up</span>, scb_low <span class="op">=</span> <span class="va">temp</span><span class="op">$</span><span class="va">scb_low</span><span class="op">)</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="fl">2</span>,<span class="fl">2.5</span>,<span class="fl">3</span><span class="op">)</span>, x <span class="op">=</span> <span class="va">temp</span><span class="op">$</span><span class="va">x</span>, y <span class="op">=</span> <span class="va">temp</span><span class="op">$</span><span class="va">y</span>, mu_hat <span class="op">=</span> <span class="va">temp</span><span class="op">$</span><span class="va">mu_hat</span>, xlab <span class="op">=</span> <span class="st">"Longitude"</span>, ylab <span class="op">=</span> <span class="st">"Latitude"</span>, level_label <span class="op">=</span> <span class="cn">T</span>, min.size <span class="op">=</span> <span class="fl">40</span>, palette <span class="op">=</span> <span class="st">"Spectral"</span>, color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span>

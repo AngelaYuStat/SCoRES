@@ -62,7 +62,7 @@
       <h1>Methods</h1>
                         <h4 data-toc-skip class="author">Angela Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-10-01</h4>
+            <h4 data-toc-skip class="date">2025-10-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Methods.Rmd" class="external-link"><code>vignettes/Methods.Rmd</code></a></small>
       <div class="d-none name"><code>Methods.Rmd</code></div>
@@ -78,7 +78,7 @@ Method<a class="anchor" aria-label="anchor" href="#definition-of-inverse-set-and
 subsets can address fundamental risk assessment challenges in
 climatology and medicine. A motivating example involves estimating
 geographical regions where average difference between summer and winter
-temperatures exceed a certain benchmark, which help policymakers focus
+temperatures exceeds a certain benchmark, which helps policymakers focus
 on specific areas that are at higher risk for effects of climate
 change.</p>
 <p>Mathematically, the target region corresponding to the inverse image
@@ -106,11 +106,11 @@ based on
 observations. To quantify the spatial uncertainty of this estimate,
 Sommerfeld et al. (2018) introduced the Coverage Probability Excursion
 (CoPE) sets, defined as:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CS</mtext><mtext mathvariant="normal">in</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>⊆</mo><msup><mi>μ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>⊆</mo><msub><mtext mathvariant="normal">CS</mtext><mtext mathvariant="normal">out</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
-\text{CS}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CS}_{\text{out}}(U)
-</annotation></semantics></math> which satisfies:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℙ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mtext mathvariant="normal">CS</mtext><mtext mathvariant="normal">in</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>⊆</mo><msup><mi>μ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>⊆</mo><msub><mtext mathvariant="normal">CS</mtext><mtext mathvariant="normal">out</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>≥</mo><mn>1</mn><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">
-\mathbb{P}\left(\text{CS}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CS}_{\text{out}}(U)\right) \geq 1 - \alpha
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CR</mtext><mtext mathvariant="normal">in</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>⊆</mo><msup><mi>μ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>⊆</mo><msub><mtext mathvariant="normal">CR</mtext><mtext mathvariant="normal">out</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+\text{CR}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CR}_{\text{out}}(U)
+</annotation></semantics></math> which satisfy:
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℙ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mtext mathvariant="normal">CR</mtext><mtext mathvariant="normal">in</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>⊆</mo><msup><mi>μ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>⊆</mo><msub><mtext mathvariant="normal">CR</mtext><mtext mathvariant="normal">out</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>≥</mo><mn>1</mn><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">
+\mathbb{P}\left(\text{CR}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CR}_{\text{out}}(U)\right) \geq 1 - \alpha
 </annotation></semantics></math> for a pre-specified confidence level
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">1-\alpha</annotation></semantics></math>
 (e.g.,
@@ -130,16 +130,16 @@ fixed threshold level, which is difficult to determine.</p>
 <p>Ren et al. (2023) proposed a framework that generalizes the
 estimation of such inverse sets to dense and non-dense domains with
 protection against inflated Type I error, and constructs multiple upper,
-lower or interval confidence region of
+lower or interval confidence regions of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>μ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mu^{-1}(U)</annotation></semantics></math>
 over arbitrary chosen thresholds. The coverage probability is achieved
 non-asymptotically and simultaneously through inverting simultaneous
 confidence intervals. For instance, suppose we are interested in inverse
-region
+regions
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>μ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mo stretchy="false" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>∞</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mu^{-1}([c,\infty))</annotation></semantics></math>
 for a single value
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>,
-the inverse confidence region are constructed by inverting simultaneous
+the inverse confidence regions are constructed by inverting simultaneous
 confidence intervals (SCIs). Given SCI bounds
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>l</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝐬</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat{B}_{l}(\boldsymbol{s})</annotation></semantics></math>
 and
@@ -148,33 +148,34 @@ satisfying:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℙ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mo>∀</mo><mi>𝐬</mi><mo>∈</mo><mi>𝒮</mi><mo>:</mo><msub><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>l</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝐬</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>≤</mo><mi>μ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝐬</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>≤</mo><msub><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝐬</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>1</mn><mo>−</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">
 \mathbb{P}\left(\forall\boldsymbol{s}\in\mathcal{S}: \hat{B}_{l}(\boldsymbol{s}) \leq \mu(\boldsymbol{s}) \leq \hat{B}_{u}(\boldsymbol{s})\right) = 1-\alpha
 </annotation></semantics></math></p>
-<p>The inner and outer CSs for the inverse upper excursion set
+<p>The inner and outer confidence regions (CRs) for the inverse upper
+excursion set
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>μ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mu^{-1}[c, \infty)</annotation></semantics></math>
-are defined as:<br><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CS</mtext><mtext mathvariant="normal">in</mtext></msub><mo stretchy="false" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mo>ℓ</mo><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mo stretchy="false" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
-\text{CS}_{\text{in}}[c, \infty) := \hat{B}_\ell^{-1}[c, \infty)
+are defined as:<br><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CR</mtext><mtext mathvariant="normal">in</mtext></msub><mo stretchy="false" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mo>ℓ</mo><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mo stretchy="false" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+\text{CR}_{\text{in}}[c, \infty) := \hat{B}_\ell^{-1}[c, \infty)
 </annotation></semantics></math></p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CS</mtext><mtext mathvariant="normal">out</mtext></msub><mo stretchy="false" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mo stretchy="false" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
-\text{CS}_{\text{out}}[c,\infty) := \hat{B}_u^{-1}[c, \infty)
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CR</mtext><mtext mathvariant="normal">out</mtext></msub><mo stretchy="false" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mo stretchy="false" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+\text{CR}_{\text{out}}[c,\infty) := \hat{B}_u^{-1}[c, \infty)
 </annotation></semantics></math></p>
-<p>The outer and inner confidence region for the inverse lower excursion
-set
+<p>The outer and inner confidence regions for the inverse lower
+excursion set
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>μ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>c</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\mu^{-1}\left(-\infty, c\right]</annotation></semantics></math>
 are defined as:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CS</mtext><mtext mathvariant="normal">in</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>c</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>c</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>+</mi><mi>∞</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mi>∁</mi></msup></mrow><annotation encoding="application/x-tex">
-\text{CS}_{\text{in}}\left(-\infty, c\right] := \hat{B}_u^{-1}\left(-\infty, c\right]
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CR</mtext><mtext mathvariant="normal">in</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>c</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>c</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>+</mi><mi>∞</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mi>∁</mi></msup></mrow><annotation encoding="application/x-tex">
+\text{CR}_{\text{in}}\left(-\infty, c\right] := \hat{B}_u^{-1}\left(-\infty, c\right]
 = \left( \hat{B}_u^{-1}\left[c, +\infty\right) \right)^{\complement}
-</annotation></semantics></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CS</mtext><mtext mathvariant="normal">out</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>c</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mo>ℓ</mo><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>c</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mo>ℓ</mo><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>+</mi><mi>∞</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mi>∁</mi></msup></mrow><annotation encoding="application/x-tex">
-\text{CS}_{\text{out}}\left(-\infty, c\right] := \hat{B}_\ell^{-1}\left(-\infty, c\right]
+</annotation></semantics></math><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CR</mtext><mtext mathvariant="normal">out</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>c</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mo>ℓ</mo><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>c</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mo>ℓ</mo><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>+</mi><mi>∞</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mi>∁</mi></msup></mrow><annotation encoding="application/x-tex">
+\text{CR}_{\text{out}}\left(-\infty, c\right] := \hat{B}_\ell^{-1}\left(-\infty, c\right]
 = \left( \hat{B}_\ell^{-1}\left[c, +\infty\right) \right)^{\complement}
 </annotation></semantics></math></p>
-<p>The inner and outer CSs for the inverse interval set
+<p>The inner and outer CRs for the inverse interval set
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>μ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">[</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\mu^{-1}[a, b]</annotation></semantics></math>
 are defined as:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CS</mtext><mtext mathvariant="normal">in</mtext></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mo>ℓ</mo><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">[</mo><mi>a</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo><mo>∩</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
-\text{CS}_{\text{in}}[a, b] := \hat{B}_\ell^{-1}[a, \infty) \cap \hat{B}_u^{-1}(-\infty, b]
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CR</mtext><mtext mathvariant="normal">in</mtext></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mo>ℓ</mo><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">[</mo><mi>a</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo><mo>∩</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
+\text{CR}_{\text{in}}[a, b] := \hat{B}_\ell^{-1}[a, \infty) \cap \hat{B}_u^{-1}(-\infty, b]
 </annotation></semantics></math></p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CS</mtext><mtext mathvariant="normal">out</mtext></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">[</mo><mi>a</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo><mo>∩</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mo>ℓ</mo><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
-\text{CS}_{\text{out}}[a, b] := \hat{B}_u^{-1}[a, \infty) \cap \hat{B}_\ell^{-1}(-\infty, b]
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CR</mtext><mtext mathvariant="normal">out</mtext></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">[</mo><mi>a</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo><mo>∩</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mo>ℓ</mo><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
+\text{CR}_{\text{out}}[a, b] := \hat{B}_u^{-1}[a, \infty) \cap \hat{B}_\ell^{-1}(-\infty, b]
 </annotation></semantics></math></p>
 </div>
 <div class="section level2">
@@ -357,7 +358,7 @@ and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">v</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi></mrow><mrow><mo stretchy="true" form="prefix">[</mo><mi>g</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathrm{var}[g] = 1</annotation></semantics></math>,
 where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>μ</mi><mo accent="true">̂</mo></mover><mi>N</mi></msub><annotation encoding="application/x-tex">\hat{\mu}_N</annotation></semantics></math>
-is fitted mean value from a FoSR model.</p></li>
+is the fitted mean value from a FoSR model.</p></li>
 <li><p>Estimate
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mover><mi>ϵ</mi><mo accent="true">̂</mo></mover><mi>N</mi><mo>*</mo></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat{\epsilon}_N^*(s)</annotation></semantics></math>
 from
@@ -390,7 +391,7 @@ from .</p></li>
 </ol>
 <p>Unless stated otherwise, we use the <code>rademacher</code>
 multipliers.</p>
-<p>At step 3, we consider two alternatives for the pointwise standrad
+<p>At step 3, we consider two alternatives for the pointwise standard
 errors
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mover><mi>ϵ</mi><mo accent="true">̂</mo></mover><mi>N</mi><mo>*</mo></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>s</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\hat{\epsilon}_N^*(s_j)</annotation></semantics></math>:</p>
 <ol style="list-style-type: decimal">

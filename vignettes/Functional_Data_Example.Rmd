@@ -27,7 +27,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-The example here is to use pupil functional data to construct the simultaneous outer and inner confidence region from simultaneous confidence bands (SCB) using Function-on-Scalar Regression (FoSR).
+The example here is to use pupil functional data to construct the simultaneous outer and inner confidence regions (SCRs) from simultaneous confidence bands (SCBs) using Function-on-Scalar Regression (FoSR).
 
 The pupil dataset contains repeated measures of percent change over time for multiple subjects under two user categories (use: 1 and no use: 0). It contains both user and non-user groups, multiple time points, and several covariates, including age, gender, BMI, and alcohol consumption.
 
@@ -37,24 +37,22 @@ library(mgcv)
 data(pupil)
 ```
 
-Before calculating the SCBs, we first process pupil data by fitting a mean GAM model, extracting residuals and performing FPCA using `SCoRES::prepare_pupil_fpca()`, the function will return an enhanced dataset includes the FPCA-derived basis scores (Phi1, Phi2, Phi3, Phi4) for Function-on-Scalar Regression (FoSR) analysis.
+Before calculating the SCBs, we first process pupil data by fitting a mean GAM model, extracting residuals and performing FPCA using `SCoRES::prepare_pupil_fpca()`, the function will return an enhanced dataset that includes the FPCA-derived basis scores (Phi1, Phi2, Phi3, Phi4) for Function-on-Scalar Regression (FoSR) analysis.
 
 Following the FPCA-based data augmentation, we fit a FoSR model using `mgcv::bam()`, which allows efficient estimation of Generalized Additive Mixed Models (GAMMs). The model formula is designed to capture both population-level smooth trends and subject-specific functional variation.
 
-The response here is percent_change. Time variable t is seconds. And the covariate is use, which is a binary variable (1:use, 0:no use).
+The response here is percent_change. Time variable t is seconds, and the covariate is use, which is a binary indicator (1:use, 0:no use).
 
 The function-on-scalar regression model is
 
 $$
-Y_i(t) = \beta_0(t) + \beta_1(t) X_{i1} + b_i(t) + \epsilon_i(t),
+\text{percent_change}_i(t) = \beta_0(t) + \beta_1(t) \text{use}_i + b_i(t) + \epsilon_i(t),
 $$
 
-```{r fit gam-fpca model, echo = TRUE}
+```{r fit gam-fpca model-1, echo = TRUE}
 pupil_fpca <- SCoRES::prepare_pupil_fpca(pupil)
 fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
             s(seconds, by = use, k=30, bs = "cr") +
-            s(seconds, by = age, k = 30, bs = "cr") +
-            s(seconds, by = gender, k = 30, bs = "cr") +
             s(id, by = Phi1, bs="re") +
             s(id, by = Phi2, bs="re") +
             s(id, by = Phi3, bs="re") +
@@ -62,7 +60,7 @@ fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
             method = "fREML", data = pupil_fpca, discrete = TRUE)
 ```
 
-After obtaining the FoSR object `fosr_mod`, simultaneous confidence bands (SCB) can be constructed though `SCoRES::SCB_functional_outcome` using pre-specified methods.
+After obtaining the FoSR object `fosr_mod`, the simultaneous confidence bands (SCBs) can be constructed through `SCoRES::SCB_functional_outcome` using pre-specified methods.
 The SCoRES package provides two options for calculating simultaneous confidence bands (SCBs), specified via the method argument:
 `cma`: Correlation and Multiplicity Adjusted (CMA) confidence bands
 via parametric approach.
@@ -72,14 +70,10 @@ Use `fitted` to specify the object for SCB estimation. If `fitted = TRUE`, `SCoR
 For `cma` option, users are required to provide a functional regression object through argument `object`.
 For `multiplier` option, users also need to provide input for `object`. If `object = NULL`, the function will only output the SCB for an overall mean outcome function regardless of the group specified.
 
-Here, we estimated SCBs using both options separately for the mean outcome Y(t) of user's group:
+Here, we estimate SCBs using both options separately for the mean outcome Y(t) of user's group:
 $$
-\hat{f}(t) = E[Y(t) | X_{1} = 1]= \beta_0(t) + \beta_1(t),
+E[\text{percent_change}(t) | \text{use} = 1] = \beta_0(t) + \beta_1(t),
 $$
-where:
-
-- \( Y(t) \) is a functional outcome (percent_change)
-- \( X_{1} \) is a scalar covariate (use)
 
 In the multiplier bootstrap procedure, `SCoRES` supports three types of multiplier distributions, which is specified by `weights`:
 
@@ -104,9 +98,9 @@ For mathematical details, see vignette Methods.
 
 ### SCB for Mean Outcome Function
 
-The code below visualizes the simultaneous outer and inner region derived from SCB results using the `SCoRES::plot_cs()` function. The `results` object is first converted to a tibble for easier manipulation.
+The code below visualizes the simultaneous outer and inner regions derived from SCB results using the `SCoRES::plot_cs()` function. The `results` object is first converted to a tibble for easier manipulation.
 
-The `levels = c(-18, -20, -22, -24)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plot the estimated inverse region, the inner confidence region, and the outer confidence region. 
+The `levels = c(-18, -20, -22, -24)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plots the estimated inverse regions, the inner confidence regions, and the outer confidence regions.
 
 ```{r pupil_plot_cs_cma, echo = TRUE}
 # CMA approach
@@ -134,11 +128,11 @@ plot_cs(results_pupil_cma,
         color_level_label = "black")
 ```
 
-The plot demonstrate how to use SCB to find regions of s where the estimated mean is greater than or equal to the four levels -18, -20, -22 and -24 for ccds data. The gray shaded area is the 95% SCB, the solid black line is the estimated mean. The red horizontal line shows the inner confidence region (where the lower SCB is greater than the corresponding level) that are contained in the estimated inverse region represented by the union of the yellow and red horizontal line (where the estimated mean is greater than the corresponding levels); the outer confidence region are the union of the blue, yellow and red line (where the upper SCB is greater than the corresponding levels) and contain both the estimated inverse region and the inner confidence region.
+The plot demonstrates how to use SCBs to find regions of time where the estimated mean is greater than or equal to the four levels -18, -20, -22 and -24 for pupil data. The gray shaded area is the 95% SCB, the solid black line is the estimated mean. The red horizontal line shows the inner confidence regions (where the lower SCB is greater than the corresponding level) that are contained in the estimated inverse region represented by the union of the yellow and red horizontal line (where the estimated mean is greater than the corresponding levels); the outer confidence regions are the union of the blue, yellow and red line (where the upper SCB is greater than the corresponding levels) and contain both the estimated inverse regions and the inner confidence regions.
 
 ### SCB for Coefficient Function
 
-The next plot shows the SCB for the coefficient function for the use group.
+The next plot shows the SCB for the coefficient function for the use group, and the corresponding SCRs based on specified levels.
 
 ```{r ccds_plot_cs_pupil_para, echo = TRUE}
 #CMA approach for parameter function
@@ -225,7 +219,7 @@ plot_cs(results_pupil_multiplier_para,
         color_level_label = "black")
 ```
 
-The following plot displays the SCB for the overall mean outcome function. the solid black line represents the sample mean. 
+The following plot displays the SCB and the corresponding SCRs of specified levels for the overall mean outcome function. The solid black line represents the sample mean. 
 
 ```{r pupil_plot_cs_multiplier_overall, echo = TRUE}
 results_pupil_multiplier_overall <- SCoRES::SCB_functional_outcome(
@@ -257,20 +251,33 @@ plot_cs(results_pupil_multiplier_overall,
 
 #### SCB for Mean Outcome Function
 
-To further illustrate the power of `SCoRES::SCB_functional_outcome` for constructing SCBs for multiple group variables, we analyze the 40-years-old male user group by specifying
+To further illustrate the power of `SCoRES::SCB_functional_outcome` for constructing SCBs for multiple group variables, we add age and gender as covariates, and analyze the 40-year-old male user group by specifying
 `group_name = c("use", "age", "gender")` and `group_value = c(1, 40, 0)`. We set `fitted = TRUE`.
 
+The function-on-scalar regression model is
+
+$$
+\text{percent_change}_i(t) = \beta_0(t) + \beta_1(t) \text{use}_i + \beta_2(t) \text{age}_i + \beta_3(t) \text{gender}_i + b_i(t) + \epsilon_i(t),
+$$
+
+```{r fit gam-fpca model-2, echo = TRUE}
+pupil_fpca <- SCoRES::prepare_pupil_fpca(pupil, example = "extended")
+fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
+            s(seconds, by = use, k=30, bs = "cr") +
+            s(seconds, by = age, k = 30, bs = "cr") +
+            s(seconds, by = gender, k = 30, bs = "cr") +
+            s(id, by = Phi1, bs="re") +
+            s(id, by = Phi2, bs="re") +
+            s(id, by = Phi3, bs="re") +
+            s(id, by = Phi4, bs="re"),
+            method = "fREML", data = pupil_fpca, discrete = TRUE)
+```
+
 The SCBs are estimated using both options separately for the mean outcome Y(t) of the specified group:
-$$
-\hat{f}(t) = E[Y(t) | X_{1} = 1, X_{2} = 40, X_{3} = 0]= \beta_0(t) + \beta_1(t) + 40*\beta_2(t),
-$$
-where:
 
-- \( Y(t) \) is a functional outcome (percent_change)
-- \( X_{1} \) is a scalar covariate (use)
-- \( X_{2} \) is a continuous covariate (age)
-- \( X_{3} \) is a scalar covariate (gender)
-
+$$
+E[\text{percent_change}(t) | \text{use} = 1, \text{age} = 40, \text{gender} = 0]= \beta_0(t) + \beta_1(t) + 40*\beta_2(t),
+$$
 
 The following plots show the SCBs and inverse SCBs for the mean outcome function. The first one is from CMA approach and the second is from multiplier bootstrap.
 

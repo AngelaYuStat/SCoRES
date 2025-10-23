@@ -321,6 +321,9 @@ cma = function(data_df, object, fitted = TRUE, alpha = 0.05, outcome, domain,
 #' @param input_data Raw pupil data
 #' @param k_mean Number of basis functions for mean model smooth terms (default: 30)
 #' @param k_fpca Number of knots for FPCA estimation (default: 15)
+#' @param example Choice for different model. If \code{example = "original"}, will only
+#' include use as the only covariate. If \code{example = "original"}, will include
+#' use, age and gender as covariates.
 #'
 #' @return A tibble containing:
 #'   \itemize{
@@ -340,16 +343,24 @@ cma = function(data_df, object, fitted = TRUE, alpha = 0.05, outcome, domain,
 #' @importFrom tibble as_tibble
 #'
 #' @export
-prepare_pupil_fpca <- function(input_data, k_mean = 30, k_fpca = 15) {
+prepare_pupil_fpca <- function(input_data, k_mean = 30, k_fpca = 15, example = "original") {
 
   # Fit mean model
-  mean_mod <- mgcv::gam(
-    percent_change ~ s(seconds, k = k_mean, bs = "cr") +
-      s(seconds, by = use, k = k_mean, bs = "cr") +
-      s(seconds, by = age, k = k_mean, bs = "cr") +
-      s(seconds, by = gender, k = k_mean, bs = "cr"),
-    data = input_data, method = "REML"
-  )
+  if(example == "extended"){
+    mean_mod <- mgcv::gam(
+      percent_change ~ s(seconds, k = k_mean, bs = "cr") +
+        s(seconds, by = use, k = k_mean, bs = "cr") +
+        s(seconds, by = age, k = k_mean, bs = "cr") +
+        s(seconds, by = gender, k = k_mean, bs = "cr"),
+      data = input_data, method = "REML")
+  }else if(example == "original"){
+    mean_mod <- mgcv::gam(
+      percent_change ~ s(seconds, k = k_mean, bs = "cr") +
+        s(seconds, by = use, k = k_mean, bs = "cr"),
+      data = input_data, method = "REML")
+  }else{
+    print("Not valid input for 'example`. Please choose between `original` and `extended`.")
+  }
 
   # Prepare residuals
   resid_df <- input_data %>%

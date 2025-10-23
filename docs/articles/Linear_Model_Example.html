@@ -62,7 +62,7 @@
       <h1>Linear_Model_Example</h1>
                         <h4 data-toc-skip class="author">Angela Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-10-20</h4>
+            <h4 data-toc-skip class="date">2025-10-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Linear_Model_Example.Rmd" class="external-link"><code>vignettes/Linear_Model_Example.Rmd</code></a></small>
       <div class="d-none name"><code>Linear_Model_Example.Rmd</code></div>
@@ -71,13 +71,13 @@
     
     
 <p>The example here is to use simulated data to construct the
-simultaneous outer and inner confidence region from simultaneous
+simultaneous outer and inner confidence regions (SCRs) from simultaneous
 confidence bands (SCB) using linear regression.
-<code><a href="../reference/SCB_linear_outcome.html">SCoRES::SCB_linear_outcome()</a></code> function use a non-parametric
+<code><a href="../reference/SCB_linear_outcome.html">SCoRES::SCB_linear_outcome()</a></code> function uses a non-parametric
 bootstrap algorithm to construct the SCB in linear regression. The
 argument <code>df_fit</code> specifies a data frame containing the
 training design matrix used to fit the linear model, while
-<code>grid_df</code> define the mean outcome for which simultaneous
+<code>grid_df</code> defines the mean outcome for which simultaneous
 confidence bands (SCB) are constructed. Use argument <code>model</code>
 to specify the formula used for fitting the linear model.</p>
 <div class="section level2">
@@ -114,8 +114,8 @@ discretized into 100 equidistant points over the domain
 <p>The <code>levels = c(-0.3, 0, 0.3)</code> argument specifies a set of
 thresholds, and <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code> function estimates
 multiple inverse upper excursion sets corresponding to these thresholds,
-and plot the estimated inverse region, the inner confidence region, and
-the outer confidence region.</p>
+and plots the estimated inverse regions, the inner confidence regions,
+and the outer confidence regions.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results</span>,</span>
@@ -129,8 +129,8 @@ the outer confidence region.</p>
 <span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
 <span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Linear_Model_Example_files/figure-html/simulate_plot_cs_linear-1.png" width="576"></p>
-<p>In the following example, we establishes simultaneous confidence
-bands for the expected response surface
+<p>In the following example, we establish simultaneous confidence bands
+for the expected response surface
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>Y</mi><mo stretchy="false" form="prefix">|</mo><msub><mi>X</mi><mn>1</mn></msub><mo>,</mo><msub><mi>X</mi><mn>2</mn></msub><mo>=</mo><mn>0</mn><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">E[Y|X_1, X_2 =0]</annotation></semantics></math>,
 with the independent variable
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mn>1</mn></msub><annotation encoding="application/x-tex">X_1</annotation></semantics></math>
@@ -149,8 +149,8 @@ discretized into 100 equidistant points over the domain
 <p>The <code>levels = c(-1.5, -1.0, -0.5)</code> argument specifies a
 set of thresholds, and <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code> function estimates
 multiple inverse upper excursion sets corresponding to these thresholds,
-and plot the estimated inverse region, the inner confidence region, and
-the outer confidence region.</p>
+and plots the estimated inverse regions, the inner confidence regions,
+and the outer confidence regions.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results</span>,</span>
@@ -251,8 +251,8 @@ Y_i = \beta_0 + \sum^{50}_{j=1}X_{ij}\beta_j + \epsilon_i,
 <p>Likewise, the <code>levels = c(-2, -0.5, -0.1, 0.2)</code> argument
 specifies a set of thresholds, and <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code>
 function estimates multiple inverse upper excursion sets corresponding
-to these thresholds, and plot the estimated inverse region, the inner
-confidence region, and the outer confidence region.</p>
+to these thresholds, and plots the estimated inverse regions, the inner
+confidence regions, and the outer confidence regions.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results</span>,</span>
@@ -269,7 +269,7 @@ confidence region, and the outer confidence region.</p>
 <p>Users can also compute the SCB for any linear combination of these
 coefficients by specifying a weight vector of the same length as the
 coefficient vector. This can be done by using
-<code><a href="../reference/SCB_regression_outcome.html">SCoRES::SCB_regression_outcome()</a></code>, and specify the linear
+<code><a href="../reference/SCB_regression_outcome.html">SCoRES::SCB_regression_outcome()</a></code>, and specifying the linear
 combination through <code>w</code>. For example, suppose we want to
 calculate the SCB for the linear combination
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>β</mi><mn>1</mn></msub><mo>+</mo><msub><mi>β</mi><mn>2</mn></msub><mo>+</mo><msub><mi>β</mi><mn>3</mn></msub></mrow><annotation encoding="application/x-tex">\beta_1+\beta_2+\beta_3</annotation></semantics></math>
@@ -292,11 +292,11 @@ for model:
 <span><span class="co">#&gt;            scb_low      Mean   scb_up</span></span>
 <span><span class="co">#&gt; scb_low -0.4971322 0.3964766 1.290085</span></span></code></pre></div>
 <p>In the following example, we load <code>ipad</code> dataset, and
-establishes simultaneous confidence bands for all the coefficients and
-the intercept in the model fitted. Here, we set <code>log(t_mmr1)</code>
-as the outcome, and include all variables from
-<code>Pupillography</code>, <code>Tablet (task metrics)</code> and
-<code>Cardiovascular</code> as predictors.</p>
+establish simultaneous confidence bands for all the coefficients and the
+intercept in the model fitted. Here, we set <code>log(t_mmr1)</code> as
+the outcome, and include all variables from <code>Pupillography</code>,
+<code>Tablet (task metrics)</code> and <code>Cardiovascular</code> as
+predictors.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://angelayustat.github.io/SCoRES">SCoRES</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
@@ -350,9 +350,9 @@ all coefficients and the intercept.</p>
 <p>The <code>levels = c(2e-07, 3e-07, 4e-07)</code> argument specifies a
 set of thresholds, and <code><a href="../reference/plot_cs.html">SCoRES::plot_cs()</a></code> function estimates
 multiple inverse upper excursion sets corresponding to these thresholds,
-and plot the estimated inverse region, the inner confidence region, and
-the outer confidence region. Here, for illustration, we filter out the
-SCB for intercept.</p>
+and plots the estimated inverse regions, the inner confidence regions,
+and the outer confidence regions. Here, for illustration, we filter out
+the SCB for intercept.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">results</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot_cs.html">plot_cs</a></span><span class="op">(</span><span class="va">results</span>,</span>

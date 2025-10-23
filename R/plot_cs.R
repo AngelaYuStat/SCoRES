@@ -493,7 +493,7 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
         min_mu = round(min(mu$true_mean, na.rm = T)-0.2, digits = 1)
         p_u <- ggplot()+
           geom_raster(aes(x=X1, y = X2, fill = true_mean), data = mu)+
-          ggtitle("Outer confidence regions")+
+          ggtitle("Outer Confidence Regions")+
           scale_fill_distiller(palette = "Spectral", direction = -1, limits = c(min_mu,max_mu), na.value = "transparent")+
           labs(fill="True mean", x = xlab, y = ylab)
         #scale_fill_gradientn(colours =
