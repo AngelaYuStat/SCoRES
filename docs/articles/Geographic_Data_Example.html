@@ -60,9 +60,10 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Geographic_Data_Example</h1>
-                        <h4 data-toc-skip class="author">Angela Yu</h4>
+                        <h4 data-toc-skip class="author">Zhuoran
+(Angela) Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-10-22</h4>
+            <h4 data-toc-skip class="date">2025-10-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Geographic_Data_Example.Rmd" class="external-link"><code>vignettes/Geographic_Data_Example.Rmd</code></a></small>
       <div class="d-none name"><code>Geographic_Data_Example.Rmd</code></div>
@@ -73,7 +74,8 @@
 <p>The following example is for displaying the confidence region for the
 increase of the mean summer temperature (June–August) in North America
 between the 20th and 21st centuries according to the specific climate
-model analyzed in Sommerfeld et al. (2018).</p>
+model analyzed in <span class="citation">Sommerfeld et al.
+(2018)</span>.</p>
 <p><code><a href="../reference/SCB_gls_geospatial.html">SCoRES::SCB_gls_geospatial()</a></code> function uses multiplier
 bootstrap algorithm to construct the SCB for a specified linear
 combination of coefficients across a geographical area. The argument
@@ -94,7 +96,7 @@ indicating spatial locations to include in the SCB, with excluded areas
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://svn.r-project.org/R-packages/trunk/nlme/" class="external-link">nlme</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://angelayustat.github.io/SCoRES">SCoRES</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://angelayustat.github.io/SCoRES/">SCoRES</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Load data</span></span>
@@ -113,7 +115,7 @@ indicating spatial locations to include in the SCB, with excluded areas
 <span><span class="va">end_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">time_taken</span> <span class="op">&lt;-</span> <span class="va">end_time</span> <span class="op">-</span> <span class="va">start_time</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">time_taken</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Time difference of 12.31293 mins</span></span></code></pre></div>
+<span><span class="co">#&gt; Time difference of 9.748226 mins</span></span></code></pre></div>
 <p>Heat maps show the estimate of the mean temperature difference. The
 first row displays the contours of the outer confidence regions, the
 estimated inverse regions, and the inner confidence regions, for various
@@ -131,6 +133,14 @@ inner confidence region.</p>
 <span><span class="va">p</span> <span class="op">=</span> <span class="va">p2</span><span class="op">/</span><span class="va">p1</span></span>
 <span><span class="va">p</span></span></code></pre></div>
 <p><img src="Geographic_Data_Example_files/figure-html/climate_data-plot_cs-1.png" width="960"></p>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
+<div id="ref-Sommerfeld:2018" class="csl-entry">
+Sommerfeld, M., Sain, S., &amp; Schwartzman, A. (2018). Confidence
+regions for spatial excursion sets from repeated random field
+observations, with an application to climate. <em>Journal of the
+American Statistical Association</em>, <em>113</em>(523), 1327–1340. <a href="https://doi.org/10.1080/01621459.2017.1341838" class="external-link">https://doi.org/10.1080/01621459.2017.1341838</a>
+</div>
+</div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>

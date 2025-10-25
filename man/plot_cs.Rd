@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_cs.R
 \name{plot_cs}
 \alias{plot_cs}
-\title{Plot Inversion of Simultaneous Confidence Intervals (SCIs) into Inner and Outer Confidence Region}
+\title{Plot Inversion of Simultaneous Confidence Bands (SCBs) into Inner and Outer Simultaneous Confidence Regions (SCRs)}
 \usage{
 plot_cs(
   SCB,
@@ -29,7 +29,8 @@ respectively. \verb{SCB$scb_up} and \verb{SCB$scb_low} should be numeric vectors
 or matrices (2D) containing the upper simultaneous confidence interval.
 Dimensions of \code{SCB$scb_up} and \code{SCB$scb_low} must match.}
 
-\item{levels}{A numeric vector or list of scalers for different levels or matrix containing interval sets to construct the confidence sets.
+\item{levels}{A numeric vector or list of scalers for different levels or matrix
+containing interval sets to construct the confidence regions.
 If \code{type} = "upper" or "lower", \code{levels} should be a vector.
 "upper" represents upper excursion sets, and "lower" represents lower excursion sets.}
 
@@ -57,11 +58,11 @@ otherwise, generates one plot per level. Default is \code{TRUE}.}
 
 \item{ylab}{Optional character for the label of the y-axis. Default is \code{"x2"}.}
 
-\item{level_label}{Optional logical value for level displaying option.
+\item{level_label}{Optional logical input for level displaying option.
 If \code{TRUE}, displays numeric level labels on contour lines for 2D confidence sets.
 Default is \code{TRUE}.}
 
-\item{min.size}{Optional logical value for minimum number of points
+\item{min.size}{Optional logical input for minimum number of points
 required for a contour to be labeled. Default is \code{5}.}
 
 \item{palette}{Optional character value for the name of the HCL color palette
@@ -75,35 +76,60 @@ A \code{ggplot2} object that includes both simultaneous confidence intervals
 and simultaneous confidence region of excursion sets corresponding to levels assigned.
 }
 \description{
-Visualizes simultaneous confidence sets of upper and lower excursion sets for
+Visualizes simultaneous confidence regions of upper and lower excursion sets for
 discrete, 1D or 2D data, using contour or band plots.
-Supports plotting confidence region at multiple levels and labeling contours.
+Supports plotting confidence regions at multiple levels and labeling contours.
 }
 \examples{
 
 # example using pupil data
 library(mgcv)
 data(pupil)
+\dontrun{
 pupil_fpca <- prepare_pupil_fpca(pupil)
 
 fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
   s(seconds, by = use, k=30, bs = "cr") +
-  s(seconds, by = age, k = 30, bs = "cr") +
-  s(seconds, by = gender, k = 30, bs = "cr") +
   s(id, by = Phi1, bs="re") +
-  s(id, by = Phi2, bs="re")+
+  s(id, by = Phi2, bs="re") +
   s(id, by = Phi3, bs="re") +
   s(id, by = Phi4, bs="re"),
   method = "fREML", data = pupil_fpca, discrete = TRUE)
 
-pupil_cma <- SCB_functional_outcome(data = pupil_fpca, object = fosr_mod, method = "cma",
+pupil_multiplier <- SCB_functional_outcome(data = pupil_fpca, object = fosr_mod,
+                                   method = "multiplier",
                                    outcome = "percent_change",
                                    domain = "seconds", subset= c("use = 1"),
                                    id = "id")
-pupil_cma <- tibble::as_tibble(pupil_cma)
 
-plot_cs(pupil_cma,levels = c(-18, -20, -22, -24), x = pupil_cma$domain,
-        mu_hat = pupil_cma$mu_hat, xlab = "", ylab = "",
+pupil_multiplier <- tibble::as_tibble(pupil_multiplier)
+
+plot_cs(pupil_multiplier,levels = c(-18), x = pupil_multiplier$domain,
+        mu_hat = pupil_multiplier$mu_hat, xlab = "", ylab = "",
         level_label = T, min.size = 40, palette = "Spectral",
         color_level_label = "black")
+}
+
+mean_mod <- mgcv::gam(percent_change ~ s(seconds, k = 5, bs = "cr") +
+s(seconds, by = use, k = 5, bs = "cr"),
+data = pupil, method = "REML")
+
+pupil_multiplier <- SCB_functional_outcome(data = pupil, object = mean_mod,
+                                   method = "multiplier",
+                                   outcome = "percent_change",
+                                   domain = "seconds", subset= c("use = 1"),
+                                   id = "id", nboot = 50)
+
+pupil_multiplier <- tibble::as_tibble(pupil_multiplier)
+
+plot_cs(pupil_multiplier,levels = c(-18), x = pupil_multiplier$domain,
+        mu_hat = pupil_multiplier$mu_hat, xlab = "", ylab = "",
+        level_label = T, min.size = 40, palette = "Spectral",
+        color_level_label = "black")
+}
+\references{
+Ren, J., Telschow, F. J. E., & Schwartzman, A. (2024).
+Inverse set estimation and inversion of simultaneous confidence intervals.
+\emph{Journal of the Royal Statistical Society: Series C (Applied Statistics)}, 73(4), 1082–1109.
+\doi{10.1093/jrsssc/qlae027}
 }

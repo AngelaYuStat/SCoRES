@@ -43,13 +43,13 @@ testthat::test_that("Input validation: n_boot, type and alpha", {
 })
 
 testthat::test_that("Function works well: linear branch.", {
-  n <- 200
+  n <- 100
   x1 <- rnorm(n)
   x2 <- rnorm(n)
   y  <- 1 + 2*x1 - 3*x2 + rnorm(n, sd = 0.8)
   df <- data.frame(y, x1, x2)
 
-  res <- SCB_regression_coef(df_fit = df, model = y ~ x1 + x2, n_boot = 150, alpha = 0.1, type = "linear")
+  res <- SCB_regression_coef(df_fit = df, model = y ~ x1 + x2, n_boot = 100, alpha = 0.1, type = "linear")
 
   expect_s3_class(res, "data.frame")
   expect_true(all(c("scb_low", "Mean", "scb_up") %in% names(res)))
@@ -69,7 +69,7 @@ testthat::test_that("Function works well: linear branch.", {
 })
 
 testthat::test_that("Function works well: logistic branch.", {
-  n <- 300
+  n <- 100
   x1 <- rnorm(n)
   x2 <- rnorm(n)
   eta <- -0.5 + 1.2*x1 - 0.8*x2

@@ -1,4 +1,4 @@
-#' Construct Simultaneous Confidence Bands for a Spatial Generalized Least Square Model
+#' Construct Simultaneous Confidence Bands for a Spatial Generalized Least Squares Model
 #'
 #' @param sp_list A list containing the spatial coordinates and the observations.
 #'  Should include the following components:
@@ -68,6 +68,11 @@
 #' \emph{Journal of the American Statistical Association}, 113(523), 1327–1340.
 #' \doi{10.1080/01621459.2017.1356318}
 #'
+#' Ren, J., Telschow, F. J. E., & Schwartzman, A. (2024).
+#' Inverse set estimation and inversion of simultaneous confidence intervals.
+#' \emph{Journal of the Royal Statistical Society: Series C (Applied Statistics)}, 73(4), 1082–1109.
+#' \doi{10.1093/jrsssc/qlae027}
+#'
 #' @importFrom MASS lm.gls
 #' @import nlme
 #' @importFrom stats quantile formula sd
@@ -77,12 +82,20 @@
 #'
 #' @examples
 #' data(climate_data)
-#' library(nlme)
 #' # Construct confidence sets for the increase of the mean temperature (June-August)
 #' # in North America between the 20th and 21st centuries
+#' \dontrun{
 #' temp = SCB_gls_geospatial(sp_list = climate_data$Z, level = 2, data_fit = climate_data$X,
 #'                        w = c(1,0,0,0), correlation = climate_data$correlation,
 #'                        mask = climate_data$mask, alpha = 0.1)
+#' }
+#'
+#' example_list <- list(x = climate_data$Z$x[50:70], y = climate_data$Z$y[40:60],
+#' obs = climate_data$Z$obs[50:70, 40:60,])
+#' temp = SCB_gls_geospatial(sp_list = example_list, level = 2, data_fit = climate_data$X,
+#'                        w = c(1,0,0,0), correlation = NULL,
+#'                        mask = NULL, alpha = 0.1, N = 100)
+#'
 SCB_gls_geospatial =
   function (sp_list, level = NULL, data_fit = NULL, w = NULL,
             correlation = NULL, corpar = NULL, groups = NULL, V = NULL,

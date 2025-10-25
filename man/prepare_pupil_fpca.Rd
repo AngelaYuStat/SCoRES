@@ -32,6 +32,8 @@ and merging the results to create an enhanced dataset for functional regression 
 \examples{
 library(mgcv)
 data(pupil)
-processed_data <- prepare_pupil_fpca(pupil)
+\dontrun{processed_data <- prepare_pupil_fpca(pupil)}
+
+processed_data <- prepare_pupil_fpca(pupil, k_mean = 5, k_fpca = 5)
 
 }

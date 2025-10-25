@@ -60,9 +60,10 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Methods</h1>
-                        <h4 data-toc-skip class="author">Angela Yu</h4>
+                        <h4 data-toc-skip class="author">Zhuoran
+(Angela) Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-10-22</h4>
+            <h4 data-toc-skip class="date">2025-10-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Methods.Rmd" class="external-link"><code>vignettes/Methods.Rmd</code></a></small>
       <div class="d-none name"><code>Methods.Rmd</code></div>
@@ -104,8 +105,8 @@ is an empirical estimator of
 based on
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
 observations. To quantify the spatial uncertainty of this estimate,
-Sommerfeld et al. (2018) introduced the Coverage Probability Excursion
-(CoPE) sets, defined as:
+<span class="citation">Sommerfeld et al. (2018)</span> introduced the
+Coverage Probability Excursion (CoPE) sets, defined as:
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CR</mtext><mtext mathvariant="normal">in</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>⊆</mo><msup><mi>μ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>⊆</mo><msub><mtext mathvariant="normal">CR</mtext><mtext mathvariant="normal">out</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
 \text{CR}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CR}_{\text{out}}(U)
 </annotation></semantics></math> which satisfy:
@@ -127,10 +128,10 @@ and
 near thresholds, and large-sample guarantees, which limit the
 applicability. Besides, the estimation and coverage depend on setting a
 fixed threshold level, which is difficult to determine.</p>
-<p>Ren et al. (2023) proposed a framework that generalizes the
-estimation of such inverse sets to dense and non-dense domains with
-protection against inflated Type I error, and constructs multiple upper,
-lower or interval confidence regions of
+<p><span class="citation">Ren et al. (2024)</span> proposed a framework
+that generalizes the estimation of such inverse sets to dense and
+non-dense domains with protection against inflated Type I error, and
+constructs multiple upper, lower or interval confidence regions of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>μ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>U</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mu^{-1}(U)</annotation></semantics></math>
 over arbitrary chosen thresholds. The coverage probability is achieved
 non-asymptotically and simultaneously through inverting simultaneous
@@ -305,8 +306,10 @@ is unknown in practice. In SCoRES, we implement two approaches for
 estimating the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>q</mi><mrow><mi>α</mi><mo>,</mo><mi>N</mi></mrow></msub><annotation encoding="application/x-tex">q_{\alpha,N}</annotation></semantics></math>
 for functional parameter functions in FoSR model: the Correlation and
-Multiplicity-Adjusted (CMA) bands based on parameter simulations, and a
-multiplier bootstrap procedure. We detail the CMA procedure below:</p>
+Multiplicity-Adjusted (CMA) bands (<span class="citation">Crainiceanu et
+al. (2024)</span>) based on parameter simulations, and a multiplier
+bootstrap procedure (<span class="citation">Telschow &amp; Schwartzman
+(2022)</span>). We detail the CMA procedure below:</p>
 <div class="section level3">
 <h3 id="correlation-and-multiplicity-adjusted-cma-confidence-bands-based-on-parameter-simulations">Correlation and Multiplicity Adjusted (CMA) Confidence Bands Based
 on Parameter Simulations<a class="anchor" aria-label="anchor" href="#correlation-and-multiplicity-adjusted-cma-confidence-bands-based-on-parameter-simulations"></a>
@@ -544,6 +547,30 @@ satisfies</p>
 by
 multiplier-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
 bootstrap method introduced before.</p>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
+<div id="ref-crainiceanu2024functional" class="csl-entry">
+Crainiceanu, C. M., Goldsmith, J., Leroux, A., &amp; Cui, E. (2024).
+<em>Functional data analysis with r</em>. Chapman; Hall/CRC.
+</div>
+<div id="ref-Ren:2024" class="csl-entry">
+Ren, J., Telschow, F. J. E., &amp; Schwartzman, A. (2024). Inverse set
+estimation and inversion of simultaneous confidence intervals.
+<em>Journal of the Royal Statistical Society Series C: Applied
+Statistics</em>, <em>73</em>(4), 1082–1109. <a href="https://doi.org/10.1093/jrsssc/qlae027" class="external-link">https://doi.org/10.1093/jrsssc/qlae027</a>
+</div>
+<div id="ref-Sommerfeld:2018" class="csl-entry">
+Sommerfeld, M., Sain, S., &amp; Schwartzman, A. (2018). Confidence
+regions for spatial excursion sets from repeated random field
+observations, with an application to climate. <em>Journal of the
+American Statistical Association</em>, <em>113</em>(523), 1327–1340. <a href="https://doi.org/10.1080/01621459.2017.1341838" class="external-link">https://doi.org/10.1080/01621459.2017.1341838</a>
+</div>
+<div id="ref-Telschow:2022" class="csl-entry">
+Telschow, F. J. E., &amp; Schwartzman, A. (2022). Simultaneous
+confidence bands for functional data using the gaussian kinematic
+formula. <em>Journal of Statistical Planning and Inference</em>,
+<em>216</em>, 70–94. <a href="https://doi.org/10.1016/j.jspi.2021.05.008" class="external-link">https://doi.org/10.1016/j.jspi.2021.05.008</a>
+</div>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

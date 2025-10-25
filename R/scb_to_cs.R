@@ -1,7 +1,7 @@
 #' Construct Simultaneous Confidence Region for Excursion/Interval Sets from Simultaneous Confidence Bands
 #'
-#' This function constructs simultaneous confidence region for upper and lower
-#' excursion sets, and interval sets from simultaneous confidence bands (SCB).
+#' This function constructs simultaneous confidence regions (SCRs) for upper and lower
+#' excursion sets, and interval sets from simultaneous confidence bands (SCBs).
 #' It allows estimation of inner and outer confidence region under
 #' single or multiple thresholds. Visualization of the confidence region is also
 #' included, along with a containment check for the coverage of true or estimated functions.
@@ -72,15 +72,21 @@
 #'
 #' @export
 #'
+#' @references
+#' Ren, J., Telschow, F. J. E., & Schwartzman, A. (2024).
+#' Inverse set estimation and inversion of simultaneous confidence intervals.
+#' \emph{Journal of the Royal Statistical Society: Series C (Applied Statistics)}, 73(4), 1082–1109.
+#' \doi{10.1093/jrsssc/qlae027}
+#'
 #' @examples
 #' set.seed(262)
 #' x1 <- rnorm(100)
 #' x2 <- rnorm(100)
-#' y <- -1 + x1 + 0.5 * x1^2 - 1.1 * x1^3 - 0.5 * x2 + 0.8 * x2^2 - 1.1 * x2^3 - rnorm(100,0,sqrt(2))
+#' y <- -1 + x1 - 0.5 * x2 + rnorm(100,0,sqrt(2))
 #' df <- data.frame(x1 = x1, x2 = x2, y = y)
 #' grid <- data.frame(x1 = seq(-1, 1, length.out = 100), x2 = seq(-1, 1, length.out = 100))
-#' model <- "y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"
-#' result <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
+#' model <- "y ~ x1 + x2 "
+#' result <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid, n_boot = 100)
 #' scb_to_cs(result$scb_up, result$scb_low, c(-1, -0.5, 0.5, 1),
 #' x1 = grid$x1, x2 = grid$x2, est_mean = results$Mean)
 #'

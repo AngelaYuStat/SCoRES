@@ -3,22 +3,24 @@ Title: Simultaneous Confidence Region Excursion Sets
 Version: 0.1.0
 Authors@R: 
     c(
-      person("Zhuoran", "Yu", , "angela.yu@emory.edu", role = c("aut", "cre")),
-      person("Armin", "Schwartzman", , "armins@health.ucsd.edu", role = "aut"),
-      person("Junting", "Ren", , "junting.ren.stat@gmail.com", role = "aut"),
-      person("Julia", "Wrobel", , "julia.wrobel@emory.edu", role = "aut")
+      person(given = "Zhuoran", family = "Yu", ,"angela.yu@emory.edu", role = c("aut", "cre")),
+      person(given = "Armin", family = "Schwartzman", ,"armins@health.ucsd.edu", role = "aut"),
+      person(given = "Junting", family = "Ren", ,"junting.ren.stat@gmail.com", role = "aut"),
+      person(given = "Julia", family = "Wrobel", ,"julia.wrobel@emory.edu", role = "aut")
     )
-Description: This package provides useful statistical tools for both the 
-  estimation of the inverse region and the corresponding simultaneous outer and 
-  inner confidence region. Acceptable forms of input includes both 1D and 2D data 
+Author: Zhuoran Yu [aut, cre], Armin Schwartzman [aut], Junting Ren [aut], Julia Wrobel [aut]
+Maintainer: Zhuoran Yu <angela.yu@emory.edu>
+Description: We present SCoRES, which provides useful statistical tools for both the 
+  estimation of the inverse regions and the corresponding simultaneous outer and 
+  inner confidence regions. Acceptable forms of input includes both 1D and 2D data 
   for linear regression, logistic regression, functional regression and spatial 
   generalized least square regression. Useful functions are also provided for 
-  constructing simultaneous confidence bands (SCB) for these models.
+  constructing simultaneous confidence bands (SCBs) for these models.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-URL: https://angelayustat.github.io/SCoRES
+URL: https://angelayustat.github.io/SCoRES/
 BugReports: https://github.com/AngelaYuStat/SCoRES/issues
 Imports: 
     dplyr,
@@ -40,7 +42,7 @@ Imports:
     magrittr,
     utils
 Depends: 
-    R (>= 4.4.2)
+    R (>= 4.4)
 LazyData: true
 Suggests: 
     knitr,

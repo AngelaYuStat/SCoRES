@@ -4,8 +4,6 @@ data(pupil)
 pupil_fpca <- SCoRES::prepare_pupil_fpca(pupil)
 fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
                         s(seconds, by = use, k=30, bs = "cr") +
-                        s(seconds, by = age, k = 30, bs = "cr") +
-                        s(seconds, by = gender, k = 30, bs = "cr") +
                         s(id, by = Phi1, bs="re") +
                         s(id, by = Phi2, bs="re") +
                         s(id, by = Phi3, bs="re") +
@@ -91,6 +89,7 @@ test_that("CMA path errors when object missing", {
 
 # CMA Branch
 test_that("CMA path works well", {
+  skip_on_cran()
   results <- SCB_functional_outcome(
     data_df = pupil_fpca, object = fosr_mod, method = "cma",
     fitted = TRUE, alpha = 0.05, outcome = "percent_change",
@@ -116,7 +115,7 @@ test_that("CMA path works well", {
 
 # Multiplier branch
 test_that("Multiplier path works well", {
-
+  skip_on_cran()
   results <- SCB_functional_outcome(
       data_df = pupil_fpca, object = fosr_mod, method = "multiplier",
       fitted = TRUE, alpha = 0.1, outcome = "percent_change",
@@ -141,6 +140,7 @@ test_that("Multiplier path works well", {
 })
 
 test_that("Handles NAs with fpca.face imputation", {
+  skip_on_cran()
   df_na <- pupil_fpca
   df_na$percent_change[df_na$seconds == 1 & df_na$id == "003-011"] <- NA
 
@@ -167,30 +167,29 @@ test_that("Handles NAs with fpca.face imputation", {
   expect_length(results$scb_up, n)
 })
 
-library(dplyr)
-
-pupil_fpca2 <- pupil_fpca %>%
-  group_by(id) %>%
-  mutate(
-    is_min = seconds == min(seconds),
-    seconds = ifelse(is_min, 0, seconds),
-    percent_change = ifelse(is_min, 0, percent_change)
-  ) %>%
-  ungroup() %>%
-  select(-is_min)
-
-fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
-                        s(seconds, by = use, k=30, bs = "cr") +
-                        s(seconds, by = age, k = 30, bs = "cr") +
-                        s(seconds, by = gender, k = 30, bs = "cr") +
-                        s(id, by = Phi1, bs="re") +
-                        s(id, by = Phi2, bs="re") +
-                        s(id, by = Phi3, bs="re") +
-                        s(id, by = Phi4, bs="re"),
-                      method = "fREML", data = pupil_fpca2, discrete = TRUE)
-s_pred <- unique(pupil_fpca2$seconds)
-
 test_that("Multiplier path without object: computes overall SCB and errors on all-zero rows", {
+  skip_on_cran()
+
+  library(dplyr)
+
+  pupil_fpca2 <- pupil_fpca %>%
+    group_by(id) %>%
+    mutate(
+      is_min = seconds == min(seconds),
+      seconds = ifelse(is_min, 0, seconds),
+      percent_change = ifelse(is_min, 0, percent_change)
+    ) %>%
+    ungroup() %>%
+    select(-is_min)
+
+  fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
+                          s(seconds, by = use, k=30, bs = "cr") +
+                          s(id, by = Phi1, bs="re") +
+                          s(id, by = Phi2, bs="re") +
+                          s(id, by = Phi3, bs="re") +
+                          s(id, by = Phi4, bs="re"),
+                        method = "fREML", data = pupil_fpca2, discrete = TRUE)
+  s_pred <- unique(pupil_fpca2$seconds)
 
   results <- SCB_functional_outcome(
     data_df = pupil_fpca2, object = NULL, method = "multiplier",

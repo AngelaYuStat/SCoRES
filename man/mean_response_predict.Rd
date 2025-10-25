@@ -15,20 +15,20 @@ mean_response_predict(
 )
 }
 \arguments{
-\item{data_df}{A functional data frame that contain both name and values for
+\item{data_df}{A functional data frame that contains both name and values for
 variables including functional outcome, domain (e.g. time) and ID (e.g. subject names)
-used to fit \code{object}.}
+used to fit the model \code{object}.}
 
 \item{object}{A fitted Function-on-Scalar Regression (FoSR) model object
 (e.g., from mgcv::gam()/mgcv::bam()).}
 
 \item{fitted}{Logical. Whether to estimate the simultaneous confidence bands
-for fitted mean function or fitted parameter function
+for the fitted mean function or the fitted parameter function
 \itemize{
 \item \code{TRUE} - Estimate the simultaneous confidence bands
-for fitted mean outcome function.
+for the fitted mean outcome function.
 \item \code{FALSE} - estimate the simultaneous confidence bands
-for fitted parameter function.
+for the fitted parameter function.
 }
 Default is \code{TRUE}.}
 
@@ -39,15 +39,15 @@ used in the model.}
 (e.g. time) used in the model.}
 
 \item{subset}{An atomic character vector (e.g., c("user = 1", "age = 30"))
-specified the target function for constructing the SCB.
-Each element must be of the form \if{html}{\out{<name>}} = \if{html}{\out{<value>}}, where \if{html}{\out{<name>}} is the name
-of a scalar grouping variable and \if{html}{\out{<value>}} is the desired value.
-Whitespace is ignored. Binary or categorical character variable should be
-transformed into numeric. Factor is not allowed here because if the input
+specifying the target function for constructing the SCB.
+Each element must be of the form \verb{<name> = <value>}, where \verb{<name>} is
+the name of a scalar grouping variable and \verb{<value>} is the desired value.
+Whitespace is ignored. Binary or categorical character variables should be
+transformed into numeric. Factors are not allowed here because if the input
 data contains factor variables, they will be automatically expanded into
 dummy (indicator) variables when constructing the design matrix, and
 the resulting variable names may differ from the original factor names.
-Default is \code{NULL}, representing the reference group.}
+Default is \code{NULL}, which represents the reference group.}
 
 \item{id}{A character string specifying the name of the ID variable.}
 }
@@ -74,19 +74,31 @@ This function is an internal function for constructing SCBs for functional data.
 \examples{
 library(mgcv)
 data(pupil)
+
+\dontrun{
 pupil_fpca <- prepare_pupil_fpca(pupil)
 
 fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
   s(seconds, by = use, k=30, bs = "cr") +
-  s(seconds, by = age, k = 30, bs = "cr") +
-  s(seconds, by = gender, k = 30, bs = "cr") +
   s(id, by = Phi1, bs="re") +
-  s(id, by = Phi2, bs="re")+
+  s(id, by = Phi2, bs="re") +
   s(id, by = Phi3, bs="re") +
   s(id, by = Phi4, bs="re"),
   method = "fREML", data = pupil_fpca, discrete = TRUE)
 
 results <- mean_response_predict(pupil_fpca, fosr_mod, fitted = TRUE,
+outcome = "percent_change", domain = "seconds", subset = c("use = 1"), id = "id")}
+
+mean_mod <- mgcv::gam(percent_change ~ s(seconds, k = 5, bs = "cr") +
+s(seconds, by = use, k = 5, bs = "cr"),
+data = pupil, method = "REML")
+
+results <- mean_response_predict(pupil, mean_mod, fitted = TRUE,
 outcome = "percent_change", domain = "seconds", subset = c("use = 1"), id = "id")
 
+}
+\references{
+Crainiceanu, C. M., Goldsmith, J., Leroux, A., & Cui, E. (2024).
+\emph{Functional Data Analysis with R}.
+Chapman and Hall/CRC.
 }

@@ -40,9 +40,9 @@ for the model coefficients using a non-parametric bootstrap procedure.
 \examples{
 library(MASS)
 set.seed(262)
-M <- 50
+M <- 5
 rho <- 0.4
-n <- 500
+n <- 100
 beta <- rnorm(M, mean = 0, sd = 1)
 Sigma <- outer(1:M, 1:M, function(i, j) rho^abs(i - j))
 X <- MASS::mvrnorm(n = n, mu = rep(0, M), Sigma = Sigma)
@@ -52,6 +52,12 @@ df <- as.data.frame(X)
 names(df) <- paste0("x", 1:M)
 df$y <- as.vector(y)
 model <- "y ~ ."
-results <- SCB_regression_coef(df, model)
+results <- SCB_regression_coef(df, model, n_boot = 500)
 
+}
+\references{
+Ren, J., Telschow, F. J. E., & Schwartzman, A. (2024).
+Inverse set estimation and inversion of simultaneous confidence intervals.
+\emph{Journal of the Royal Statistical Society: Series C (Applied Statistics)}, 73(4), 1082–1109.
+\doi{10.1093/jrsssc/qlae027}
 }

@@ -25,7 +25,7 @@ $$
 $$
 are used to assess the spatial uncertainty of the inverse set estimation.
 
-Ren et al. (2023) generalized the estimation to dense and non-dense domains, and developed a fast and reliable construction method of confidence regions for inverse sets over arbitrary chosen thresholds $c$ simultaneously. Based on Ren's approach, this package provides useful statistical tools for both the estimation of the inverse set and the corresponding simultaneous outer and inner confidence region. Acceptable forms of input includes both 1D and 2D data for linear regression, logistic regression, functional regression and spatial generalized least square regression. Useful functions are also provided for constructing simultaneous confidence bands (SCB) for these models. More details can be found below.
+Ren et al. (2024) generalized the estimation to dense and non-dense domains, and developed a fast and reliable construction method of confidence regions for inverse sets over arbitrary chosen thresholds $c$ simultaneously. Based on Ren's approach, this package provides useful statistical tools for both the estimation of the inverse set and the corresponding simultaneous outer and inner confidence region. Acceptable forms of input includes both 1D and 2D data for linear regression, logistic regression, functional regression and spatial generalized least square regression. Useful functions are also provided for constructing simultaneous confidence bands (SCB) for these models. More details can be found below.
 
 
 ### Installation

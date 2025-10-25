@@ -72,6 +72,7 @@ test_that("Input validation: mask", {
 
 
 test_that("Function works well", {
+  skip_on_cran()
   res <- SCB_gls_geospatial(sp_list = climate_data$Z, level = 2, data_fit = climate_data$X,
                   w = c(1,0,0,0), correlation = climate_data$correlation,
                   mask = climate_data$mask, alpha = 0.1)

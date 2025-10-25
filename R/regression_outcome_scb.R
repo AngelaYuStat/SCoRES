@@ -58,18 +58,24 @@
 #'
 #' @export
 #'
+#' @references
+#' Ren, J., Telschow, F. J. E., & Schwartzman, A. (2024).
+#' Inverse set estimation and inversion of simultaneous confidence intervals.
+#' \emph{Journal of the Royal Statistical Society: Series C (Applied Statistics)}, 73(4), 1082–1109.
+#' \doi{10.1093/jrsssc/qlae027}
+#'
 #' @examples
 #' set.seed(262)
 #' x1 <- rnorm(100)
 #' x2 <- rnorm(100)
 #' epsilon <- rnorm(100,0,sqrt(2))
-#' y <- -1 + x1 + 0.5 * x1^2 - 1.1 * x1^3 - 0.5 * x2 + 0.8 * x2^2 - 1.1 * x2^3 + epsilon
+#' y <- -1 + x1 + x2 + epsilon
 #' df <- data.frame(x1 = x1, x2 = x2, y = y)
-#' grid <- data.frame(x1 = seq(-1, 1, length.out = 100),
-#'                    x2 = seq(-1, 1, length.out = 100))
-#' model <- "y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"
-#' w <- matrix(c(0, 0, 1, 0, 0, 1, 0), ncol = 7)
-#' results <- SCB_regression_outcome(df_fit = df, model = model, grid_df = grid, w   = w)
+#' grid <- data.frame(x1 = seq(-1, 1, length.out = 100), x2 = seq(-1, 1, length.out = 100))
+#' model <- "y ~ x1 + x2"
+#' w <- matrix(c(0, 1, 1), ncol = 3)
+#' results <- SCB_regression_outcome(df_fit = df, model = model, grid_df = grid,
+#'                                   w = w, n_boot = 100)
 #'
 SCB_regression_outcome = function(df_fit, model, grid_df = NULL, n_boot = 1000,
                                   alpha = 0.05, grid_df_boot = NULL, type = "linear",
@@ -144,17 +150,21 @@ SCB_regression_outcome = function(df_fit, model, grid_df = NULL, n_boot = 1000,
 #' @importFrom stats quantile as.formula lm predict
 #' @export
 #'
+#' @references
+#' Ren, J., Telschow, F. J. E., & Schwartzman, A. (2024).
+#' Inverse set estimation and inversion of simultaneous confidence intervals.
+#' \emph{Journal of the Royal Statistical Society: Series C (Applied Statistics)}, 73(4), 1082–1109.
+#' \doi{10.1093/jrsssc/qlae027}
+#'
 #' @examples
 #' set.seed(262)
 #' x1 <- rnorm(100)
-#' x2 <- rnorm(100)
 #' epsilon <- rnorm(100,0,sqrt(2))
-#' y <- -1 + x1 + 0.5 * x1^2 - 1.1 * x1^3 - 0.5 * x2 + 0.8 * x2^2 - 1.1 * x2^3 + epsilon
-#' df <- data.frame(x1 = x1, x2 = x2, y = y)
-#' grid <- data.frame(x1 = seq(-1, 1, length.out = 100),
-#'                    x2 = seq(-1, 1, length.out = 100))
-#' model <- "y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"
-#' results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
+#' y <- -1 + x1 + epsilon
+#' df <- data.frame(x1 = x1, y = y)
+#' grid <- data.frame(x1 = seq(-1, 1, length.out = 100))
+#' model <- "y ~ x1"
+#' results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid, n_boot = 100)
 #'
 SCB_linear_outcome = function(df_fit, model, grid_df = NULL, n_boot = 1000,
                               alpha = 0.05, grid_df_boot = NULL){
@@ -351,17 +361,22 @@ expit = function(x){
 #' @importFrom stats quantile as.formula glm predict
 #' @export
 #'
+#' @references
+#' Ren, J., Telschow, F. J. E., & Schwartzman, A. (2024).
+#' Inverse set estimation and inversion of simultaneous confidence intervals.
+#' \emph{Journal of the Royal Statistical Society: Series C (Applied Statistics)}, 73(4), 1082–1109.
+#' \doi{10.1093/jrsssc/qlae027}
+#'
 #' @examples
 #' set.seed(262)
 #' x1 <- rnorm(100)
-#' x2 <- rnorm(100)
-#' mu <- -1 + x1 + 0.5 * x1^2 - 1.1 * x1^3 - 0.5 * x2 + 0.8 * x2^2 - 1.1 * x2^3
+#' mu <- -1 + x1
 #' p <- expit(mu)
 #' y <- rbinom(100, size = 1, prob = p)
-#' df <- data.frame(x1 = x1, x2 = x2, y = y)
-#' grid <- data.frame(x1 = seq(-1, 1, length.out = 100), x2 = seq(-1, 1, length.out = 100))
-#' model <- "y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"
-#' results <- SCB_logistic_outcome(df_fit = df, model = model, grid_df = grid)
+#' df <- data.frame(x1 = x1, y = y)
+#' grid <- data.frame(x1 = seq(-1, 1, length.out = 100))
+#' model <- "y ~ x1"
+#' results <- SCB_logistic_outcome(df_fit = df, model = model, grid_df = grid, n_boot = 100)
 #'
 SCB_logistic_outcome = function(df_fit, model, grid_df = NULL, n_boot = 1000, alpha = 0.05){
 
@@ -485,12 +500,18 @@ SCB_logistic_outcome = function(df_fit, model, grid_df = NULL, n_boot = 1000, al
 #' @importFrom stats quantile as.formula lm glm predict binomial
 #' @export
 #'
+#' @references
+#' Ren, J., Telschow, F. J. E., & Schwartzman, A. (2024).
+#' Inverse set estimation and inversion of simultaneous confidence intervals.
+#' \emph{Journal of the Royal Statistical Society: Series C (Applied Statistics)}, 73(4), 1082–1109.
+#' \doi{10.1093/jrsssc/qlae027}
+#'
 #' @examples
 #' library(MASS)
 #' set.seed(262)
-#' M <- 50
+#' M <- 5
 #' rho <- 0.4
-#' n <- 500
+#' n <- 100
 #' beta <- rnorm(M, mean = 0, sd = 1)
 #' Sigma <- outer(1:M, 1:M, function(i, j) rho^abs(i - j))
 #' X <- MASS::mvrnorm(n = n, mu = rep(0, M), Sigma = Sigma)
@@ -500,7 +521,7 @@ SCB_logistic_outcome = function(df_fit, model, grid_df = NULL, n_boot = 1000, al
 #' names(df) <- paste0("x", 1:M)
 #' df$y <- as.vector(y)
 #' model <- "y ~ ."
-#' results <- SCB_regression_coef(df, model)
+#' results <- SCB_regression_coef(df, model, n_boot = 500)
 #'
 SCB_regression_coef = function(df_fit, model, n_boot = 5000, alpha = 0.05, type = "linear"){
 

@@ -32,11 +32,11 @@
 <li class="active nav-item"><a class="nav-link" href="../articles/SCoRES.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/Functional_Data_Example.html">Functional_Data_Example</a></li>
-    <li><a class="dropdown-item" href="../articles/Geographic_Data_Examples.html">Geographic_Data_Examples</a></li>
-    <li><a class="dropdown-item" href="../articles/Linear_Model_Example.html">Linear_Model_Example</a></li>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-vignettes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Vignettes</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes">
+<li><a class="dropdown-item" href="../articles/Functional_Data_Example.html">Functional Data Example</a></li>
+    <li><a class="dropdown-item" href="../articles/Geographic_Data_Example.html">Geographic Data Example</a></li>
+    <li><a class="dropdown-item" href="../articles/Linear_Model_Example.html">Linear Model Example</a></li>
     <li><a class="dropdown-item" href="../articles/Methods.html">Methods</a></li>
   </ul>
 </li>
@@ -60,9 +60,10 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>SCoRES: a vignette</h1>
-                        <h4 data-toc-skip class="author">Angela Yu</h4>
+                        <h4 data-toc-skip class="author">Zhuoran
+(Angela) Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-08-08</h4>
+            <h4 data-toc-skip class="date">2025-10-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/SCoRES.Rmd" class="external-link"><code>vignettes/SCoRES.Rmd</code></a></small>
       <div class="d-none name"><code>SCoRES.Rmd</code></div>
@@ -71,22 +72,22 @@
     
     
 <p>The <code>SCoRES</code> package is for estimating the simultaneous
-confidence intervals for inverse sets.</p>
+confidence regions for inverse regions.</p>
 <p>This vignette outlines the general functionality of the package. The
 package can handle discrete data, continuous data, functional data, and
 geographic data. It also provides users with functions to estimate the
 simultaneous confidence bands for both the mean outcome and coefficients
 from linear regression, logistic regression, functional regression and
 spatial generalized least square regression. Details on how to estimate
-SCI of inverse set for linear and logistic regression with the
+SCRs of inverse regions for linear and logistic regression with the
 <code>SCoRES</code> package can be found in the vignette
-<code>"Linear_Model_Examples"</code>. For instructions on functional
-data, see vignette <code>"Functional_Data_Examples"</code>. For
-geographic data, see vignette <code>"Geographic_Data_Examples"</code>.
+<code>"Linear_Model_Example"</code>. For instructions on functional
+data, see vignette <code>"Functional_Data_Example"</code>. For
+geographic data, see vignette <code>"Geographic_Data_Example"</code>.
 For detailed explanation of the methods used for estimating SCI and
 inverse set SCI, see vignette <code>"Methods"</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://angelayustat.github.io/SCoRES">SCoRES</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://angelayustat.github.io/SCoRES/">SCoRES</a></span><span class="op">)</span></span></code></pre></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
@@ -94,7 +95,7 @@ inverse set SCI, see vignette <code>"Methods"</code>.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Angela Yu, Armin Schwartzman, Julia Wrobel.</p>
+  <p>Developed by Zhuoran Yu, Armin Schwartzman, Junting Ren, Julia Wrobel.</p>
 </div>
 
 <div class="pkgdown-footer-right">

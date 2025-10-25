@@ -60,9 +60,10 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Functional_Data_Example</h1>
-                        <h4 data-toc-skip class="author">Angela Yu</h4>
+                        <h4 data-toc-skip class="author">Zhuoran
+(Angela) Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-10-22</h4>
+            <h4 data-toc-skip class="date">2025-10-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Functional_Data_Example.Rmd" class="external-link"><code>vignettes/Functional_Data_Example.Rmd</code></a></small>
       <div class="d-none name"><code>Functional_Data_Example.Rmd</code></div>
@@ -82,7 +83,7 @@ time for multiple subjects under two user categories (use: 1 and no use:
 several covariates, including age, gender, BMI, and alcohol
 consumption.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://angelayustat.github.io/SCoRES">SCoRES</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://angelayustat.github.io/SCoRES/">SCoRES</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mgcv</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">pupil</span><span class="op">)</span></span></code></pre></div>
 <p>Before calculating the SCBs, we first process pupil data by fitting a
@@ -116,22 +117,24 @@ simultaneous confidence bands (SCBs) can be constructed through
 The SCoRES package provides two options for calculating simultaneous
 confidence bands (SCBs), specified via the method argument:
 <code>cma</code>: Correlation and Multiplicity Adjusted (CMA) confidence
-bands via parametric approach. <code>multiplier</code>: Dense confidence
-bands via Multiplier-t Bootstrap method. Use <code>subset</code> to
-specify the names of grouping variables to analyze. The input data
-should have numerical binary 0/1 values for all scalar group variables.
-Here, we analyze the user group by specifying
-<code>subset = c("use = 1")</code>. Use <code>fitted</code> to specify
-the object for SCB estimation. If <code>fitted = TRUE</code>,
-<code><a href="../reference/SCB_functional_outcome.html">SCoRES::SCB_functional_outcome</a></code> will construct the SCB for
-the fitted mean outcome function. If <code>fitted = FALSE</code>,
-<code><a href="../reference/SCB_functional_outcome.html">SCoRES::SCB_functional_outcome</a></code> will construct the SCB for
-the fitted parameter function. For <code>cma</code> option, users are
-required to provide a functional regression object through argument
-<code>object</code>. For <code>multiplier</code> option, users also need
-to provide input for <code>object</code>. If <code>object = NULL</code>,
-the function will only output the SCB for an overall mean outcome
-function regardless of the group specified.</p>
+bands via parametric approach (<span class="citation">Crainiceanu et al.
+(2024)</span>). <code>multiplier</code>: Dense confidence bands via
+Multiplier-t Bootstrap method (<span class="citation">Telschow &amp;
+Schwartzman (2022)</span>). Use <code>subset</code> to specify the names
+of grouping variables to analyze. The input data should have numerical
+binary 0/1 values for all scalar group variables. Here, we analyze the
+user group by specifying <code>subset = c("use = 1")</code>. Use
+<code>fitted</code> to specify the object for SCB estimation. If
+<code>fitted = TRUE</code>, <code><a href="../reference/SCB_functional_outcome.html">SCoRES::SCB_functional_outcome</a></code>
+will construct the SCB for the fitted mean outcome function. If
+<code>fitted = FALSE</code>, <code><a href="../reference/SCB_functional_outcome.html">SCoRES::SCB_functional_outcome</a></code>
+will construct the SCB for the fitted parameter function. For
+<code>cma</code> option, users are required to provide a functional
+regression object through argument <code>object</code>. For
+<code>multiplier</code> option, users also need to provide input for
+<code>object</code>. If <code>object = NULL</code>, the function will
+only output the SCB for an overall mean outcome function regardless of
+the group specified.</p>
 <p>Here, we estimate SCBs using both options separately for the mean
 outcome Y(t) of user’s group:
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">[</mo><mtext mathvariant="normal">percent_change</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="prefix">|</mo><mtext mathvariant="normal">use</mtext><mo>=</mo><mn>1</mn><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
@@ -406,7 +409,7 @@ from multiplier bootstrap.</p>
 <span>        min.size <span class="op">=</span> <span class="fl">40</span>, </span>
 <span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
 <span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Functional_Data_Example_files/figure-html/pupil_plot_cs_cma%202-1.png" width="576"></p>
+<p><img src="Functional_Data_Example_files/figure-html/pupil_plot_cs_cma_2-1.png" width="576"></p>
 </div>
 </div>
 <div class="section level3">
@@ -441,7 +444,19 @@ from multiplier bootstrap.</p>
 <span>        min.size <span class="op">=</span> <span class="fl">40</span>, </span>
 <span>        palette <span class="op">=</span> <span class="st">"Spectral"</span>, </span>
 <span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Functional_Data_Example_files/figure-html/pupil_plot_cs_multiplier%202-1.png" width="576"></p>
+<p><img src="Functional_Data_Example_files/figure-html/pupil_plot_cs_multiplier_2-1.png" width="576"></p>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
+<div id="ref-crainiceanu2024functional" class="csl-entry">
+Crainiceanu, C. M., Goldsmith, J., Leroux, A., &amp; Cui, E. (2024).
+<em>Functional data analysis with r</em>. Chapman; Hall/CRC.
+</div>
+<div id="ref-Telschow:2022" class="csl-entry">
+Telschow, F. J. E., &amp; Schwartzman, A. (2022). Simultaneous
+confidence bands for functional data using the gaussian kinematic
+formula. <em>Journal of Statistical Planning and Inference</em>,
+<em>216</em>, 70–94. <a href="https://doi.org/10.1016/j.jspi.2021.05.008" class="external-link">https://doi.org/10.1016/j.jspi.2021.05.008</a>
+</div>
+</div>
 </div>
 </div>
 </div>

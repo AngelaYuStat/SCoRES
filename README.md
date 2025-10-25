@@ -28,7 +28,7 @@ Proposed by Sommerfeld et al. (2018), Coverage Probability Excursion
 CR<sub>in</sub>(*U*) ⊆ *μ*<sup>−1</sup>(*U*) ⊆ CR<sub>out</sub>(*U*) are
 used to assess the spatial uncertainty of the inverse set estimation.
 
-Ren et al. (2023) generalized the estimation to dense and non-dense
+Ren et al. (2024) generalized the estimation to dense and non-dense
 domains, and developed a fast and reliable construction method of
 confidence regions for inverse sets over arbitrary chosen thresholds $c$
 simultaneously. Based on Ren’s approach, this package provides useful
@@ -169,7 +169,7 @@ plot_cs(results_pupil_cma,
         color_level_label = "black")
 ```
 
-![](man/figures/pupil_plot_cs_cma-2-1.png)<!-- -->
+![](man/figures/pupil_plot_cs_cma-1.png)<!-- -->
 
 The plot demonstrate how to use SCB to find regions of time where the
 estimated mean is greater than or equal to the four levels -18, -20, -22

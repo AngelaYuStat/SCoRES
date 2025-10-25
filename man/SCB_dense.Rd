@@ -15,7 +15,7 @@ SCB_dense(
 )
 }
 \arguments{
-\item{A}{A data array of dimension (D₁, D₂, ..., N), where N is the number of repetition/subjects. There should be no NA in A.}
+\item{A}{A data array of dimension \eqn{(D_1, D_2, \ldots, D_N)}, where N is the number of repetition/subjects. There should be no NA in A.}
 
 \item{mean_A}{Optional array of same shape as \code{A[,,1]}, representing the estimated mean of the data.}
 

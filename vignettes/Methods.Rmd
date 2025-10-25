@@ -1,12 +1,14 @@
 ---
 title: "Methods"
-author: "Angela Yu"
+author: "Zhuoran (Angela) Yu"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
     toc: true
     toc_depth: 2
     number_sections: true
+bibliography: references.bib
+csl: apa.csl
 vignette: >
   %\VignetteIndexEntry{Methods}
   %\VignetteEncoding{UTF-8}
@@ -24,7 +26,7 @@ $$
 $$
 , with $U$ a pre-specified  subset of a real line $\mathbb{R}$ (e.g., $[c, \infty)$).  
 
-A point estimator for the inverse set can be constructed as $\hat{\mu}_n^{-1}(U)$, where $\hat{\mu}_n$ is an empirical estimator of $\mu$ based on $n$ observations. To quantify the spatial uncertainty of this estimate, Sommerfeld et al. (2018)  introduced the Coverage Probability Excursion (CoPE) sets, defined as: 
+A point estimator for the inverse set can be constructed as $\hat{\mu}_n^{-1}(U)$, where $\hat{\mu}_n$ is an empirical estimator of $\mu$ based on $n$ observations. To quantify the spatial uncertainty of this estimate, @Sommerfeld:2018 introduced the Coverage Probability Excursion (CoPE) sets, defined as: 
 $$
 \text{CR}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CR}_{\text{out}}(U)
 $$
@@ -36,7 +38,7 @@ for a pre-specified confidence level $1-\alpha$ (e.g., $\alpha = 0.05$).
 
 Existing approaches require restrictive assumptions, including domain density of $S$ in $R$, continuity of $\hat{\mu}_n$ and $\mu$ near thresholds, and  large-sample guarantees, which limit the applicability. Besides, the estimation  and coverage depend on setting a fixed threshold level, which is difficult to  determine.  
 
-Ren et al. (2023) proposed a framework that generalizes the estimation of such inverse sets to dense and non-dense domains with protection against inflated Type I error, and constructs multiple upper, lower or interval confidence regions of $\mu^{-1}(U)$ over arbitrary chosen thresholds. The coverage probability is achieved non-asymptotically and simultaneously through inverting simultaneous confidence intervals. For instance, suppose we are interested in inverse regions  $\mu^{-1}([c,\infty))$ for a single value $c$, the inverse confidence regions are constructed by inverting simultaneous confidence intervals (SCIs). Given SCI  bounds $\hat{B}_{l}(\boldsymbol{s})$ and $\hat{B}_{u}(\boldsymbol{s})$ satisfying:
+@Ren:2024 proposed a framework that generalizes the estimation of such inverse sets to dense and non-dense domains with protection against inflated Type I error, and constructs multiple upper, lower or interval confidence regions of $\mu^{-1}(U)$ over arbitrary chosen thresholds. The coverage probability is achieved non-asymptotically and simultaneously through inverting simultaneous confidence intervals. For instance, suppose we are interested in inverse regions  $\mu^{-1}([c,\infty))$ for a single value $c$, the inverse confidence regions are constructed by inverting simultaneous confidence intervals (SCIs). Given SCI  bounds $\hat{B}_{l}(\boldsymbol{s})$ and $\hat{B}_{u}(\boldsymbol{s})$ satisfying:
 
 $$
 \mathbb{P}\left(\forall\boldsymbol{s}\in\mathcal{S}: \hat{B}_{l}(\boldsymbol{s}) \leq \mu(\boldsymbol{s}) \leq \hat{B}_{u}(\boldsymbol{s})\right) = 1-\alpha
@@ -140,7 +142,7 @@ whenever the critical value $q_{\alpha,N}$ satisfies
 \frac{\hat{\eta}_N(s)-\eta(s)}{\hat{\zeta}_N(s)} \;>\; q_{\alpha,N}\right)=\alpha. 
 \]
 
-The $q_{\alpha,N}$ is unknown in practice. In SCoRES, we implement two approaches for estimating the $q_{\alpha,N}$ for functional parameter functions in FoSR model: the Correlation and Multiplicity-Adjusted (CMA) bands based on parameter simulations, and a multiplier bootstrap procedure. We detail the CMA procedure below:
+The $q_{\alpha,N}$ is unknown in practice. In SCoRES, we implement two approaches for estimating the $q_{\alpha,N}$ for functional parameter functions in FoSR model: the Correlation and Multiplicity-Adjusted (CMA) bands (@crainiceanu2024functional) based on parameter simulations, and a multiplier bootstrap procedure (@Telschow:2022). We detail the CMA procedure below:
 
 ### Correlation and Multiplicity Adjusted (CMA) Confidence Bands Based on Parameter Simulations
 

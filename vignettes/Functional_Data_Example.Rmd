@@ -1,12 +1,14 @@
 ---
 title: "Functional_Data_Example"
-author: "Angela Yu"
+author: "Zhuoran (Angela) Yu"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
     toc: true
     toc_depth: 2
     number_sections: true
+bibliography: references.bib
+csl: apa.csl
 vignette: >
   %\VignetteIndexEntry{Functional_Data_Example}
   %\VignetteEncoding{UTF-8}
@@ -63,8 +65,8 @@ fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
 After obtaining the FoSR object `fosr_mod`, the simultaneous confidence bands (SCBs) can be constructed through `SCoRES::SCB_functional_outcome` using pre-specified methods.
 The SCoRES package provides two options for calculating simultaneous confidence bands (SCBs), specified via the method argument:
 `cma`: Correlation and Multiplicity Adjusted (CMA) confidence bands
-via parametric approach.
-`multiplier`: Dense confidence bands via Multiplier-t Bootstrap method.
+via parametric approach (@crainiceanu2024functional).
+`multiplier`: Dense confidence bands via Multiplier-t Bootstrap method (@Telschow:2022).
 Use `subset` to specify the names of grouping variables to analyze. The input data should have numerical binary 0/1 values for all scalar group variables. Here, we analyze the user group by specifying `subset = c("use = 1")`.
 Use `fitted` to specify the object for SCB estimation. If `fitted = TRUE`, `SCoRES::SCB_functional_outcome` will construct the SCB for the fitted mean outcome function. If `fitted = FALSE`, `SCoRES::SCB_functional_outcome` will construct the SCB for the fitted parameter function.
 For `cma` option, users are required to provide a functional regression object through argument `object`.
@@ -102,7 +104,7 @@ The code below visualizes the simultaneous outer and inner regions derived from 
 
 The `levels = c(-18, -20, -22, -24)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plots the estimated inverse regions, the inner confidence regions, and the outer confidence regions.
 
-```{r pupil_plot_cs_cma, echo = TRUE}
+```{r pupil_plot_cs_cma, echo = TRUE, eval = pkgdown::in_pkgdown()}
 # CMA approach
 results_pupil_cma <- SCoRES::SCB_functional_outcome(
                                           data_df = pupil,
@@ -134,7 +136,7 @@ The plot demonstrates how to use SCBs to find regions of time where the estimate
 
 The next plot shows the SCB for the coefficient function for the use group, and the corresponding SCRs based on specified levels.
 
-```{r ccds_plot_cs_pupil_para, echo = TRUE}
+```{r ccds_plot_cs_pupil_para, echo = TRUE, eval = pkgdown::in_pkgdown()}
 #CMA approach for parameter function
 results_pupil_cma_para <- SCoRES::SCB_functional_outcome(
                                           data_df = pupil,
@@ -221,7 +223,7 @@ plot_cs(results_pupil_multiplier_para,
 
 The following plot displays the SCB and the corresponding SCRs of specified levels for the overall mean outcome function. The solid black line represents the sample mean. 
 
-```{r pupil_plot_cs_multiplier_overall, echo = TRUE}
+```{r pupil_plot_cs_multiplier_overall, echo = TRUE, eval = pkgdown::in_pkgdown()}
 results_pupil_multiplier_overall <- SCoRES::SCB_functional_outcome(
                                           data_df = pupil,
                                           method = "multiplier",
@@ -281,7 +283,7 @@ $$
 
 The following plots show the SCBs and inverse SCBs for the mean outcome function. The first one is from CMA approach and the second is from multiplier bootstrap.
 
-```{r pupil_plot_cs_cma 2, echo = TRUE}
+```{r pupil_plot_cs_cma_2, echo = TRUE, eval = pkgdown::in_pkgdown()}
 # CMA approach
 results_pupil_cma <- SCoRES::SCB_functional_outcome(
                                           data_df = pupil,
@@ -313,7 +315,7 @@ plot_cs(results_pupil_cma,
 
 #### SCB for Mean Outcome Function
 
-```{r pupil_plot_cs_multiplier 2, echo = TRUE}
+```{r pupil_plot_cs_multiplier_2, echo = TRUE}
 # Multiplier-t Bootstrap
 results_pupil_multiplier <- SCoRES::SCB_functional_outcome(
                                           data_df = pupil,

@@ -20,3 +20,7 @@
 ^Simulation\.html$
 ^coverage\.html$
 ^SCoRES_Simulation\.ipynb$
+^\.git$
+^\.Rproj\.user$
+^.*\.Rcheck$
+^\.Rd2pdf[0-9]+$

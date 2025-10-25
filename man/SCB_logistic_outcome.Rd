@@ -48,13 +48,18 @@ using a non-parametric bootstrap method for the mean outcome of regression on a 
 \examples{
 set.seed(262)
 x1 <- rnorm(100)
-x2 <- rnorm(100)
-mu <- -1 + x1 + 0.5 * x1^2 - 1.1 * x1^3 - 0.5 * x2 + 0.8 * x2^2 - 1.1 * x2^3
+mu <- -1 + x1
 p <- expit(mu)
 y <- rbinom(100, size = 1, prob = p)
-df <- data.frame(x1 = x1, x2 = x2, y = y)
-grid <- data.frame(x1 = seq(-1, 1, length.out = 100), x2 = seq(-1, 1, length.out = 100))
-model <- "y ~ x1 + I(x1^2) + I(x1^3) + x2 + I(x2^2) + I(x2^3)"
-results <- SCB_logistic_outcome(df_fit = df, model = model, grid_df = grid)
+df <- data.frame(x1 = x1, y = y)
+grid <- data.frame(x1 = seq(-1, 1, length.out = 100))
+model <- "y ~ x1"
+results <- SCB_logistic_outcome(df_fit = df, model = model, grid_df = grid, n_boot = 100)
 
+}
+\references{
+Ren, J., Telschow, F. J. E., & Schwartzman, A. (2024).
+Inverse set estimation and inversion of simultaneous confidence intervals.
+\emph{Journal of the Royal Statistical Society: Series C (Applied Statistics)}, 73(4), 1082–1109.
+\doi{10.1093/jrsssc/qlae027}
 }

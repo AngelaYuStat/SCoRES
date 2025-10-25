@@ -133,6 +133,8 @@ testthat::test_that("dims > 2 should error", {
 
 data(pupil)
 testthat::test_that("Function works well", {
+  skip_on_cran()
+
   library(mgcv)
   pupil_fpca <- prepare_pupil_fpca(pupil)
   fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +

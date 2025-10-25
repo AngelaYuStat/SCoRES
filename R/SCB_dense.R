@@ -1,6 +1,6 @@
 #' Construct Simultaneous Confidence Bands (SCB) for Dense Functional Data
 #'
-#' @param A A data array of dimension (D₁, D₂, ..., N), where N is the number of repetition/subjects. There should be no NA in A.
+#' @param A A data array of dimension \eqn{(D_1, D_2, \ldots, D_N)}, where N is the number of repetition/subjects. There should be no NA in A.
 #' @param mean_A Optional array of same shape as \code{A[,,1]}, representing the estimated mean of the data.
 #' @param alpha Significance level for SCB. Default is 0.05.
 #' @param Mboots Number of bootstrap replications. Default is 5000.
