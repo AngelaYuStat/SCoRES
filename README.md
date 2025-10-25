@@ -1,9 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # SCoRES
@@ -97,9 +91,7 @@ variation.
 
 The function-on-scalar regression model is
 
-$$
-\text{percent_change}_i(t) = \beta_0(t) + \beta_1(t) \text{use}_i + b_i(t) + \epsilon_i(t),
-$$
+$\text{percent_change}_i(t) = \beta_0(t) + \beta_1(t) \text{use}_i + b_i(t) + \epsilon_i(t),$
 
 ``` r
 pupil_fpca <- SCoRES::prepare_pupil_fpca(pupil)
@@ -126,9 +118,7 @@ SCB for the fitted mean outcome function. If `fitted = FALSE`,
 parameter function.
 
 Here, we estimated SCBs using both options seperately for the mean
-outcome $\text{percent_change}(t)$ of user’s group: $$
-E[\text{percent_change}(t) | \text{use} = 1] = \beta_0(t) + \beta_1(t),
-$$
+outcome $\text{percent_change}(t)$ of user’s group: $E[\text{percent_change}(t) | \text{use} = 1] = \beta_0(t) + \beta_1(t),$
 
 ``` r
 # CMA approach
