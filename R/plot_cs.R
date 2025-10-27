@@ -100,10 +100,12 @@
 #'
 #'results <- tibble::as_tibble(results)
 #'plot_cs(results, levels = c(0), x = seq(-1, 1, length.out = 50), mu_hat = results$Mean,
-#'xlab = "x1", ylab = "y", level_label = T, min.size = 40, palette = "Spectral", color_level_label = "black"))
+#'        xlab = "x1", ylab = "y", level_label = T, min.size = 40, palette = "Spectral",
+#'        color_level_label = "black")
 #'
 
-plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_true = NULL, together = TRUE, xlab = "X1", ylab = "X2", level_label = TRUE,
+plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_true = NULL,
+                   together = TRUE, xlab = "X1", ylab = "X2", level_label = TRUE,
                    min.size = 5, palette = "gray", color_level_label = "black"){
 
   if(!is.list(SCB)) stop("`SCB` should be a list.")

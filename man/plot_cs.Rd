@@ -120,7 +120,8 @@ results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
 
 results <- tibble::as_tibble(results)
 plot_cs(results, levels = c(0), x = seq(-1, 1, length.out = 50), mu_hat = results$Mean,
-xlab = "x1", ylab = "y", level_label = T, min.size = 40, palette = "Spectral", color_level_label = "black"))
+       xlab = "x1", ylab = "y", level_label = T, min.size = 40, palette = "Spectral",
+       color_level_label = "black")
 
 }
 \references{
