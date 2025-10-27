@@ -30,7 +30,7 @@ statistical tools for both the estimation of the inverse set and the
 corresponding simultaneous outer and inner confidence region. Acceptable
 forms of input includes both 1D and 2D data for linear regression,
 logistic regression, functional regression and spatial generalized least
-square regression. Useful functions are also provided for constructing
+squares regression. Useful functions are also provided for constructing
 simultaneous confidence bands (SCB) for these models. More details can
 be found below.
 

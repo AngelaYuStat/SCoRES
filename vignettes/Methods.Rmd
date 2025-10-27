@@ -238,7 +238,7 @@ After $L$ bootstrap iterations, take the $(1-\alpha)$ quantile of the empirical 
 \]
 For logistic regression, the SCI is further transformed back to the data scale using the link function.
 
-## Construction of SCB for Spatial Generalized Least Square Model
+## Construction of SCB for Spatial Generalized Least Squares Model
 
 We also provide tools in SCoRES for estimating SCB of geographic data, however, their use is currently limited to the spatial generalized least squares model. 
 
