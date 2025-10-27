@@ -24,3 +24,5 @@
 ^\.Rproj\.user$
 ^.*\.Rcheck$
 ^\.Rd2pdf[0-9]+$
+^\.github$
+^check$
