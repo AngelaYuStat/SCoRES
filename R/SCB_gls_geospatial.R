@@ -90,11 +90,11 @@
 #'                        mask = climate_data$mask, alpha = 0.1)
 #' }
 #'
-#' example_list <- list(x = climate_data$Z$x[50:70], y = climate_data$Z$y[40:60],
-#' obs = climate_data$Z$obs[50:70, 40:60,])
+#' example_list <- list(x = climate_data$Z$x[50:60], y = climate_data$Z$y[40:50],
+#' obs = climate_data$Z$obs[50:60, 40:50,])
 #' temp = SCB_gls_geospatial(sp_list = example_list, level = 2, data_fit = climate_data$X,
 #'                        w = c(1,0,0,0), correlation = NULL,
-#'                        mask = NULL, alpha = 0.1, N = 100)
+#'                        mask = NULL, alpha = 0.1, N = 50)
 #'
 SCB_gls_geospatial =
   function (sp_list, level = NULL, data_fit = NULL, w = NULL,

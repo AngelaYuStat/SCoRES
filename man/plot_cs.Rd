@@ -110,22 +110,18 @@ plot_cs(pupil_multiplier,levels = c(-18), x = pupil_multiplier$domain,
         color_level_label = "black")
 }
 
-mean_mod <- mgcv::gam(percent_change ~ s(seconds, k = 5, bs = "cr") +
-s(seconds, by = use, k = 5, bs = "cr"),
-data = pupil, method = "REML")
+x <- rnorm(50)
+epsilon <- rnorm(50,0,sqrt(2))
+y <- -1 + x + epsilon
+df <- data.frame(x = x, y = y)
+grid <- data.frame(x = seq(-1, 1, length.out = 50))
+model <- "y ~ x"
+results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
 
-pupil_multiplier <- SCB_functional_outcome(data = pupil, object = mean_mod,
-                                   method = "multiplier",
-                                   outcome = "percent_change",
-                                   domain = "seconds", subset= c("use = 1"),
-                                   id = "id", nboot = 50)
+results <- tibble::as_tibble(results)
+plot_cs(results, levels = c(0), x = seq(-1, 1, length.out = 50), mu_hat = results$Mean,
+xlab = "x1", ylab = "y", level_label = T, min.size = 40, palette = "Spectral", color_level_label = "black"))
 
-pupil_multiplier <- tibble::as_tibble(pupil_multiplier)
-
-plot_cs(pupil_multiplier,levels = c(-18), x = pupil_multiplier$domain,
-        mu_hat = pupil_multiplier$mu_hat, xlab = "", ylab = "",
-        level_label = T, min.size = 40, palette = "Spectral",
-        color_level_label = "black")
 }
 \references{
 Ren, J., Telschow, F. J. E., & Schwartzman, A. (2024).

@@ -104,7 +104,7 @@ The code below visualizes the simultaneous outer and inner regions derived from 
 
 The `levels = c(-18, -20, -22, -24)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plots the estimated inverse regions, the inner confidence regions, and the outer confidence regions.
 
-```{r pupil_plot_cs_cma, echo = TRUE, eval = pkgdown::in_pkgdown()}
+```{r pupil_plot_cs_cma, echo = TRUE, eval = FALSE}
 # CMA approach
 results_pupil_cma <- SCoRES::SCB_functional_outcome(
                                           data_df = pupil,
@@ -136,7 +136,7 @@ The plot demonstrates how to use SCBs to find regions of time where the estimate
 
 The next plot shows the SCB for the coefficient function for the use group, and the corresponding SCRs based on specified levels.
 
-```{r ccds_plot_cs_pupil_para, echo = TRUE, eval = pkgdown::in_pkgdown()}
+```{r ccds_plot_cs_pupil_para, echo = TRUE, eval = FALSE}
 #CMA approach for parameter function
 results_pupil_cma_para <- SCoRES::SCB_functional_outcome(
                                           data_df = pupil,
@@ -223,7 +223,7 @@ plot_cs(results_pupil_multiplier_para,
 
 The following plot displays the SCB and the corresponding SCRs of specified levels for the overall mean outcome function. The solid black line represents the sample mean. 
 
-```{r pupil_plot_cs_multiplier_overall, echo = TRUE, eval = pkgdown::in_pkgdown()}
+```{r pupil_plot_cs_multiplier_overall, echo = TRUE, eval = FALSE}
 results_pupil_multiplier_overall <- SCoRES::SCB_functional_outcome(
                                           data_df = pupil,
                                           method = "multiplier",
@@ -283,7 +283,7 @@ $$
 
 The following plots show the SCBs and inverse SCBs for the mean outcome function. The first one is from CMA approach and the second is from multiplier bootstrap.
 
-```{r pupil_plot_cs_cma_2, echo = TRUE, eval = pkgdown::in_pkgdown()}
+```{r pupil_plot_cs_cma_2, echo = TRUE, eval = FALSE}
 # CMA approach
 results_pupil_cma <- SCoRES::SCB_functional_outcome(
                                           data_df = pupil,

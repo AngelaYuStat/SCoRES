@@ -52,7 +52,7 @@ df <- as.data.frame(X)
 names(df) <- paste0("x", 1:M)
 df$y <- as.vector(y)
 model <- "y ~ ."
-results <- SCB_regression_coef(df, model, n_boot = 500)
+results <- SCB_regression_coef(df, model, n_boot = 100)
 
 }
 \references{

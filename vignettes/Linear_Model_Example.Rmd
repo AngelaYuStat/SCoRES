@@ -155,7 +155,7 @@ Y_i = \beta_0 + \sum^{50}_{j=1}X_{ij}\beta_j + \epsilon_i,
 $$
 where $Cov(X_i, X_j)=0.4^{|i-j|}$.
 
-```{r simulate data_estimate SCI_coef, echo = TRUE, eval = pkgdown::in_pkgdown()}
+```{r simulate data_estimate SCI_coef, echo = TRUE, eval = FALSE}
 library(MASS)
 # generate simulated data
 M <- 50
@@ -176,7 +176,7 @@ results <- SCB_regression_coef(df, model)
 
 Likewise, the `levels = c(-2, -0.5, -0.1, 0.2)` argument specifies a set of thresholds, and `SCoRES::plot_cs()` function estimates multiple inverse upper excursion sets corresponding to these thresholds, and plots the estimated inverse regions, the inner confidence regions, and the outer confidence regions.
 
-```{r simulate_plot_cs_coef, echo = TRUE, eval = pkgdown::in_pkgdown()}
+```{r simulate_plot_cs_coef, echo = TRUE, eval = FALSE}
 results <- tibble::as_tibble(results)
 plot_cs(results,
         levels = c(-2, -0.5, -0.1, 0.2), 

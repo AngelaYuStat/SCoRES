@@ -521,7 +521,7 @@ SCB_logistic_outcome = function(df_fit, model, grid_df = NULL, n_boot = 1000, al
 #' names(df) <- paste0("x", 1:M)
 #' df$y <- as.vector(y)
 #' model <- "y ~ ."
-#' results <- SCB_regression_coef(df, model, n_boot = 500)
+#' results <- SCB_regression_coef(df, model, n_boot = 100)
 #'
 SCB_regression_coef = function(df_fit, model, n_boot = 5000, alpha = 0.05, type = "linear"){
 
