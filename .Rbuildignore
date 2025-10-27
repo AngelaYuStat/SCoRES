@@ -26,3 +26,6 @@
 ^\.Rd2pdf[0-9]+$
 ^\.github$
 ^check$
+^build$
+^\.DS_Store$
+^cran-comments\.md$
