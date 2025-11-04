@@ -63,7 +63,7 @@
                         <h4 data-toc-skip class="author">Zhuoran
 (Angela) Yu</h4>
             
-            <h4 data-toc-skip class="date">2025-10-24</h4>
+            <h4 data-toc-skip class="date">2025-11-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/AngelaYuStat/SCoRES/blob/HEAD/vignettes/Methods.Rmd" class="external-link"><code>vignettes/Methods.Rmd</code></a></small>
       <div class="d-none name"><code>Methods.Rmd</code></div>
@@ -152,7 +152,7 @@ satisfying:</p>
 <p>The inner and outer confidence regions (CRs) for the inverse upper
 excursion set
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>μ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mu^{-1}[c, \infty)</annotation></semantics></math>
-are defined as:<br><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CR</mtext><mtext mathvariant="normal">in</mtext></msub><mo stretchy="false" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mo>ℓ</mo><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mo stretchy="false" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+are calculated as:<br><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CR</mtext><mtext mathvariant="normal">in</mtext></msub><mo stretchy="false" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mo>ℓ</mo><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mo stretchy="false" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
 \text{CR}_{\text{in}}[c, \infty) := \hat{B}_\ell^{-1}[c, \infty)
 </annotation></semantics></math></p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CR</mtext><mtext mathvariant="normal">out</mtext></msub><mo stretchy="false" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mo stretchy="false" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
@@ -161,7 +161,7 @@ are defined as:<br><math display="block" xmlns="http://www.w3.org/1998/Math/Math
 <p>The outer and inner confidence regions for the inverse lower
 excursion set
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>μ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>c</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\mu^{-1}\left(-\infty, c\right]</annotation></semantics></math>
-are defined as:</p>
+are calculated as:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CR</mtext><mtext mathvariant="normal">in</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>c</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>c</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">[</mo><mi>c</mi><mo>,</mo><mi>+</mi><mi>∞</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mi>∁</mi></msup></mrow><annotation encoding="application/x-tex">
 \text{CR}_{\text{in}}\left(-\infty, c\right] := \hat{B}_u^{-1}\left(-\infty, c\right]
 = \left( \hat{B}_u^{-1}\left[c, +\infty\right) \right)^{\complement}
@@ -171,13 +171,15 @@ are defined as:</p>
 </annotation></semantics></math></p>
 <p>The inner and outer CRs for the inverse interval set
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>μ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">[</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\mu^{-1}[a, b]</annotation></semantics></math>
-are defined as:</p>
+are calculated as:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CR</mtext><mtext mathvariant="normal">in</mtext></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mo>ℓ</mo><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">[</mo><mi>a</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo><mo>∩</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
 \text{CR}_{\text{in}}[a, b] := \hat{B}_\ell^{-1}[a, \infty) \cap \hat{B}_u^{-1}(-\infty, b]
 </annotation></semantics></math></p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">CR</mtext><mtext mathvariant="normal">out</mtext></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>:=</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mrow><mo stretchy="true" form="prefix">[</mo><mi>a</mi><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo><mo>∩</mo><msubsup><mover><mi>B</mi><mo accent="true">̂</mo></mover><mo>ℓ</mo><mrow><mi>−</mi><mn>1</mn></mrow></msubsup><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>∞</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
 \text{CR}_{\text{out}}[a, b] := \hat{B}_u^{-1}[a, \infty) \cap \hat{B}_\ell^{-1}(-\infty, b]
-</annotation></semantics></math></p>
+</annotation></semantics></math> By Theorem 1 from <span class="citation">Ren et al. (2024)</span>, these CRs are valid for all
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>∈</mo><mi>ℝ</mi></mrow><annotation encoding="application/x-tex">c \in \mathbb{R}</annotation></semantics></math>.
+Therefore we name them as simultaneous confidence regions (SCRs).</p>
 </div>
 <div class="section level2">
 <h2 id="linear-function-on-scalar-regression-fosr">Linear Function-on-Scalar Regression (FoSR)<a class="anchor" aria-label="anchor" href="#linear-function-on-scalar-regression-fosr"></a>
@@ -306,10 +308,9 @@ is unknown in practice. In SCoRES, we implement two approaches for
 estimating the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>q</mi><mrow><mi>α</mi><mo>,</mo><mi>N</mi></mrow></msub><annotation encoding="application/x-tex">q_{\alpha,N}</annotation></semantics></math>
 for functional parameter functions in FoSR model: the Correlation and
-Multiplicity-Adjusted (CMA) bands (<span class="citation">Crainiceanu et
-al. (2024)</span>) based on parameter simulations, and a multiplier
-bootstrap procedure (<span class="citation">Telschow &amp; Schwartzman
-(2022)</span>). We detail the CMA procedure below:</p>
+Multiplicity-Adjusted (CMA) bands from <span class="citation">Crainiceanu et al. (2024)</span> based on parameter
+simulations, and a multiplier bootstrap procedure from <span class="citation">Telschow &amp; Schwartzman (2022)</span>. We detail the
+CMA procedure below:</p>
 <div class="section level3">
 <h3 id="correlation-and-multiplicity-adjusted-cma-confidence-bands-based-on-parameter-simulations">Correlation and Multiplicity Adjusted (CMA) Confidence Bands Based
 on Parameter Simulations<a class="anchor" aria-label="anchor" href="#correlation-and-multiplicity-adjusted-cma-confidence-bands-based-on-parameter-simulations"></a>
@@ -370,7 +371,9 @@ from
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>T</mi><mo>*</mo></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mn>1</mn><msqrt><mi>N</mi></msqrt></mfrac><munderover><mo>∑</mo><mrow><mi>n</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover><msub><mi>g</mi><mi>n</mi></msub><mfrac><mrow><msubsup><mi>R</mi><mi>n</mi><mi>N</mi></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><msubsup><mover><mi>ϵ</mi><mo accent="true">̂</mo></mover><mi>N</mi><mo>*</mo></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mrow><annotation encoding="application/x-tex">
 T^*(s) = \frac{1}{\sqrt{N}} \sum_{n=1}^N g_n \frac{R_n^N(s)}{\hat{\epsilon}_N^*(s)}
 </annotation></semantics></math></p></li>
-<li><p>Repeat steps 1 to 3 many times. Take the
+<li><p>Repeat steps 1 to 3 many times to approximate the condition law
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>ℒ</mi><mo>*</mo></msup><mo>=</mo><mi>ℒ</mi><mspace width="-0.167em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>T</mi><mo>*</mo></msup><mo>∣</mo><msub><mi>Y</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>Y</mi><mi>N</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{L}^* = \mathcal{L}\!\left(T^* \mid Y_1, \ldots, Y_N\right)</annotation></semantics></math>.
+Take the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>⋅</mo><mn>100</mn><mi>%</mi></mrow><annotation encoding="application/x-tex">(1 - \alpha) \cdot 100\%</annotation></semantics></math>
 quantile of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>ℒ</mi><mo>*</mo></msup><annotation encoding="application/x-tex">\mathcal{L}^*</annotation></semantics></math>
@@ -486,7 +489,7 @@ The SCI on the test design matrix is then given by
 further transformed back to the data scale using the link function.</p>
 </div>
 <div class="section level2">
-<h2 id="construction-of-scb-for-spatial-generalized-least-square-model">Construction of SCB for Spatial Generalized Least Square Model<a class="anchor" aria-label="anchor" href="#construction-of-scb-for-spatial-generalized-least-square-model"></a>
+<h2 id="construction-of-scb-for-spatial-generalized-least-squares-model">Construction of SCB for Spatial Generalized Least Squares Model<a class="anchor" aria-label="anchor" href="#construction-of-scb-for-spatial-generalized-least-squares-model"></a>
 </h2>
 <p>We also provide tools in SCoRES for estimating SCB of geographic
 data, however, their use is currently limited to the spatial generalized

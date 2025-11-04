@@ -44,7 +44,7 @@ $$
 \mathbb{P}\left(\forall\boldsymbol{s}\in\mathcal{S}: \hat{B}_{l}(\boldsymbol{s}) \leq \mu(\boldsymbol{s}) \leq \hat{B}_{u}(\boldsymbol{s})\right) = 1-\alpha
 $$
 
-The inner and outer confidence regions (CRs) for the inverse upper excursion set $$\mu^{-1}[c, \infty)$$ are defined as:  
+The inner and outer confidence regions (CRs) for the inverse upper excursion set $$\mu^{-1}[c, \infty)$$ are calculated as:  
 $$
 \text{CR}_{\text{in}}[c, \infty) := \hat{B}_\ell^{-1}[c, \infty)
 $$
@@ -53,7 +53,7 @@ $$
 \text{CR}_{\text{out}}[c,\infty) := \hat{B}_u^{-1}[c, \infty)
 $$
 
-The outer and inner confidence regions for the inverse lower excursion set $\mu^{-1}\left(-\infty, c\right]$ are defined as:
+The outer and inner confidence regions for the inverse lower excursion set $\mu^{-1}\left(-\infty, c\right]$ are calculated as:
 
 $$
 \text{CR}_{\text{in}}\left(-\infty, c\right] := \hat{B}_u^{-1}\left(-\infty, c\right]
@@ -64,7 +64,7 @@ $$
 = \left( \hat{B}_\ell^{-1}\left[c, +\infty\right) \right)^{\complement}
 $$
 
-The inner and outer CRs for the inverse interval set $\mu^{-1}[a, b]$ are defined as:
+The inner and outer CRs for the inverse interval set $\mu^{-1}[a, b]$ are calculated as:
 
 $$
 \text{CR}_{\text{in}}[a, b] := \hat{B}_\ell^{-1}[a, \infty) \cap \hat{B}_u^{-1}(-\infty, b]
@@ -73,6 +73,7 @@ $$
 $$
 \text{CR}_{\text{out}}[a, b] := \hat{B}_u^{-1}[a, \infty) \cap \hat{B}_\ell^{-1}(-\infty, b]
 $$
+By Theorem 1 from @Ren:2024, these CRs are valid for all $c \in \mathbb{R}$. Therefore we name them as simultaneous confidence regions (SCRs).
 
 ## Linear Function-on-Scalar Regression (FoSR)
 
@@ -142,7 +143,7 @@ whenever the critical value $q_{\alpha,N}$ satisfies
 \frac{\hat{\eta}_N(s)-\eta(s)}{\hat{\zeta}_N(s)} \;>\; q_{\alpha,N}\right)=\alpha. 
 \]
 
-The $q_{\alpha,N}$ is unknown in practice. In SCoRES, we implement two approaches for estimating the $q_{\alpha,N}$ for functional parameter functions in FoSR model: the Correlation and Multiplicity-Adjusted (CMA) bands (@crainiceanu2024functional) based on parameter simulations, and a multiplier bootstrap procedure (@Telschow:2022). We detail the CMA procedure below:
+The $q_{\alpha,N}$ is unknown in practice. In SCoRES, we implement two approaches for estimating the $q_{\alpha,N}$ for functional parameter functions in FoSR model: the Correlation and Multiplicity-Adjusted (CMA) bands from @crainiceanu2024functional based on parameter simulations, and a multiplier bootstrap procedure from @Telschow:2022. We detail the CMA procedure below:
 
 ### Correlation and Multiplicity Adjusted (CMA) Confidence Bands Based on Parameter Simulations
 
@@ -177,7 +178,7 @@ The second is the multiplier-t bootstrap procedure for constructing confidence b
 T^*(s) = \frac{1}{\sqrt{N}} \sum_{n=1}^N g_n \frac{R_n^N(s)}{\hat{\epsilon}_N^*(s)}
 \]
 
-4. Repeat steps 1 to 3 many times. Take the $(1 - \alpha) \cdot 100\%$ quantile of $\mathcal{L}^*$ to estimate $q_{\alpha, N}$.
+4. Repeat steps 1 to 3 many times to approximate the condition law $\mathcal{L}^* = \mathcal{L}\!\left(T^* \mid Y_1, \ldots, Y_N\right)$. Take the $(1 - \alpha) \cdot 100\%$ quantile of $\mathcal{L}^*$ to estimate $q_{\alpha, N}$.
 
 At step 2, we allow three choices for the multiplier distribution $g_i$, each with mean zero and unit variance:
 

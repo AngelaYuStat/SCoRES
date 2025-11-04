@@ -76,7 +76,7 @@ using parameter simulations approach with Gaussian multiplier bootstrap.
 # example using pupil data
 library(mgcv)
 data(pupil)
-\dontrun{
+\donttest{
 pupil_fpca <- prepare_pupil_fpca(pupil)
 
 fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +

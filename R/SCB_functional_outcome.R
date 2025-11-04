@@ -332,7 +332,7 @@ SCB_functional_outcome = function(data_df, object = NULL, method, fitted = TRUE,
     )
     return(results)
   }else{
-    print("No Functional Regression Object provided, will only compute an overall SCB for the outcome regardless of the group specified.")
+    message("No Functional Regression Object provided, will only compute an overall SCB for the outcome regardless of the group specified.")
 
     # impute NA if necessary
     if (anyNA(data_df)){

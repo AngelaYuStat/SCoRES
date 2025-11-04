@@ -13,8 +13,8 @@ scb_to_cs(
   x1 = NULL,
   x2 = NULL,
   type = "upper",
-  return_contain_only = F,
-  return_plot = F,
+  return_contain_only = FALSE,
+  return_plot = FALSE,
   xlab = NULL,
   ylab = NULL
 )

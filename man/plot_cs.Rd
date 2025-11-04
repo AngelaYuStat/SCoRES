@@ -85,7 +85,7 @@ Supports plotting confidence regions at multiple levels and labeling contours.
 # example using pupil data
 library(mgcv)
 data(pupil)
-\dontrun{
+\donttest{
 pupil_fpca <- prepare_pupil_fpca(pupil)
 
 fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +

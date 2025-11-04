@@ -64,7 +64,7 @@
 #' library(mgcv)
 #' data(pupil)
 #'
-#' \dontrun{
+#' \donttest{
 #' pupil_fpca <- prepare_pupil_fpca(pupil)
 #'
 #' fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
@@ -277,7 +277,7 @@ mean_response_predict = function(data_df, object, fitted = TRUE, outcome, domain
 #' # example using pupil data
 #' library(mgcv)
 #' data(pupil)
-#' \dontrun{
+#' \donttest{
 #' pupil_fpca <- prepare_pupil_fpca(pupil)
 #'
 #' fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
@@ -359,7 +359,7 @@ cma = function(data_df, object, fitted = TRUE, alpha = 0.05, outcome, domain,
 #' @examples
 #' library(mgcv)
 #' data(pupil)
-#' \dontrun{processed_data <- prepare_pupil_fpca(pupil)}
+#' \donttest{processed_data <- prepare_pupil_fpca(pupil)}
 #'
 #' processed_data <- prepare_pupil_fpca(pupil, k_mean = 5, k_fpca = 5)
 #'
@@ -385,7 +385,7 @@ prepare_pupil_fpca <- function(input_data, k_mean = 30, k_fpca = 15, example = "
         s(seconds, by = use, k = k_mean, bs = "cr"),
       data = input_data, method = "REML")
   }else{
-    print("Not valid input for 'example`. Please choose between `original` and `extended`.")
+    stop("Not valid input for 'example`. Please choose between `original` and `extended`.")
   }
 
   # Prepare residuals

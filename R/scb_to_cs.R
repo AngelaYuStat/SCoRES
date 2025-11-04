@@ -90,7 +90,9 @@
 #' scb_to_cs(result$scb_up, result$scb_low, c(-1, -0.5, 0.5, 1),
 #' x1 = grid$x1, x2 = grid$x2, est_mean = results$Mean)
 #'
-scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL, est_mean = NULL, x1 = NULL, x2 = NULL, type = "upper", return_contain_only = F, return_plot = F, xlab = NULL, ylab = NULL)
+scb_to_cs = function(scb_up, scb_low, levels, true_mean = NULL, est_mean = NULL,
+                     x1 = NULL, x2 = NULL, type = "upper", return_contain_only = FALSE,
+                     return_plot = FALSE, xlab = NULL, ylab = NULL)
 {
   if(is.null(scb_up)||is.null(scb_low)){
     stop("Must provide input for `scb_up` and `scb_low`.")

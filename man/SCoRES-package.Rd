@@ -6,7 +6,7 @@
 \alias{SCoRES-package}
 \title{SCoRES: Simultaneous Confidence Region Excursion Sets}
 \description{
-We present SCoRES, which provides useful statistical tools for both the estimation of the inverse regions and the corresponding simultaneous outer and inner confidence regions. Acceptable forms of input includes both 1D and 2D data for linear regression, logistic regression, functional regression and spatial generalized least squares regression. Useful functions are also provided for constructing simultaneous confidence bands (SCBs) for these models.
+Provides useful computational tools for both the estimation of the inverse regions and the corresponding simultaneous outer and inner confidence regions. Acceptable forms of input includes both 1D and 2D data for linear regression, logistic regression, functional regression and spatial generalized least squares regression. Useful functions are also provided for constructing simultaneous confidence bands (SCBs) for these models. Definition of simultaneous confidence regions (SCRs) can be found in: Sommerfeld et al., (2018) \doi{10.1080/01621459.2017.1356318}. Methods for estimating inverse regions, SCRs, and non-parametric bootstrap are based on: Ren et al., (2024) \doi{10.1093/jrsssc/qlae027}. Methods for constructing the SCBs are as described in: Crainiceanu et al., (2024) \doi{10.1201/9781003278726} and Telschow et al., (2022). \doi{10.1016/j.jspi.2021.05.008}.
 }
 \seealso{
 Useful links:

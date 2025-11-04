@@ -65,8 +65,8 @@ fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
 After obtaining the FoSR object `fosr_mod`, the simultaneous confidence bands (SCBs) can be constructed through `SCoRES::SCB_functional_outcome` using pre-specified methods.
 The SCoRES package provides two options for calculating simultaneous confidence bands (SCBs), specified via the method argument:
 `cma`: Correlation and Multiplicity Adjusted (CMA) confidence bands
-via parametric approach (@crainiceanu2024functional).
-`multiplier`: Dense confidence bands via Multiplier-t Bootstrap method (@Telschow:2022).
+via parametric approach from @crainiceanu2024functional.
+`multiplier`: Dense confidence bands via Multiplier-t Bootstrap method from @Telschow:2022.
 Use `subset` to specify the names of grouping variables to analyze. The input data should have numerical binary 0/1 values for all scalar group variables. Here, we analyze the user group by specifying `subset = c("use = 1")`.
 Use `fitted` to specify the object for SCB estimation. If `fitted = TRUE`, `SCoRES::SCB_functional_outcome` will construct the SCB for the fitted mean outcome function. If `fitted = FALSE`, `SCoRES::SCB_functional_outcome` will construct the SCB for the fitted parameter function.
 For `cma` option, users are required to provide a functional regression object through argument `object`.
@@ -223,7 +223,7 @@ plot_cs(results_pupil_multiplier_para,
 
 The following plot displays the SCB and the corresponding SCRs of specified levels for the overall mean outcome function. The solid black line represents the sample mean. 
 
-```{r pupil_plot_cs_multiplier_overall, echo = TRUE, eval = FALSE}
+```{r pupil_plot_cs_multiplier_overall, echo = TRUE, eval = pkgdown::in_pkgdown()}
 results_pupil_multiplier_overall <- SCoRES::SCB_functional_outcome(
                                           data_df = pupil,
                                           method = "multiplier",
