@@ -8,6 +8,8 @@ Authors@R:
       person(given = "Junting", family = "Ren", ,"junting.ren.stat@gmail.com", role = "aut"),
       person(given = "Julia", family = "Wrobel", ,"julia.wrobel@emory.edu", role = "aut")
     )
+Author: Zhuoran Yu [aut, cre], Armin Schwartzman [aut], Junting Ren [aut], Julia Wrobel [aut]
+Maintainer: Zhuoran Yu <angela.yu@emory.edu>
 Description: Provides computational tools for estimating inverse regions and 
   constructing the corresponding simultaneous outer and inner confidence regions. 
   Acceptable input includes both one-dimensional and two-dimensional data for linear, 

@@ -1,0 +1,280 @@
+---
+title: "Methods"
+author: "Zhuoran (Angela) Yu"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+bibliography: references.bib
+csl: apa.csl
+vignette: >
+  %\VignetteIndexEntry{Methods}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+## Definition of Inverse Set and Introduction of the Estimation Method
+The identification of domain sets whose outcomes belong to predefined subsets can address fundamental risk assessment challenges in climatology and medicine. A  motivating example involves estimating geographical regions where average difference between summer and winter temperatures exceeds a certain benchmark,  which helps policymakers focus on specific areas that are at higher risk for  effects of climate change.  
+
+Mathematically, the target region corresponding to the inverse image of $U \subset  \mathbb{R}$ under an unknown function $\mu: \mathcal{S} \to \mathbb{R}$, can be defined as 
+$$
+\mu^{-1}(U) = \{s \in S: \mu(s) \in U\}
+$$
+, with $U$ a pre-specified  subset of a real line $\mathbb{R}$ (e.g., $[c, \infty)$).  
+
+A point estimator for the inverse set can be constructed as $\hat{\mu}_n^{-1}(U)$, where $\hat{\mu}_n$ is an empirical estimator of $\mu$ based on $n$ observations. To quantify the spatial uncertainty of this estimate, @Sommerfeld:2018 introduced the Coverage Probability Excursion (CoPE) sets, defined as: 
+$$
+\text{CR}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CR}_{\text{out}}(U)
+$$
+which satisfy: 
+$$
+\mathbb{P}\left(\text{CR}_{\text{in}}(U) \subseteq \mu^{-1}(U) \subseteq \text{CR}_{\text{out}}(U)\right) \geq 1 - \alpha
+$$ 
+for a pre-specified confidence level $1-\alpha$ (e.g., $\alpha = 0.05$).  
+
+Existing approaches require restrictive assumptions, including domain density of $S$ in $R$, continuity of $\hat{\mu}_n$ and $\mu$ near thresholds, and  large-sample guarantees, which limit the applicability. Besides, the estimation  and coverage depend on setting a fixed threshold level, which is difficult to  determine.  
+
+@Ren:2024 proposed a framework that generalizes the estimation of such inverse sets to dense and non-dense domains with protection against inflated Type I error, and constructs multiple upper, lower or interval confidence regions of $\mu^{-1}(U)$ over arbitrary chosen thresholds. The coverage probability is achieved non-asymptotically and simultaneously through inverting simultaneous confidence intervals. For instance, suppose we are interested in inverse regions  $\mu^{-1}([c,\infty))$ for a single value $c$, the inverse confidence regions are constructed by inverting simultaneous confidence intervals (SCIs). Given SCI  bounds $\hat{B}_{l}(\boldsymbol{s})$ and $\hat{B}_{u}(\boldsymbol{s})$ satisfying:
+
+$$
+\mathbb{P}\left(\forall\boldsymbol{s}\in\mathcal{S}: \hat{B}_{l}(\boldsymbol{s}) \leq \mu(\boldsymbol{s}) \leq \hat{B}_{u}(\boldsymbol{s})\right) = 1-\alpha
+$$
+
+The inner and outer confidence regions (CRs) for the inverse upper excursion set $$\mu^{-1}[c, \infty)$$ are calculated as:  
+$$
+\text{CR}_{\text{in}}[c, \infty) := \hat{B}_\ell^{-1}[c, \infty)
+$$
+
+$$
+\text{CR}_{\text{out}}[c,\infty) := \hat{B}_u^{-1}[c, \infty)
+$$
+
+The outer and inner confidence regions for the inverse lower excursion set $\mu^{-1}\left(-\infty, c\right]$ are calculated as:
+
+$$
+\text{CR}_{\text{in}}\left(-\infty, c\right] := \hat{B}_u^{-1}\left(-\infty, c\right]
+= \left( \hat{B}_u^{-1}\left[c, +\infty\right) \right)^{\complement}
+$$
+$$
+\text{CR}_{\text{out}}\left(-\infty, c\right] := \hat{B}_\ell^{-1}\left(-\infty, c\right]
+= \left( \hat{B}_\ell^{-1}\left[c, +\infty\right) \right)^{\complement}
+$$
+
+The inner and outer CRs for the inverse interval set $\mu^{-1}[a, b]$ are calculated as:
+
+$$
+\text{CR}_{\text{in}}[a, b] := \hat{B}_\ell^{-1}[a, \infty) \cap \hat{B}_u^{-1}(-\infty, b]
+$$
+
+$$
+\text{CR}_{\text{out}}[a, b] := \hat{B}_u^{-1}[a, \infty) \cap \hat{B}_\ell^{-1}(-\infty, b]
+$$
+By Theorem 1 from @Ren:2024, these CRs are valid for all $c \in \mathbb{R}$. Therefore we name them as simultaneous confidence regions (SCRs).
+
+## Linear Function-on-Scalar Regression (FoSR)
+
+A simple example for function-on-scalar regression model is
+
+$$
+Y_i(t) = \beta_0(t) + \beta_1(t) X_{i1} + b_i(t) + \epsilon_i(t),
+$$
+
+where:
+
+- \( Y_i(t) \) is a functional outcome
+- \( X_{i1} \) is a scalar covariate 
+- Each \( \beta_j(t) \) is a coefficient function  
+- \( b_i(t) \) is a subject-specific functional random effect. This captures correlation within subjects over time that is not captured by the mean. This term is not always included in FoSR models, but it’s generally a good idea because it gives better inference  
+- \( \epsilon_i(t) \) are normally distributed iid errors
+
+Here, the same bases are used for \( \beta_1(t) \) and \( \beta_2(t) \).
+
+### Accounting for Error Correlation
+
+The fitted GAM model above didn't take the correlation of residuals into account. Here, we combined random effects and FPCA into the GAM model to resolve this.
+
+#### Modeling residuals with FPCA and gam
+
+First, fit the mean model:
+
+$$
+Y_i(t) = \beta_0(t) + \beta_1(t) X_{i1} + e_i(t),
+$$
+
+#### Estimate the FPCA for GAMM FPCA model
+
+After obtaining residuals from the mean model, FPCA models the residuals using equation \(e_i(s) = b_i(s) + \epsilon_i(s)\), where \(b_i(s)\) 
+follows a mean zero Gaussian Process (GP) with covariance function \(\Sigma\), and \(\epsilon_i(s)\) are independent \(N(0, \sigma_e^2)\) random errors.
+
+Assuming that \(\phi_k(\cdot)\) are the eigenfunctions of the covariance operator 
+\(K_X\) of \(b_i(\cdot)\), one can express:
+
+$$
+b_i(t) = \sum_{k=1}^{\infty} \xi_{ik} \phi_k(t)
+$$
+
+The GAMM-FPCA model will be :
+
+$$
+Y_i(t) = \beta_0(t) + \beta_1(t) X_{i1} + \sum_{k=1}^{K} \xi_{ik} \phi_k(t) + \epsilon_i(t),
+$$
+
+## Construction of Simultaneous Confidence Bands for Functional Regression Model
+
+We consider simultaneous confidence bands (SCBs) for a target function $\eta(\cdot)$ on a grid $\mathcal{S}$. For example, $\eta(\cdot)$ could be $Y_i(t)$ or $\beta_1(t)$.
+Given an estimator $\hat{\eta}_N(s)$ with pointwise standard error $\hat{\zeta}_N(s)$ and a normalizing
+factor $\tau_N$, we can define the simultaneous confidence band for $\eta(\cdot)$ as:
+\[
+\mathrm{SCB}(s;q_{\alpha,N})
+= \Big[\, \hat{\eta}_N(s) - q_{\alpha,N}\tfrac{\hat{\zeta}_N(s)}{\tau_N},\;
+              \hat{\eta}_N(s) + q_{\alpha,N}\tfrac{\hat{\zeta}_N(s)}{\tau_N} \Big].
+\]
+And we can verify that these bands achieve $(1-\alpha)$ simultaneous coverage by
+\[
+\mathbb{P}\!\left(\forall s\in\mathcal{S}:\; \eta(s)\in \mathrm{SCB}(s;q_{\alpha,N})\right)=1-\alpha,
+\]
+whenever the critical value $q_{\alpha,N}$ satisfies
+\[
+\mathbb{P}\!\left(\max_{s\in\mathcal{S}}\, \tau_N\,
+\frac{\hat{\eta}_N(s)-\eta(s)}{\hat{\zeta}_N(s)} \;>\; q_{\alpha,N}\right)=\alpha. 
+\]
+
+The $q_{\alpha,N}$ is unknown in practice. In SCoRES, we implement two approaches for estimating the $q_{\alpha,N}$ for functional parameter functions in FoSR model: the Correlation and Multiplicity-Adjusted (CMA) bands from @crainiceanu2024functional based on parameter simulations, and a multiplier bootstrap procedure from @Telschow:2022. We detail the CMA procedure below:
+
+### Correlation and Multiplicity Adjusted (CMA) Confidence Bands Based on Parameter Simulations
+
+1. Simulate model parameters
+    $\boldsymbol{\beta}_1, \ldots, \boldsymbol{\beta}_B \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\hat{\boldsymbol{\beta}}, \hat{V}_{\boldsymbol{\beta}})$,
+    where $(\hat{\boldsymbol{\beta}}, \hat{V}_{\boldsymbol{\beta}})$ are estimated from a fitted FoSR model.
+
+2. For each $b=1,\ldots,B$, compute
+\[
+   \mathbf{X}_b \;=\; \frac{\mathbf{B}(\beta_b - \hat{\beta})}{\mathbf{D}_f},
+\]
+    where the division is element-wise and $\mathbf{B}$ maps parameters to functional effects.
+
+3. Define
+\[
+   d_b \;=\; \max\!\big(|\mathbf{X}_b|\big), \quad b=1,\ldots,B,
+\]
+    where the absolute value is taken element-wise.
+
+4. Estimate $q_{\alpha,N}$ as the $(1 - \alpha) \cdot 100\%$ quantile of $\{d_1,\ldots,d_B\}$.
+
+### Multiplier-t Bootstrap Procedure for Constructing Confidence Bands
+
+The second is the multiplier-t bootstrap procedure for constructing confidence bands. A full introduction to the method can be found in previous work from \cite{Telschow:2022}.
+
+1. Compute residuals $R_1^N, \ldots, R_N^N$, where $R_n^N = \sqrt{\frac{N}{N - 1}} \left( Y_n - \hat{\mu}_N \right)$, and multipliers $g_1, \ldots, g_N \overset{\text{i.i.d.}}{\sim} g$ with $\mathbb{E}[g] = 0$ and $\mathrm{var}[g] = 1$, where $\hat{\mu}_N$ is the fitted mean value from a FoSR model.
+
+2. Estimate $\hat{\epsilon}_N^*(s)$ from $g_1 Y_1(s), \ldots, g_N Y_N(s)$.
+
+3. Compute 
+\[
+T^*(s) = \frac{1}{\sqrt{N}} \sum_{n=1}^N g_n \frac{R_n^N(s)}{\hat{\epsilon}_N^*(s)}
+\]
+
+4. Repeat steps 1 to 3 many times to approximate the condition law $\mathcal{L}^* = \mathcal{L}\!\left(T^* \mid Y_1, \ldots, Y_N\right)$. Take the $(1 - \alpha) \cdot 100\%$ quantile of $\mathcal{L}^*$ to estimate $q_{\alpha, N}$.
+
+At step 2, we allow three choices for the multiplier distribution $g_i$, each with mean zero and unit variance:
+
+1. `rademacher`: $g_i \in \{-1,+1\}$ with equal probability;
+
+2. `gaussian`: $g_i \sim \mathcal{N}(0,1)$;
+
+3. `mammen`: a two–point distribution with mean $0$ and variance $1$ from \cite{Mammen:1993}.
+
+Unless stated otherwise, we use the `rademacher` multipliers.
+
+At step 3, we consider two alternatives for the pointwise standard errors
+$\hat{\epsilon}_N^*(s_j)$:
+
+1. `regular`,
+  \[
+    \hat{\epsilon}_N^*(s_j)
+    = \sqrt{\frac{1}{n}\sum_{i=1}^n\big(Y_i(s_j)-\hat{\beta}(s_j)\big)^2/(n-1)}\,;
+  \]
+
+2. `t`,
+  \[
+    \hat{\epsilon}_N^*(s_j)
+    = \sqrt{\frac{N}{N-1}\,\Big|\mathbb{E}_b\!\big[Y^{b}(s_j)^2\big]
+      - \big(\mathbb{E}_b[Y^{b}(s_j)]\big)^2\Big|},
+  \]
+  where expectations are taken over bootstrap replicates and $Y^{b}(s_j)$ denotes the perturbed sample at iteration $b$. The absolute value improves numerical stability when subtracting nearly equal quantities.
+
+Unless noted otherwise, we report results using the `t` estimator.
+  
+## Construction of Simultaneous Confidence Bands for Linear/Logistic Regression Model
+
+We next describe the bootstrap algorithm used to construct simultaneous confidence intervals (SCIs) for the mean outcome of regression on a fixed test design matrix. We also use the same procedures for the construction of SCIs for the regression coefficients. For details of this algorithm, please refer to \cite{Ren:2024}.
+
+Suppose we have training data outcome $y$, design matrix $X$, and a fixed test design matrix $\tilde{X}$. Let $f(\beta, X)$ denote the fitted regression function. The algorithm proceeds as follows.
+
+First, we estimate $\hat{\beta}$ on the training data $(y, X)$ using least squares. Then we compute the estimated mean outcome on the test design matrix $\hat{E}(\tilde{y}) := f(\hat{\beta}, \tilde{X})$,
+together with its standard deviation $\hat{\sigma}$.
+
+For bootstrap samples $b=1,\ldots,L$, repeat:
+
+1. Resample $(y_b, X_b)$ with replacement from the training data.
+
+2. Fit the model on the resampled data to obtain $\hat{\beta}_b$.
+
+3. Compute the estimated mean $\hat{E}(\tilde{y}_b):=f(\hat{\beta}_b, \tilde{X})$ and its pointwise standard deviation $\hat{\sigma}_b$.
+
+4. Calculate the standardized absolute residuals on the test design grid,
+  \[
+  r_b = \frac{\big| \hat{E}(\tilde{y}_b) - \hat{E}(\tilde{y}) \big|}{\hat{\sigma}_b}.
+  \]
+  
+5. Record the maximum value of $r_b$ as $r^{\max}_b$.
+
+After $L$ bootstrap iterations, take the $(1-\alpha)$ quantile of the empirical distribution of $\{r^{\max}_b\}_{b=1}^L$ as the threshold $a$. The SCI on the test design matrix is then given by
+\[
+\Big( \hat{E}(\tilde{y}) - a \times \hat{\sigma}, \;\; \hat{E}(\tilde{y}) + a \times \hat{\sigma} \Big).
+\]
+For logistic regression, the SCI is further transformed back to the data scale using the link function.
+
+## Construction of SCB for Spatial Generalized Least Squares Model
+
+We also provide tools in SCoRES for estimating SCB of geographic data, however, their use is currently limited to the spatial generalized least squares model. 
+
+Let the spatial domain be sampled on spots \(s\in\mathcal S\) with coordinates \(s=(x_s,y_s)\).
+At each spot \(s\), we observe \(n\) outcomes \(\mathbf z_s\in\mathbb R^{n}\) with design matrix
+\(\mathbf X\in\mathbb R^{n\times p}\). We fit a spot-specific generalized least squares (GLS) model
+
+$$
+\mathbf z_s=\mathbf X\boldsymbol\beta(s)+\boldsymbol\varepsilon_s,\qquad
+\boldsymbol\varepsilon_s\sim \mathcal N\!\left(\mathbf 0,\ \mathbf V_s\right),
+$$
+
+where the variance-covariance matrix within the spot encodes the prespecified correlation structure \(\mathbf V_s\).
+
+SCoRES allows users to directly input the matrix \(\mathbf V_s\) for each spot \(s\), or specify the correlation structure \(\mathbf R\).
+
+Assume we are interested in the linear functional \(\eta(s)=\mathbf w^\top \boldsymbol\beta(s)\), with \(\mathbf w\) as a weight vector for the specific linear combination. The pointwise estimated standard error is
+
+$$
+\widehat{\zeta}(s)=\sqrt{\mathbf w^\top \mathrm{Var}(\beta(s))\, \mathbf w}.
+$$
+
+To quantify uncertainty uniformly across spots, we construct a simultaneous confidence band (SCB)
+for \(\eta(\cdot)\) on the grid \(\mathcal S\):
+
+$$
+\mathrm{SCB}(s;\,q_\alpha)=\Big[\ \widehat{\eta}(s)-q_\alpha\,\widehat{\zeta}(s),\ \
+\widehat{\eta}(s)+q_\alpha\,\widehat{\zeta}(s)\ \Big],\qquad s\in\mathcal S,
+$$
+
+where \(q_\alpha\) satisfies
+
+$$
+\mathbb P\!\left(\max_{s\in\mathcal S}\frac{|\widehat{\eta}(s)-\eta(s)|}{\widehat{\zeta}(s)}
+\le q_\alpha\right)= 1-\alpha.
+$$
+
+We estimate \(q_\alpha\) by multiplier-\(t\) bootstrap method introduced before.
