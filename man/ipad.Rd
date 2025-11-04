@@ -71,4 +71,10 @@ Units for biochemical and physiological variables follow the original source.
 data(ipad)
 
 }
-\keyword{datasets}
+\references{
+Smith, S. J., Wrobel, J., Brooks-Russell, A., Kosnett, M. J., & Sammel, M. D. (2023).
+A Latent Variable Analysis of Psychomotor and Neurocognitive Performance After Acute Cannabis Smoking.
+\emph{Cannabis (Albuquerque, N.M.)}, 6(2), 123–132.
+\doi{10.26828/cannabis/2023/000156}
+}
+\keyword{dataset}

@@ -19,6 +19,12 @@
 #'   \item{percent_change}{Numeric. Percent change in the outcome of interest.}
 #' }
 #'
+#' @references
+#' Godbole, S., Leroux, A., Brooks-Russell, A., Subramanian, P. S., Kosnett, M. J., & Wrobel, J. (2024).
+#' A Study of Pupil Response to Light as a Digital Biomarker of Recent Cannabis Use.
+#' \emph{Digital biomarkers}, 8(1), 83–92.
+#' \doi{10.1159/000538561}
+#'
 #' @source Processed from \code{data-raw/pupil_load.R} using the \code{readr} and \code{dplyr} packages.
 #' @usage data(pupil)
 #' @keywords dataset

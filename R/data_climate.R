@@ -32,7 +32,7 @@
 #' Sommerfeld, M., Sain, S., & Schwartzman, A. (2018).
 #' Confidence regions for spatial excursion sets from repeated random field observations, with an application to climate.
 #' \emph{Journal of the American Statistical Association}, 113(523), 1327–1340.
-#' \doi{10.1080/01621459.2017.1356318}
+#' \doi{10.1080/01621459.2017.1341838}
 #'
 #' @source Processed from \code{data-raw/climate_data.R} using the \code{readr} package.
 #' @usage data(climate_data)

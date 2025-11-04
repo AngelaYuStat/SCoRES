@@ -31,4 +31,10 @@ Participants in the cannabis use group smoked cannabis flower or concentrate 40 
 Goal of this data is to understand differences in pupil response to light driven by acute cannabis users.
 Measurements were collected on the right eye.
 }
+\references{
+Godbole, S., Leroux, A., Brooks-Russell, A., Subramanian, P. S., Kosnett, M. J., & Wrobel, J. (2024).
+A Study of Pupil Response to Light as a Digital Biomarker of Recent Cannabis Use.
+\emph{Digital biomarkers}, 8(1), 83–92.
+\doi{10.1159/000538561}
+}
 \keyword{dataset}

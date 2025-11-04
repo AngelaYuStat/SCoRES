@@ -60,11 +60,17 @@
 #' \code{recent_smoke} to factors with informative labels for modeling/plotting.
 #' Units for biochemical and physiological variables follow the original source.
 #'
+#' @references
+#' Smith, S. J., Wrobel, J., Brooks-Russell, A., Kosnett, M. J., & Sammel, M. D. (2023).
+#' A Latent Variable Analysis of Psychomotor and Neurocognitive Performance After Acute Cannabis Smoking.
+#' \emph{Cannabis (Albuquerque, N.M.)}, 6(2), 123–132.
+#' \doi{10.26828/cannabis/2023/000156}
+#'
 #' @usage
 #' data(ipad)
 #'
 #' @examples
 #' data(ipad)
 #'
-#' @keywords datasets
+#' @keywords dataset
 "ipad"
