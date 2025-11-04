@@ -223,7 +223,7 @@ plot_cs(results_pupil_multiplier_para,
 
 The following plot displays the SCB and the corresponding SCRs of specified levels for the overall mean outcome function. The solid black line represents the sample mean. 
 
-```{r pupil_plot_cs_multiplier_overall, echo = TRUE, eval = pkgdown::in_pkgdown()}
+```{r pupil_plot_cs_multiplier_overall, echo = TRUE, eval = FALSE}
 results_pupil_multiplier_overall <- SCoRES::SCB_functional_outcome(
                                           data_df = pupil,
                                           method = "multiplier",
