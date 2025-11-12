@@ -1,6 +1,6 @@
 Package: SCoRES
 Title: Simultaneous Confidence Region Excursion Sets
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: 
     c(
       person(given = "Zhuoran", family = "Yu", ,"angela.yu@emory.edu", role = c("aut", "cre")),
@@ -57,4 +57,5 @@ Suggests:
 Config/testthat/edition: 3
 VignetteBuilder: knitr, rmarkdown
 BuildVignettes: true
-
+LazyLoad: no
+ByteCompile: false

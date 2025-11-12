@@ -23,4 +23,4 @@ There are currently no downstream dependencies.
 
 ## Additional notes
 * The package passes R CMD check --as-cran on all major operating systems.
-* This is the first submission of the package **SCoRES (version 0.1.0)** to CRAN.
+* This is the second submission of the package **SCoRES (version 0.1.1)** to CRAN.

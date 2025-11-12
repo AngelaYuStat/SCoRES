@@ -74,7 +74,7 @@ using parameter simulations approach with Gaussian multiplier bootstrap.
 }
 \examples{
 # example using pupil data
-library(mgcv)
+if (requireNamespace("mgcv", quietly = TRUE)) {
 data(pupil)
 \donttest{
 pupil_fpca <- prepare_pupil_fpca(pupil)
@@ -97,6 +97,7 @@ data = pupil, method = "REML")
 
 results <- cma(pupil, mean_mod, fitted = TRUE, outcome = "percent_change",
                domain = "seconds", subset = c("use = 1"), id = "id", nboot = 100)
+}
 
 }
 \references{

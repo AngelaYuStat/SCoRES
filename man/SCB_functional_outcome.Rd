@@ -97,9 +97,9 @@ bootstrap approaches.
 }
 \examples{
 # example using pupil data
-library(mgcv)
+if (requireNamespace("mgcv", quietly = TRUE)) {
 data(pupil)
-\dontrun{
+\donttest{
 pupil_fpca <- prepare_pupil_fpca(pupil)
 
 fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
@@ -131,5 +131,6 @@ pupil_multiplier <- SCB_functional_outcome(data = pupil, object = mean_mod, meth
                                    outcome = "percent_change",
                                    domain = "seconds", subset= c("use = 1"),
                                    id = "id")
+}
 
 }

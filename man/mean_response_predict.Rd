@@ -72,7 +72,7 @@ the selected group coefficients}
 This function is an internal function for constructing SCBs for functional data.
 }
 \examples{
-library(mgcv)
+if (requireNamespace("mgcv", quietly = TRUE)) {
 data(pupil)
 
 \donttest{
@@ -95,6 +95,7 @@ data = pupil, method = "REML")
 
 results <- mean_response_predict(pupil, mean_mod, fitted = TRUE,
 outcome = "percent_change", domain = "seconds", subset = c("use = 1"), id = "id")
+}
 
 }
 \references{

@@ -21,6 +21,7 @@
 ^_pkgdown\.yml$
 ^docs$
 ^doc$
+^pkgdown$
 
 ^Simulation\.(R|Rmd|html)$
 ^SCoRES_Simulation\.ipynb$

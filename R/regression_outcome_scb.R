@@ -256,7 +256,7 @@ SCB_linear_outcome = function(df_fit, model, grid_df = NULL, n_boot = 1000,
       # for all model_vars, check if they're included in grid_df_boot
       # make sure that the included vars match the format in grid_df
       # grid_df_boot is only for calculate the thres
-      # for muneric variable, can be denser
+      # for numeric variable, can be denser
       # for factor/character variable, must be included in grid_df
         if(!is.null(grid_df)){
           grid_df_boot <- check_and_align_vars(grid_df, grid_df_boot, model_vars[-1], grid_boot = TRUE)

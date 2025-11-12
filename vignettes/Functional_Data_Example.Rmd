@@ -27,6 +27,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+Due to runtime constraints, some code chunks in this vignette are not executed during the build process. Users may run these examples locally or refer to the package website for the full outputs.
+
 ## Overview
 
 The example here is to use pupil functional data to construct the simultaneous outer and inner confidence regions (SCRs) from simultaneous confidence bands (SCBs) using Function-on-Scalar Regression (FoSR).

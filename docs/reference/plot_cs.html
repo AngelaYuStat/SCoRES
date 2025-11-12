@@ -11,7 +11,7 @@ Supports plotting confidence regions at multiple levels and labeling contours.">
 
     <a class="navbar-brand me-2" href="../index.html">SCoRES Package</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -167,18 +167,18 @@ Inverse set estimation and inversion of simultaneous confidence intervals.
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># example using pupil data</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mgcv</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">pupil</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"mgcv"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># example using pupil data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">pupil</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">pupil_fpca</span> <span class="op">&lt;-</span> <span class="fu"><a href="prepare_pupil_fpca.html">prepare_pupil_fpca</a></span><span class="op">(</span><span class="va">pupil</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">fosr_mod</span> <span class="op">&lt;-</span> <span class="fu">mgcv</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/bam.html" class="external-link">bam</a></span><span class="op">(</span><span class="va">percent_change</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">seconds</span>, k<span class="op">=</span><span class="fl">30</span>, bs<span class="op">=</span><span class="st">"cr"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">seconds</span>, by <span class="op">=</span> <span class="va">use</span>, k<span class="op">=</span><span class="fl">30</span>, bs <span class="op">=</span> <span class="st">"cr"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi1</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi2</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi3</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html" class="external-link">s</a></span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi4</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span><span class="va">fosr_mod</span> <span class="op">&lt;-</span> <span class="fu">mgcv</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/bam.html" class="external-link">bam</a></span><span class="op">(</span><span class="va">percent_change</span> <span class="op">~</span> <span class="fu">s</span><span class="op">(</span><span class="va">seconds</span>, k<span class="op">=</span><span class="fl">30</span>, bs<span class="op">=</span><span class="st">"cr"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">s</span><span class="op">(</span><span class="va">seconds</span>, by <span class="op">=</span> <span class="va">use</span>, k<span class="op">=</span><span class="fl">30</span>, bs <span class="op">=</span> <span class="st">"cr"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">s</span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi1</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">s</span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi2</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">s</span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi3</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">s</span><span class="op">(</span><span class="va">id</span>, by <span class="op">=</span> <span class="va">Phi4</span>, bs<span class="op">=</span><span class="st">"re"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  method <span class="op">=</span> <span class="st">"fREML"</span>, data <span class="op">=</span> <span class="va">pupil_fpca</span>, discrete <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">pupil_multiplier</span> <span class="op">&lt;-</span> <span class="fu"><a href="SCB_functional_outcome.html">SCB_functional_outcome</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">pupil_fpca</span>, object <span class="op">=</span> <span class="va">fosr_mod</span>,</span></span>
@@ -193,6 +193,7 @@ Inverse set estimation and inversion of simultaneous confidence intervals.
 <span class="r-in"><span>        mu_hat <span class="op">=</span> <span class="va">pupil_multiplier</span><span class="op">$</span><span class="va">mu_hat</span>, xlab <span class="op">=</span> <span class="st">""</span>, ylab <span class="op">=</span> <span class="st">""</span>,</span></span>
 <span class="r-in"><span>        level_label <span class="op">=</span> <span class="cn">T</span>, min.size <span class="op">=</span> <span class="fl">40</span>, palette <span class="op">=</span> <span class="st">"Spectral"</span>,</span></span>
 <span class="r-in"><span>        color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-plt img"><img src="plot_cs-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
@@ -208,8 +209,8 @@ Inverse set estimation and inversion of simultaneous confidence intervals.
 <span class="r-in"><span><span class="fu">plot_cs</span><span class="op">(</span><span class="va">results</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>, x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>, mu_hat <span class="op">=</span> <span class="va">results</span><span class="op">$</span><span class="va">Mean</span>,</span></span>
 <span class="r-in"><span>       xlab <span class="op">=</span> <span class="st">"x1"</span>, ylab <span class="op">=</span> <span class="st">"y"</span>, level_label <span class="op">=</span> <span class="cn">T</span>, min.size <span class="op">=</span> <span class="fl">40</span>, palette <span class="op">=</span> <span class="st">"Spectral"</span>,</span></span>
 <span class="r-in"><span>       color_level_label <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 35 rows containing missing values or values outside the scale range (`geom_line()`).</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 43 rows containing missing values or values outside the scale range (`geom_line()`).</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 42 rows containing missing values or values outside the scale range</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> (`geom_line()`).</span>
 <span class="r-plt img"><img src="plot_cs-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

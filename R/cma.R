@@ -61,7 +61,7 @@
 #' Chapman and Hall/CRC.
 #'
 #' @examples
-#' library(mgcv)
+#' if (requireNamespace("mgcv", quietly = TRUE)) {
 #' data(pupil)
 #'
 #' \donttest{
@@ -84,6 +84,7 @@
 #'
 #' results <- mean_response_predict(pupil, mean_mod, fitted = TRUE,
 #' outcome = "percent_change", domain = "seconds", subset = c("use = 1"), id = "id")
+#' }
 #'
 #' @export
 #'
@@ -275,7 +276,7 @@ mean_response_predict = function(data_df, object, fitted = TRUE, outcome, domain
 #'
 #' @examples
 #' # example using pupil data
-#' library(mgcv)
+#' if (requireNamespace("mgcv", quietly = TRUE)) {
 #' data(pupil)
 #' \donttest{
 #' pupil_fpca <- prepare_pupil_fpca(pupil)
@@ -298,6 +299,7 @@ mean_response_predict = function(data_df, object, fitted = TRUE, outcome, domain
 #'
 #' results <- cma(pupil, mean_mod, fitted = TRUE, outcome = "percent_change",
 #'                domain = "seconds", subset = c("use = 1"), id = "id", nboot = 100)
+#' }
 #'
 cma = function(data_df, object, fitted = TRUE, alpha = 0.05, outcome, domain,
                subset = NULL, id, nboot = NULL){
@@ -357,11 +359,12 @@ cma = function(data_df, object, fitted = TRUE, alpha = 0.05, outcome, domain,
 #'   }
 #'
 #' @examples
-#' library(mgcv)
+#' if (requireNamespace("mgcv", quietly = TRUE)) {
 #' data(pupil)
 #' \donttest{processed_data <- prepare_pupil_fpca(pupil)}
 #'
 #' processed_data <- prepare_pupil_fpca(pupil, k_mean = 5, k_fpca = 5)
+#' }
 #'
 #' @importFrom dplyr mutate filter select arrange left_join %>%
 #' @importFrom tidyr pivot_wider

@@ -82,10 +82,10 @@ Supports plotting confidence regions at multiple levels and labeling contours.
 }
 \examples{
 
-# example using pupil data
-library(mgcv)
-data(pupil)
 \donttest{
+if (requireNamespace("mgcv", quietly = TRUE)) {
+# example using pupil data
+data(pupil)
 pupil_fpca <- prepare_pupil_fpca(pupil)
 
 fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
@@ -108,6 +108,7 @@ plot_cs(pupil_multiplier,levels = c(-18), x = pupil_multiplier$domain,
         mu_hat = pupil_multiplier$mu_hat, xlab = "", ylab = "",
         level_label = T, min.size = 40, palette = "Spectral",
         color_level_label = "black")
+}
 }
 
 x <- rnorm(50)

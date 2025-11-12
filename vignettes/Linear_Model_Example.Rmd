@@ -16,6 +16,8 @@ editor_options:
 encoding: UTF-8
 ---
 
+Due to runtime constraints, some code chunks in this vignette are not executed during the build process. Users may run these examples locally or refer to the package website for the full outputs.
+
 The example here is to use simulated data to construct the simultaneous outer and inner confidence regions (SCRs) from simultaneous confidence bands (SCB) using linear regression. 
 `SCoRES::SCB_linear_outcome()` function uses a non-parametric bootstrap algorithm to construct the SCB in linear regression. The argument `df_fit` specifies a data frame containing the training design matrix used to fit the linear model, while `grid_df` defines the mean outcome for which simultaneous confidence bands (SCB) are constructed. Use argument `model` to specify the formula used for fitting the linear model.
 

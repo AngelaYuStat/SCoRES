@@ -62,10 +62,10 @@
 #'
 #' @examples
 #'
-#' # example using pupil data
-#' library(mgcv)
-#' data(pupil)
 #' \donttest{
+#' if (requireNamespace("mgcv", quietly = TRUE)) {
+#' # example using pupil data
+#' data(pupil)
 #' pupil_fpca <- prepare_pupil_fpca(pupil)
 #'
 #' fosr_mod <- mgcv::bam(percent_change ~ s(seconds, k=30, bs="cr") +
@@ -89,17 +89,18 @@
 #'         level_label = T, min.size = 40, palette = "Spectral",
 #'         color_level_label = "black")
 #' }
+#' }
 #'
-#'x <- rnorm(50)
-#'epsilon <- rnorm(50,0,sqrt(2))
-#'y <- -1 + x + epsilon
-#'df <- data.frame(x = x, y = y)
-#'grid <- data.frame(x = seq(-1, 1, length.out = 50))
-#'model <- "y ~ x"
-#'results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
+#' x <- rnorm(50)
+#' epsilon <- rnorm(50,0,sqrt(2))
+#' y <- -1 + x + epsilon
+#' df <- data.frame(x = x, y = y)
+#' grid <- data.frame(x = seq(-1, 1, length.out = 50))
+#' model <- "y ~ x"
+#' results <- SCB_linear_outcome(df_fit = df, model = model, grid_df = grid)
 #'
-#'results <- tibble::as_tibble(results)
-#'plot_cs(results, levels = c(0), x = seq(-1, 1, length.out = 50), mu_hat = results$Mean,
+#' results <- tibble::as_tibble(results)
+#' plot_cs(results, levels = c(0), x = seq(-1, 1, length.out = 50), mu_hat = results$Mean,
 #'        xlab = "x1", ylab = "y", level_label = T, min.size = 40, palette = "Spectral",
 #'        color_level_label = "black")
 #'
@@ -249,14 +250,14 @@ plot_cs = function(SCB, levels, type = "upper", x, y = NULL, mu_hat = NULL, mu_t
 
   if(is.null(mu_hat) && is.null(mu_true)) stop("An input must be provided for either `mu_hat` or `mu_true`.")
 
-  if(!is.null(xlab)){
-    if (!is.character(xlab) || length(xlab) != 1L) stop("`xlab` must be a single string.")
-  }
-  if (!is.null(ylab)){
-    if ((!is.character(ylab) || length(ylab) != 1L)) {
-      stop("`ylab` must be NULL or a single string.")
-    }
-  }
+  #if(!is.null(xlab)){
+    #if (!is.character(xlab) || length(xlab) != 1L) stop("`xlab` must be a single string.")
+  #}
+  #if (!is.null(ylab)){
+    #if ((!is.character(ylab) || length(ylab) != 1L)) {
+      #stop("`ylab` must be NULL or a single string.")
+    #}
+  #}
 
   if (!is.character(palette) || length(palette) != 1) {
     stop("`palette` must be a single character string.")

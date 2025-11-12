@@ -30,10 +30,11 @@ Processes data by fitting a mean GAM model, extracting residuals, performing FPC
 and merging the results to create an enhanced dataset for functional regression analysis.
 }
 \examples{
-library(mgcv)
+if (requireNamespace("mgcv", quietly = TRUE)) {
 data(pupil)
 \donttest{processed_data <- prepare_pupil_fpca(pupil)}
 
 processed_data <- prepare_pupil_fpca(pupil, k_mean = 5, k_fpca = 5)
+}
 
 }
