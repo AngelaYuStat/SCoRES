@@ -39,3 +39,6 @@
 ^vignettes/\.Rcheck$
 ^vignettes/\.gitignore$
 ^nul$
+
+^man/figures$
+^man/figures/.*$
